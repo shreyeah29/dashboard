@@ -176,7 +176,7 @@ app.post('/api/v1/auth/admin/login', (req, res) => {
     res.json({ 
       success: true, 
       message: 'Login successful',
-      user: { role: 'admin' }
+      user: { isAdmin: true, role: 'admin' }
     });
   } else {
     res.status(401).json({ 
@@ -193,7 +193,7 @@ app.get('/api/v1/auth/admin/verify', (req, res) => {
   if (token && token.startsWith('admin-session-')) {
     res.json({ 
       authenticated: true, 
-      user: { role: 'admin' } 
+      user: { isAdmin: true, role: 'admin' } 
     });
   } else {
     res.status(401).json({ 
