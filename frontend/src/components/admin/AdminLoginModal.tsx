@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,7 +13,6 @@ interface AdminLoginModalProps {
 }
 
 const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose }) => {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +27,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose }) =>
     setError('');
 
     try {
-      await login(email, password);
+      await login(password);
       toast({
         title: "Login Successful",
         description: "Welcome to the Admin Dashboard",
@@ -112,26 +111,8 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose }) =>
 
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                    Email Address
-                  </Label>
-                  <div className="relative mt-1">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 border-gray-300 focus:border-edicius-gold focus:ring-edicius-gold"
-                      placeholder="admin@edicius.com"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
                   <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-                    Password
+                    Admin Password
                   </Label>
                   <div className="relative mt-1">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -141,7 +122,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose }) =>
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-10 pr-10 border-gray-300 focus:border-edicius-gold focus:ring-edicius-gold"
-                      placeholder="Enter your password"
+                      placeholder="Enter admin password"
                       required
                     />
                     <button
