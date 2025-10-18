@@ -37,8 +37,8 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({
   className = "",
-  width = 150,
-  height = 100,
+  width = 200,
+  height = 120,
 }) => {
   return (
     <div
@@ -63,7 +63,7 @@ const Logo: React.FC<LogoProps> = ({
       </svg>
 
       {/* EDICIUS Text */}
-      <div className="text-black dark:text-white font-bold tracking-wider text-lg">
+      <div className="text-white font-bold tracking-wider text-lg">
         EDICIUS
       </div>
     </div>

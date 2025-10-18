@@ -228,11 +228,6 @@ const Home = () => {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/40 transition-all duration-300"></div>
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="opacity-80">
-                            <Logo width={60} height={20} />
-                          </div>
-                        </div>
                       </div>
                       <CardContent className="p-6 bg-gray-800">
                         <h3 className="text-xl font-bold text-white mb-3 group-hover:text-edicius-red transition-colors duration-200">
