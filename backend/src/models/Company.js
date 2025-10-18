@@ -26,7 +26,7 @@ const companySchema = new mongoose.Schema({
   },
   sector: {
     type: String,
-    required: true
+    required: false
   },
   status: {
     type: String,
