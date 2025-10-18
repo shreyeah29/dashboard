@@ -36,42 +36,55 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
     setLoading(true);
     setError('');
     try {
-      // First, try to get the document URL through the API
       console.log('Fetching document URL for:', document._id);
-      const apiResponse = await documentsApi.getById(document._id);
       
-      if (apiResponse.presignedUrl) {
-        console.log('Got presigned URL from API:', apiResponse.presignedUrl);
-        setViewUrl(apiResponse.presignedUrl);
-        return;
+      // Try multiple URL sources in order of preference
+      const urlsToTry = [];
+      
+      // 1. Try API first
+      try {
+        const apiResponse = await documentsApi.getById(document._id);
+        if (apiResponse.presignedUrl) {
+          urlsToTry.push(apiResponse.presignedUrl);
+          console.log('Got presigned URL from API:', apiResponse.presignedUrl);
+        }
+      } catch (apiErr) {
+        console.log('API call failed, will try other methods');
       }
       
-      // If API doesn't provide URL, construct it manually
+      // 2. Try original s3Url
+      if (document.s3Url) {
+        urlsToTry.push(document.s3Url);
+        console.log('Added original s3Url:', document.s3Url);
+      }
+      
+      // 3. Construct URL manually
       const backendUrl = 'https://edicius-dashboard.onrender.com';
       const fileName = document.s3Key || document.name;
       const constructedUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
+      urlsToTry.push(constructedUrl);
+      console.log('Added constructed URL:', constructedUrl);
       
-      console.log('Constructed URL:', constructedUrl);
-      
-      // Test if the constructed URL is accessible
-      try {
-        const response = await fetch(constructedUrl, { method: 'HEAD' });
-        if (response.ok) {
-          setViewUrl(constructedUrl);
-          console.log('Constructed URL is accessible');
-        } else {
-          throw new Error(`HTTP ${response.status}`);
-        }
-      } catch (fetchErr) {
-        console.error('Constructed URL not accessible:', fetchErr);
-        // Try the original s3Url as fallback
-        if (document.s3Url) {
-          console.log('Trying original s3Url:', document.s3Url);
-          setViewUrl(document.s3Url);
-        } else {
-          setError('Document file not found. Please contact support.');
+      // Test each URL until we find one that works
+      for (const url of urlsToTry) {
+        try {
+          console.log('Testing URL:', url);
+          const response = await fetch(url, { method: 'HEAD' });
+          if (response.ok) {
+            console.log('URL is accessible:', url);
+            setViewUrl(url);
+            return;
+          } else {
+            console.log(`URL returned ${response.status}:`, url);
+          }
+        } catch (fetchErr) {
+          console.log('URL not accessible:', url, fetchErr);
         }
       }
+      
+      // If no URL worked, set error
+      setError('Document file not found. Please contact support.');
+      
     } catch (err) {
       console.error('Error fetching document view URL:', err);
       setError('Failed to load document. Please try again later.');
@@ -88,7 +101,7 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
     if (loading) {
       return (
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-edicius-gold"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
         </div>
       );
     }
@@ -173,13 +186,25 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
                 try {
                   let docUrl = viewUrl;
                   
-                  // If we don't have a viewUrl, try to get it
+                  // If we don't have a viewUrl, try to get it using the same logic as fetchViewUrl
                   if (!docUrl) {
+                    // Try API first
                     try {
                       const apiResponse = await documentsApi.getById(document._id);
-                      docUrl = apiResponse.presignedUrl;
+                      if (apiResponse.presignedUrl) {
+                        docUrl = apiResponse.presignedUrl;
+                      }
                     } catch (apiErr) {
-                      // Construct URL manually
+                      console.log('API call failed for new tab');
+                    }
+                    
+                    // Try original s3Url
+                    if (!docUrl && document.s3Url) {
+                      docUrl = document.s3Url;
+                    }
+                    
+                    // Construct URL manually as last resort
+                    if (!docUrl) {
                       const backendUrl = 'https://edicius-dashboard.onrender.com';
                       const fileName = document.s3Key || document.name;
                       docUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
@@ -188,9 +213,10 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
                   
                   if (docUrl) {
                     console.log('Opening document in new tab:', docUrl);
-                    const newWindow = window.open(docUrl, '_blank');
+                    const newWindow = window.open(docUrl, '_blank', 'noopener,noreferrer');
                     if (!newWindow) {
-                      setError('Please allow popups to view this document');
+                      // If popup blocked, try to open in same window
+                      window.location.href = docUrl;
                     }
                   } else {
                     setError('Document URL not available');
@@ -209,13 +235,25 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
                 try {
                   let docUrl = viewUrl;
                   
-                  // If we don't have a viewUrl, try to get it
+                  // If we don't have a viewUrl, try to get it using the same logic as fetchViewUrl
                   if (!docUrl) {
+                    // Try API first
                     try {
                       const apiResponse = await documentsApi.getById(document._id);
-                      docUrl = apiResponse.presignedUrl;
+                      if (apiResponse.presignedUrl) {
+                        docUrl = apiResponse.presignedUrl;
+                      }
                     } catch (apiErr) {
-                      // Construct URL manually
+                      console.log('API call failed for Google Docs viewer');
+                    }
+                    
+                    // Try original s3Url
+                    if (!docUrl && document.s3Url) {
+                      docUrl = document.s3Url;
+                    }
+                    
+                    // Construct URL manually as last resort
+                    if (!docUrl) {
                       const backendUrl = 'https://edicius-dashboard.onrender.com';
                       const fileName = document.s3Key || document.name;
                       docUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
@@ -226,9 +264,12 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
                     // Use Google Docs Viewer for presentations and documents
                     const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(docUrl)}&embedded=true`;
                     console.log('Opening Google Docs Viewer with URL:', googleViewerUrl);
-                    const newWindow = window.open(googleViewerUrl, '_blank');
+                    
+                    // Try to open in new tab
+                    const newWindow = window.open(googleViewerUrl, '_blank', 'noopener,noreferrer');
                     if (!newWindow) {
-                      setError('Please allow popups to view this document');
+                      // If popup blocked, try to open in same window
+                      window.location.href = googleViewerUrl;
                     }
                   } else {
                     setError('Document URL not available');
@@ -268,13 +309,25 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
             try {
               let docUrl = viewUrl;
               
-              // If we don't have a viewUrl, try to get it
+              // If we don't have a viewUrl, try to get it using the same logic as fetchViewUrl
               if (!docUrl) {
+                // Try API first
                 try {
                   const apiResponse = await documentsApi.getById(document._id);
-                  docUrl = apiResponse.presignedUrl;
+                  if (apiResponse.presignedUrl) {
+                    docUrl = apiResponse.presignedUrl;
+                  }
                 } catch (apiErr) {
-                  // Construct URL manually
+                  console.log('API call failed for default case');
+                }
+                
+                // Try original s3Url
+                if (!docUrl && document.s3Url) {
+                  docUrl = document.s3Url;
+                }
+                
+                // Construct URL manually as last resort
+                if (!docUrl) {
                   const backendUrl = 'https://edicius-dashboard.onrender.com';
                   const fileName = document.s3Key || document.name;
                   docUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
@@ -283,9 +336,10 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
               
               if (docUrl) {
                 console.log('Opening document in new tab:', docUrl);
-                const newWindow = window.open(docUrl, '_blank');
+                const newWindow = window.open(docUrl, '_blank', 'noopener,noreferrer');
                 if (!newWindow) {
-                  setError('Please allow popups to view this document');
+                  // If popup blocked, try to open in same window
+                  window.location.href = docUrl;
                 }
               } else {
                 setError('Document URL not available');

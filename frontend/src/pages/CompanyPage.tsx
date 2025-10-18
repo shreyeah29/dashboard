@@ -6,7 +6,13 @@ import { companiesApi, projectsApi } from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Building2, Calendar, Users, ArrowRight, Globe, CheckCircle } from 'lucide-react';
+import { 
+  ArrowLeft, Building2, Calendar, Users, ArrowRight, Globe, CheckCircle,
+  Rocket, Briefcase, Bot, Pickaxe, Leaf, FlaskConical,
+  Film, Smartphone, PartyPopper, Handshake, TrendingUp, Target,
+  Truck, Ship, Globe2, Wrench, Hammer, HardHat,
+  Bed, UtensilsCrossed, MapPin, Home, Building, Zap
+} from 'lucide-react';
 import { formatDate, getStatusColor } from '@/lib/utils';
 
 // Function to get appropriate hero image based on company name
@@ -68,17 +74,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Digital Transformation",
           description: "Comprehensive digital transformation strategies that modernize operations and drive growth.",
-          icon: "🚀"
+          icon: Rocket
         },
         {
           title: "Technology Consulting",
           description: "Expert guidance on technology adoption, system integration, and digital strategy.",
-          icon: "💼"
+          icon: Briefcase
         },
         {
           title: "AI & Automation",
           description: "Cutting-edge artificial intelligence solutions and process automation services.",
-          icon: "🤖"
+          icon: Bot
         }
       ],
       highlights: [
@@ -95,17 +101,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Mining Operations",
           description: "Advanced mining technologies and sustainable extraction methods for various minerals.",
-          icon: "⛏️"
+          icon: Pickaxe
         },
         {
           title: "Environmental Management",
           description: "Comprehensive environmental impact assessment and sustainable mining practices.",
-          icon: "🌱"
+          icon: Leaf
         },
         {
           title: "Mineral Processing",
           description: "State-of-the-art processing facilities and quality control systems.",
-          icon: "⚗️"
+          icon: FlaskConical
         }
       ],
       highlights: [
@@ -122,17 +128,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Film Production",
           description: "Full-service film production from concept to distribution with state-of-the-art equipment.",
-          icon: "🎬"
+          icon: Film
         },
         {
           title: "Digital Content",
           description: "Creative digital content creation for brands, social media, and marketing campaigns.",
-          icon: "📱"
+          icon: Smartphone
         },
         {
           title: "Event Management",
           description: "Large-scale event planning and execution for corporate and entertainment events.",
-          icon: "🎪"
+          icon: PartyPopper
         }
       ],
       highlights: [
@@ -149,17 +155,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Business Development",
           description: "Strategic business development and partnership opportunities across multiple sectors.",
-          icon: "🤝"
+          icon: Handshake
         },
         {
           title: "Investment Management",
           description: "Comprehensive investment strategies and portfolio management services.",
-          icon: "📈"
+          icon: TrendingUp
         },
         {
           title: "Strategic Consulting",
           description: "Expert business consulting and strategic planning for growth and expansion.",
-          icon: "🎯"
+          icon: Target
         }
       ],
       highlights: [
@@ -176,17 +182,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Smart Infrastructure",
           description: "Intelligent infrastructure solutions with IoT integration and smart city technologies.",
-          icon: "🏗️"
+          icon: Building
         },
         {
           title: "Sustainable Construction",
           description: "Eco-friendly construction methods and green building certifications.",
-          icon: "🌿"
+          icon: Leaf
         },
         {
           title: "Urban Planning",
           description: "Comprehensive urban planning and development strategies for modern cities.",
-          icon: "🏙️"
+          icon: MapPin
         }
       ],
       highlights: [
@@ -203,17 +209,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Global Trade",
           description: "Comprehensive import/export services with worldwide logistics network.",
-          icon: "🌍"
+          icon: Globe2
         },
         {
           title: "Supply Chain Management",
           description: "End-to-end supply chain optimization and logistics management.",
-          icon: "📦"
+          icon: Truck
         },
         {
           title: "Customs & Compliance",
           description: "Expert customs clearance and international trade compliance services.",
-          icon: "📋"
+          icon: Ship
         }
       ],
       highlights: [
@@ -230,17 +236,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Smart Consumer Goods",
           description: "Technology-integrated consumer products for modern lifestyle needs.",
-          icon: "🏠"
+          icon: Home
         },
         {
           title: "Personal Care",
           description: "Premium personal care products with natural and organic ingredients.",
-          icon: "🧴"
+          icon: Zap
         },
         {
           title: "Lifestyle Solutions",
           description: "Innovative lifestyle products that simplify and enhance daily routines.",
-          icon: "✨"
+          icon: Wrench
         }
       ],
       highlights: [
@@ -257,17 +263,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Luxury Accommodations",
           description: "Premium hotel and resort experiences with world-class amenities and service.",
-          icon: "🏨"
+          icon: Bed
         },
         {
           title: "Sustainable Tourism",
           description: "Eco-friendly tourism practices and sustainable hospitality solutions.",
-          icon: "🌿"
+          icon: Leaf
         },
         {
           title: "Event Venues",
           description: "Exclusive event venues and conference facilities for corporate and social events.",
-          icon: "🎉"
+          icon: PartyPopper
         }
       ],
       highlights: [
@@ -284,17 +290,17 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Business Solutions",
           description: "Comprehensive business solutions tailored to specific industry needs.",
-          icon: "💼"
+          icon: Briefcase
         },
         {
           title: "Innovation & Technology",
           description: "Cutting-edge technology solutions and innovation consulting services.",
-          icon: "🚀"
+          icon: Rocket
         },
         {
           title: "Strategic Partnerships",
           description: "Strategic partnerships and collaboration opportunities for growth.",
-          icon: "🤝"
+          icon: Handshake
         }
       ],
       highlights: [
@@ -437,9 +443,8 @@ const CompanyPage = () => {
             </div>
           </motion.div>
 
-          {/* Visual Content Section - Only for non-Innovation companies */}
-          {!company.name.toLowerCase().includes('innovations') && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+          {/* Visual Content Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -482,7 +487,6 @@ const CompanyPage = () => {
                 </div>
               </motion.div>
             </div>
-          )}
         </div>
       </section>
 
@@ -514,7 +518,7 @@ const CompanyPage = () => {
                 <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                   <CardContent className="p-8 text-center">
                     <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mx-auto mb-6">
-                      <span className="text-3xl">{service.icon}</span>
+                      <service.icon className="w-10 h-10 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-black mb-4 font-serif tracking-wide">{service.title}</h3>
                     <p className="text-gray-600 leading-relaxed font-medium">
