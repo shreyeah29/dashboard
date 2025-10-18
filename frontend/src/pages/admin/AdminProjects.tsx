@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { projectsApi, companiesApi } from '@/lib/api';
+import FileUploadModal from '@/components/admin/FileUploadModal';
 
 const AdminProjects = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -158,6 +159,48 @@ const AdminProjects = () => {
   const handleManageFiles = (project: any) => {
     setSelectedProject(project);
     setIsUploadModalOpen(true);
+  };
+
+  const handleFileUpload = async (file: File, tags: string) => {
+    if (!selectedProject) return;
+
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('name', file.name);
+    formData.append('tags', tags);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/projects/${selectedProject._id}/documents`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await response.json();
+      console.log('File uploaded successfully:', result);
+      
+      toast({
+        title: "File Uploaded",
+        description: `${file.name} has been uploaded successfully.`,
+      });
+
+      // Reload projects data
+      await loadData();
+      setIsUploadModalOpen(false);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload file. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDeleteProject = (projectId: string) => {
@@ -450,66 +493,11 @@ const AdminProjects = () => {
 
         {/* Upload Files Modal */}
         {isUploadModalOpen && selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsUploadModalOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-2xl bg-edicius-navy/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-edicius-gold/20"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">Upload Files</h2>
-                    <p className="text-white/70">Upload documents for: {selectedProject.name}</p>
-                  </div>
-                  <button
-                    onClick={() => setIsUploadModalOpen(false)}
-                    className="text-edicius-gold/70 hover:text-edicius-gold transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-
-                <div className="border-2 border-dashed border-edicius-gold/30 rounded-lg p-8 text-center">
-                  <Upload className="w-16 h-16 text-edicius-gold mx-auto mb-4" />
-                  <p className="text-white mb-2 text-lg">Drop your PPT file here</p>
-                  <p className="text-white/60 mb-4">or click to browse files</p>
-                  <input
-                    type="file"
-                    multiple
-                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
-                    className="hidden"
-                    id="project-file-upload"
-                  />
-                  <label htmlFor="project-file-upload">
-                    <Button className="bg-edicius-gold text-edicius-navy hover:bg-edicius-gold/90">
-                      Choose Files
-                    </Button>
-                  </label>
-                </div>
-
-                <div className="flex justify-end space-x-3 mt-6">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsUploadModalOpen(false)}
-                    className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
-                  >
-                    Cancel
-                  </Button>
-                  <Button className="bg-edicius-gold text-edicius-navy hover:bg-edicius-gold/90">
-                    Upload Files
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+          <FileUploadModal
+            project={selectedProject}
+            onClose={() => setIsUploadModalOpen(false)}
+            onUpload={handleFileUpload}
+          />
         )}
       </div>
     </div>

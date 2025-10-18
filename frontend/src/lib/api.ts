@@ -102,11 +102,23 @@ export const projectsApi = {
 
 // Documents API
 export const documentsApi = {
-  upload: async (projectId: string, file: File) => {
+  getByProject: async (projectId: string): Promise<Document[]> => {
+    const response = await api.get(`/projects/${projectId}/documents`);
+    return response.data;
+  },
+  
+  getById: async (id: string): Promise<Document> => {
+    const response = await api.get(`/documents/${id}`);
+    return response.data;
+  },
+  
+  upload: async (projectId: string, file: File, tags?: string): Promise<Document> => {
     const formData = new FormData();
     formData.append('document', file);
+    formData.append('name', file.name);
+    if (tags) formData.append('tags', tags);
     
-    const response = await api.post(`/documents/projects/${projectId}/documents`, formData, {
+    const response = await api.post(`/projects/${projectId}/documents`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -114,13 +126,8 @@ export const documentsApi = {
     return response.data;
   },
   
-  getViewUrl: async (documentId: string) => {
-    const response = await api.get(`/documents/${documentId}/view`);
-    return response.data;
-  },
-  
-  delete: async (documentId: string) => {
-    const response = await api.delete(`/documents/${documentId}`);
+  delete: async (id: string) => {
+    const response = await api.delete(`/documents/${id}`);
     return response.data;
   }
 };
