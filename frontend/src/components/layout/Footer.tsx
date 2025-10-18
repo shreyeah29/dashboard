@@ -10,11 +10,13 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <div className="flex items-center space-x-1">
-                <div className="w-1 h-6 bg-edicius-red"></div>
-                <div className="w-1 h-6 bg-edicius-red"></div>
-                <div className="w-1 h-6 bg-edicius-red"></div>
+                <div className="w-1 h-3 bg-edicius-red"></div>
+                <div className="w-1 h-4 bg-edicius-red"></div>
+                <div className="w-1 h-5 bg-edicius-red"></div>
+                <div className="w-1 h-6 bg-white"></div>
+                <div className="w-1 h-7 bg-white"></div>
               </div>
-              <span className="text-lg font-bold">EDICIUS GROUP OF COMPANIES</span>
+              <span className="text-lg font-bold">EDICIUS</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               where innovation meets precision. With over 7 years of relentless dedication, 

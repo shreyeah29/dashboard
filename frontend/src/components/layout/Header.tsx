@@ -25,12 +25,14 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
             <div className="flex items-center space-x-1">
-              <div className="w-1 h-8 bg-edicius-red"></div>
-              <div className="w-1 h-8 bg-edicius-red"></div>
-              <div className="w-1 h-8 bg-edicius-red"></div>
+              <div className="w-2 h-4 bg-edicius-red"></div>
+              <div className="w-2 h-6 bg-edicius-red"></div>
+              <div className="w-2 h-8 bg-edicius-red"></div>
+              <div className="w-2 h-10 bg-black"></div>
+              <div className="w-2 h-12 bg-black"></div>
             </div>
             <span className="text-lg font-bold text-edicius-navy tracking-wide">
-              EDICIUS GROUP OF COMPANIES
+              EDICIUS
             </span>
           </Link>
 
