@@ -16,10 +16,10 @@ import AdminDashboard from '@/pages/admin/AdminDashboard';
 import AdminCompanies from '@/pages/admin/AdminCompanies';
 import AdminProjects from '@/pages/admin/AdminProjects';
 import AdminProjectDetail from '@/pages/admin/AdminProjectDetail';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 // Layout components
 import PublicLayout from '@/components/layout/PublicLayout';
-import AdminLayout from '@/components/layout/AdminLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 const queryClient = new QueryClient({

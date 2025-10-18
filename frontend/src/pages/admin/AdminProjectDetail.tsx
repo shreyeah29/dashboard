@@ -1,560 +1,322 @@
-import { useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  ArrowLeft,
-  Upload, 
-  FileText, 
-  MessageSquare,
-  Plus,
-  Trash2,
-  Save,
-  Users,
-  Calendar,
-  Building2
-} from 'lucide-react';
-import { projectsApi, documentsApi, commentsApi } from '@/lib/api';
-import { formatDate, getStatusColor, getDocumentIcon, formatFileSize } from '@/lib/utils';
-import { Link } from 'react-router-dom';
-import { useDropzone } from 'react-dropzone';
-
-const projectSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  status: z.enum(['Planned', 'In Progress', 'Completed']),
-});
-
-const commentSchema = z.object({
-  text: z.string().min(1, 'Comment is required'),
-});
-
-type ProjectForm = z.infer<typeof projectSchema>;
-type CommentForm = z.infer<typeof commentSchema>;
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Edit, Trash2, Plus, Upload, MessageSquare, Calendar, User, FileText } from 'lucide-react';
 
 const AdminProjectDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const [isEditing, setIsEditing] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('overview');
 
-  const { data: project, isLoading } = useQuery({
-    queryKey: ['project', id],
-    queryFn: () => projectsApi.getBySlug(id!),
-    enabled: !!id,
-  });
-
-  const { data: comments } = useQuery({
-    queryKey: ['comments', project?._id],
-    queryFn: () => commentsApi.getByProject(project!._id),
-    enabled: !!project?._id,
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<ProjectForm> }) =>
-      projectsApi.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project', id] });
-      setIsEditing(false);
-    },
-  });
-
-  const commentMutation = useMutation({
-    mutationFn: ({ projectId, text }: { projectId: string; text: string }) =>
-      commentsApi.create(projectId, text),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', project?._id] });
-    },
-  });
-
-  const deleteCommentMutation = useMutation({
-    mutationFn: commentsApi.delete,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', project?._id] });
-    },
-  });
-
-  const {
-    register: registerProject,
-    handleSubmit: handleProjectSubmit,
-    formState: { errors: projectErrors },
-    reset: resetProject,
-  } = useForm<ProjectForm>({
-    resolver: zodResolver(projectSchema),
-    defaultValues: {
-      title: project?.title || '',
-      description: project?.description || '',
-      status: project?.status || 'Planned',
-    },
-  });
-
-  const {
-    register: registerComment,
-    handleSubmit: handleCommentSubmit,
-    formState: { errors: commentErrors },
-    reset: resetComment,
-  } = useForm<CommentForm>({
-    resolver: zodResolver(commentSchema),
-  });
-
-  const onDrop = async (acceptedFiles: File[]) => {
-    if (!project) return;
-    
-    setUploading(true);
-    try {
-      for (const file of acceptedFiles) {
-        await documentsApi.upload(project._id, file);
-      }
-      queryClient.invalidateQueries({ queryKey: ['project', id] });
-    } catch (error) {
-      console.error('Upload error:', error);
-    } finally {
-      setUploading(false);
-    }
+  const project = {
+    id: '1',
+    name: 'Smart City Infrastructure',
+    company: 'Edicius Infrastructure and Developers',
+    description: 'Developing sustainable smart city solutions with IoT integration and renewable energy systems. This project aims to create a comprehensive infrastructure platform that will serve as a model for future smart cities worldwide.',
+    status: 'In Progress',
+    progress: 65,
+    startDate: '2024-01-15',
+    endDate: '2024-12-31',
+    teamSize: 12,
+    priority: 'High',
+    budget: '$2.5M',
+    documents: 15,
+    comments: 8
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'application/pdf': ['.pdf'],
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'],
-      'application/vnd.ms-powerpoint': ['.ppt'],
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'],
-      'application/msword': ['.doc'],
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-    },
-  });
+  const milestones = [
+    { id: 1, title: 'Project Planning & Design', status: 'Completed', date: '2024-02-15' },
+    { id: 2, title: 'Infrastructure Setup', status: 'Completed', date: '2024-03-30' },
+    { id: 3, title: 'IoT Integration', status: 'In Progress', date: '2024-06-15' },
+    { id: 4, title: 'Testing & Validation', status: 'Planned', date: '2024-09-30' },
+    { id: 5, title: 'Deployment & Launch', status: 'Planned', date: '2024-12-31' }
+  ];
 
-  const onProjectSubmit = (data: ProjectForm) => {
-    if (project) {
-      updateMutation.mutate({ id: project._id, data });
-    }
-  };
+  const teamMembers = [
+    { name: 'John Smith', role: 'Project Manager', avatar: 'JS' },
+    { name: 'Sarah Johnson', role: 'Lead Developer', avatar: 'SJ' },
+    { name: 'Mike Chen', role: 'IoT Specialist', avatar: 'MC' },
+    { name: 'Emily Davis', role: 'UI/UX Designer', avatar: 'ED' }
+  ];
 
-  const onCommentSubmit = (data: CommentForm) => {
-    if (project) {
-      commentMutation.mutate({ projectId: project._id, text: data.text });
-      resetComment();
-    }
-  };
+  const recentComments = [
+    { author: 'John Smith', message: 'Great progress on the IoT integration. Keep up the excellent work!', time: '2 hours ago' },
+    { author: 'Sarah Johnson', message: 'The testing phase is ready to begin. All systems are green.', time: '4 hours ago' },
+    { author: 'Mike Chen', message: 'Need to review the sensor calibration data before proceeding.', time: '6 hours ago' }
+  ];
 
-  const handleDeleteComment = (commentId: string) => {
-    if (window.confirm('Are you sure you want to delete this comment?')) {
-      deleteCommentMutation.mutate(commentId);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-edicius-gold"></div>
-      </div>
-    );
-  }
-
-  if (!project) {
-    return (
-      <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Project not found</h1>
-        <Link to="/admin/projects">
-          <Button>Back to Projects</Button>
-        </Link>
-      </div>
-    );
-  }
-
-  const company = typeof project.companyId === 'object' ? project.companyId : null;
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: FileText },
+    { id: 'milestones', label: 'Milestones', icon: Calendar },
+    { id: 'team', label: 'Team', icon: User },
+    { id: 'documents', label: 'Documents', icon: FileText },
+    { id: 'comments', label: 'Comments', icon: MessageSquare }
+  ];
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="flex items-center space-x-4 mb-6">
-          <Link to="/admin/projects">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <div className="flex items-center space-x-4 mb-6">
             <Button variant="outline" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Projects
             </Button>
-          </Link>
-        </div>
-
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-edicius-navy mb-2">
-              {project.title}
-            </h1>
-            {company && (
-              <div className="flex items-center text-gray-600 mb-4">
-                <Building2 className="w-4 h-4 mr-2" />
-                <span>{company.name}</span>
+          </div>
+          
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{project.name}</h1>
+              <p className="text-gray-600 mb-4">{project.company}</p>
+              <div className="flex items-center space-x-4">
+                <Badge className="bg-blue-100 text-blue-800">{project.status}</Badge>
+                <Badge className="bg-red-100 text-red-800">{project.priority}</Badge>
+                <span className="text-sm text-gray-500">Budget: {project.budget}</span>
               </div>
-            )}
-            <div className="flex items-center space-x-4">
-              <Badge className={getStatusColor(project.status)}>
-                {project.status}
-              </Badge>
-              <span className="text-sm text-gray-500">
-                Created {formatDate(project.createdAt)}
-              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" className="border-red-200 text-red-600 hover:bg-red-50">
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+              <Button variant="outline" className="border-red-200 text-red-600 hover:bg-red-50">
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete
+              </Button>
             </div>
           </div>
-          <Button
-            onClick={() => {
-              setIsEditing(!isEditing);
-              if (!isEditing) {
-                resetProject({
-                  title: project.title,
-                  description: project.description,
-                  status: project.status,
-                });
-              }
-            }}
-          >
-            {isEditing ? 'Cancel' : 'Edit Project'}
-          </Button>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Project Details */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle>Project Details</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isEditing ? (
-                  <form onSubmit={handleProjectSubmit} className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Title
-                      </label>
-                      <Input
-                        {...registerProject('title')}
-                        placeholder="Project title"
-                      />
-                      {projectErrors.title && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {projectErrors.title.message}
-                        </p>
-                      )}
-                    </div>
+        {/* Progress Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-8"
+        >
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Project Progress</span>
+                <span className="text-sm text-gray-500">{project.progress}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div 
+                  className="bg-red-600 h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${project.progress}%` }}
+                ></div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Description
-                      </label>
-                      <Textarea
-                        {...registerProject('description')}
-                        placeholder="Project description"
-                        rows={6}
-                      />
-                      {projectErrors.description && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {projectErrors.description.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Status
-                      </label>
-                      <select
-                        {...registerProject('status')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-edicius-gold"
-                      >
-                        <option value="Planned">Planned</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <Button type="submit" disabled={updateMutation.isPending}>
-                        <Save className="w-4 h-4 mr-2" />
-                        Save Changes
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setIsEditing(false)}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </form>
-                ) : (
-                  <div>
-                    <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                      {project.description}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Team Members */}
-          {project.team && project.team.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Users className="w-5 h-5" />
-                    <span>Team Members</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {project.team.map((member, index) => (
-                      <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-10 h-10 bg-edicius-gold rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">
-                            {member.name.split(' ').map(n => n[0]).join('')}
-                          </span>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">{member.name}</p>
-                          <p className="text-sm text-gray-600">{member.role}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Documents */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <FileText className="w-5 h-5" />
-                  <span>Documents</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {/* Upload Area */}
-                <div
-                  {...getRootProps()}
-                  className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors duration-200 ${
-                    isDragActive
-                      ? 'border-edicius-gold bg-yellow-50'
-                      : 'border-gray-300 hover:border-edicius-gold hover:bg-gray-50'
+        {/* Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-8"
+        >
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+                    activeTab === tab.id
+                      ? 'border-red-500 text-red-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  <input {...getInputProps()} />
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  {uploading ? (
-                    <p className="text-gray-600">Uploading...</p>
-                  ) : isDragActive ? (
-                    <p className="text-edicius-gold">Drop files here...</p>
-                  ) : (
-                    <div>
-                      <p className="text-gray-600 mb-1">
-                        Drag & drop files here, or click to select
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        PDF, Images, PowerPoint, Word documents
-                      </p>
+                  <tab.icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+        </motion.div>
+
+        {/* Tab Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          {activeTab === 'overview' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Project Description</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 leading-relaxed">{project.description}</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Project Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Start Date</span>
+                      <span className="text-sm font-medium">{project.startDate}</span>
                     </div>
-                  )}
-                </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">End Date</span>
+                      <span className="text-sm font-medium">{project.endDate}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Team Size</span>
+                      <span className="text-sm font-medium">{project.teamSize} members</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Documents</span>
+                      <span className="text-sm font-medium">{project.documents} files</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Comments</span>
+                      <span className="text-sm font-medium">{project.comments} comments</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
 
-                {/* Documents List */}
-                {project.documents && project.documents.length > 0 && (
-                  <div className="mt-6 space-y-3">
-                    {project.documents.map((doc: any) => (
-                      <div
-                        key={doc._id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{getDocumentIcon(doc.type)}</span>
-                          <div>
-                            <p className="font-medium text-gray-900">{doc.name}</p>
-                            <p className="text-sm text-gray-500">
-                              {doc.type.toUpperCase()} • {formatFileSize(doc.size)}
-                            </p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteComment(doc._id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Comments */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
+          {activeTab === 'milestones' && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <MessageSquare className="w-5 h-5" />
-                  <span>Comments & Notes</span>
-                </CardTitle>
+                <CardTitle>Project Milestones</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Add Comment Form */}
-                <form onSubmit={handleCommentSubmit} className="mb-6">
-                  <div className="space-y-4">
-                    <div>
-                      <Textarea
-                        {...registerComment('text')}
-                        placeholder="Add a comment or note..."
-                        rows={3}
-                      />
-                      {commentErrors.text && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {commentErrors.text.message}
-                        </p>
-                      )}
-                    </div>
-                    <Button type="submit" disabled={commentMutation.isPending}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Comment
-                    </Button>
-                  </div>
-                </form>
-
-                {/* Comments List */}
-                {comments && comments.length > 0 ? (
-                  <div className="space-y-4">
-                    {comments.map((comment) => (
-                      <div key={comment._id} className="border-l-4 border-edicius-gold pl-4 py-2">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium text-gray-900">
-                            {comment.author === 'admin' ? 'Admin' : 'System'}
-                            {comment.author === 'admin' && (
-                              <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                (internal note)
-                              </span>
-                            )}
-                          </span>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xs text-gray-500">
-                              {formatDate(comment.createdAt)}
-                            </span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteComment(comment._id)}
-                              className="text-red-600 hover:text-red-700 p-1"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </div>
-                        <p className="text-gray-700">{comment.text}</p>
+                <div className="space-y-4">
+                  {milestones.map((milestone, index) => (
+                    <motion.div
+                      key={milestone.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg"
+                    >
+                      <div className={`w-3 h-3 rounded-full ${
+                        milestone.status === 'Completed' ? 'bg-green-500' :
+                        milestone.status === 'In Progress' ? 'bg-blue-500' : 'bg-gray-300'
+                      }`}></div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900">{milestone.title}</h4>
+                        <p className="text-sm text-gray-600">Due: {milestone.date}</p>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">No comments yet</p>
-                  </div>
-                )}
+                      <Badge className={
+                        milestone.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                        milestone.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                      }>
+                        {milestone.status}
+                      </Badge>
+                    </motion.div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
-          </motion.div>
-        </div>
+          )}
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Project Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
+          {activeTab === 'team' && (
             <Card>
               <CardHeader>
-                <CardTitle>Project Information</CardTitle>
+                <CardTitle>Team Members</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Status</label>
-                  <div className="mt-1">
-                    <Badge className={getStatusColor(project.status)}>
-                      {project.status}
-                    </Badge>
-                  </div>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {teamMembers.map((member, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg"
+                    >
+                      <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-medium text-red-600">{member.avatar}</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">{member.name}</h4>
+                        <p className="text-sm text-gray-600">{member.role}</p>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-                
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Created</label>
-                  <p className="text-sm text-gray-900">{formatDate(project.createdAt)}</p>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Last Updated</label>
-                  <p className="text-sm text-gray-900">{formatDate(project.updatedAt)}</p>
-                </div>
-
-                {project.team && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Team Size</label>
-                    <p className="text-sm text-gray-900">{project.team.length} members</p>
-                  </div>
-                )}
-
-                {project.documents && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Documents</label>
-                    <p className="text-sm text-gray-900">{project.documents.length} files</p>
-                  </div>
-                )}
               </CardContent>
             </Card>
-          </motion.div>
-        </div>
+          )}
+
+          {activeTab === 'documents' && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Project Documents</CardTitle>
+                  <Button className="bg-red-600 hover:bg-red-700">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Document management functionality will be implemented here.</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeTab === 'comments' && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Project Comments</CardTitle>
+                  <Button className="bg-red-600 hover:bg-red-700">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Comment
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentComments.map((comment, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="p-4 border border-gray-200 rounded-lg"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                          <span className="text-xs font-medium text-red-600">
+                            {comment.author.split(' ').map(n => n[0]).join('')}
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="font-medium text-gray-900">{comment.author}</h4>
+                            <span className="text-xs text-gray-500">{comment.time}</span>
+                          </div>
+                          <p className="text-gray-700">{comment.message}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </motion.div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Building2, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import Logo from '@/components/Logo';
+import HiddenAdminTrigger from '@/components/admin/HiddenAdminTrigger';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -82,18 +83,14 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                to="/admin/login"
-                className="text-sm text-gray-600 hover:text-edicius-gold transition-colors duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Admin
-              </Link>
             </div>
           </motion.div>
         )}
       </div>
     </motion.header>
+    
+    {/* Hidden Admin Trigger */}
+    <HiddenAdminTrigger />
   );
 };
 

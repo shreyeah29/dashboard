@@ -1,272 +1,275 @@
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Building2, 
-  FolderOpen, 
-  FileText, 
-  TrendingUp,
-  Calendar,
-  Users,
-  Activity
-} from 'lucide-react';
-import { analyticsApi } from '@/lib/api';
-import { formatDate } from '@/lib/utils';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell
-} from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Building2, Users, FileText, TrendingUp, Plus, Edit, Trash2, Clock, Activity, Upload, Eye } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const AdminDashboard = () => {
-  const { data: analytics, isLoading } = useQuery({
-    queryKey: ['analytics'],
-    queryFn: analyticsApi.getSummary,
-  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Mock data for demonstration
+  const stats = [
+    { title: 'Total Companies', value: '8', icon: Building2, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
+    { title: 'Active Projects', value: '24', icon: FileText, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
+    { title: 'Team Members', value: '156', icon: Users, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
+    { title: 'Documents', value: '89', icon: FileText, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
+  ];
+
+  const recentActivities = [
+    { action: 'New project created', company: 'Edicius Enterprises', time: '2 hours ago', type: 'project' },
+    { action: 'Document uploaded', company: 'Edicius Infrastructure', time: '4 hours ago', type: 'document' },
+    { action: 'Team member added', company: 'Edicius Innovations', time: '6 hours ago', type: 'team' },
+    { action: 'Project updated', company: 'Edicius Consumer Products', time: '8 hours ago', type: 'project' },
+    { action: 'Analytics report generated', company: 'Edicius Mining', time: '10 hours ago', type: 'analytics' },
+  ];
+
+  const chartData = [
+    { name: 'Enterprises', projects: 8, documents: 12 },
+    { name: 'Infrastructure', projects: 6, documents: 15 },
+    { name: 'Innovations', projects: 12, documents: 8 },
+    { name: 'Consumer Products', projects: 7, documents: 10 },
+    { name: 'Mining', projects: 5, documents: 6 },
+    { name: 'Hotels', projects: 2, documents: 4 },
+  ];
+
+  const pieData = [
+    { name: 'Legal', value: 25, color: '#DC2626' },
+    { name: 'Financial', value: 30, color: '#C9A227' },
+    { name: 'Planning', value: 20, color: '#0B1F3A' },
+    { name: 'Technical', value: 25, color: '#64748B' },
+  ];
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-edicius-gold"></div>
+      <div className="min-h-screen bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-edicius-gold/30 border-t-edicius-gold rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white/70">Loading Dashboard...</p>
+        </div>
       </div>
     );
   }
 
-  const COLORS = ['#C9A227', '#0B1F3A', '#3B82F6', '#10B981', '#F59E0B'];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6
-      }
-    }
-  };
-
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <h1 className="text-3xl font-bold text-edicius-navy">Dashboard</h1>
-        <p className="text-gray-600 mt-2">
-          Welcome to the Edicius Group admin portal. Here's an overview of your data.
-        </p>
-      </motion.div>
-
-      {/* Stats Cards */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-      >
-        <motion.div variants={itemVariants}>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Companies</p>
-                  <p className="text-3xl font-bold text-edicius-navy">
-                    {analytics?.companyCount || 0}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Building2 className="w-6 h-6 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Projects</p>
-                  <p className="text-3xl font-bold text-edicius-navy">
-                    {analytics?.projectCount || 0}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <FolderOpen className="w-6 h-6 text-green-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Documents This Month</p>
-                  <p className="text-3xl font-bold text-edicius-navy">
-                    {analytics?.docCountThisMonth || 0}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-yellow-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Recent Activity</p>
-                  <p className="text-3xl font-bold text-edicius-navy">
-                    {analytics?.recentActivity?.length || 0}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-purple-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </motion.div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Project Status Chart */}
+    <div className="min-h-screen bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
         >
-          <Card>
+          <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
+          <p className="text-white/70">Manage your Edicius Group companies and projects</p>
+        </motion.div>
+
+        {/* Stats Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+        >
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.title}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+            >
+              <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20 hover:bg-white/15 transition-all duration-300 hover:shadow-2xl hover:shadow-edicius-gold/20">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white/70">{stat.title}</p>
+                      <p className="text-2xl font-bold text-white">{stat.value}</p>
+                    </div>
+                    <div className={`p-3 rounded-full ${stat.bgColor} border border-edicius-gold/30`}>
+                      <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Charts Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
+        >
+          {/* Projects by Company Chart */}
+          <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
             <CardHeader>
-              <CardTitle>Project Status Distribution</CardTitle>
+              <CardTitle className="text-white">Projects by Company</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={analytics?.projectStatusStats || []}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="_id" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#C9A227" />
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#C9A227" opacity={0.3} />
+                  <XAxis dataKey="name" stroke="#C9A227" />
+                  <YAxis stroke="#C9A227" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#0B1F3A', 
+                      border: '1px solid #C9A227',
+                      borderRadius: '8px',
+                      color: '#C9A227'
+                    }} 
+                  />
+                  <Bar dataKey="projects" fill="#C9A227" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </motion.div>
 
-        {/* Document Types Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <Card>
+          {/* Document Types Chart */}
+          <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
             <CardHeader>
-              <CardTitle>Document Types</CardTitle>
+              <CardTitle className="text-white">Document Types</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={analytics?.documentTypeStats || []}
+                    data={pieData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ _id, percent }) => `${_id} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
                     fill="#8884d8"
-                    dataKey="count"
+                    dataKey="value"
                   >
-                    {(analytics?.documentTypeStats || []).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#0B1F3A', 
+                      border: '1px solid #C9A227',
+                      borderRadius: '8px',
+                      color: '#C9A227'
+                    }} 
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
         </motion.div>
-      </div>
 
-      {/* Recent Activity */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Activity className="w-5 h-5" />
-              <span>Recent Activity</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {analytics?.recentActivity && analytics.recentActivity.length > 0 ? (
-              <div className="space-y-4">
-                {analytics.recentActivity.slice(0, 10).map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-8 h-8 bg-edicius-gold rounded-full flex items-center justify-center flex-shrink-0">
-                      {activity.type === 'document_upload' ? (
-                        <FileText className="w-4 h-4 text-white" />
-                      ) : (
-                        <Users className="w-4 h-4 text-white" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-900">{activity.description}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {formatDate(activity.timestamp)}
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="text-xs">
-                      {activity.type.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">No recent activity</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </motion.div>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Recent Activities */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="lg:col-span-2"
+          >
+            <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between text-white">
+                  <span>Recent Activities</span>
+                  <Badge variant="outline" className="text-edicius-gold border-edicius-gold">
+                    Live
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivities.map((activity, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
+                      className="flex items-center space-x-4 p-3 rounded-lg hover:bg-white/5 transition-colors border border-edicius-gold/10"
+                    >
+                      <div className={`w-2 h-2 rounded-full ${
+                        activity.type === 'project' ? 'bg-edicius-gold' :
+                        activity.type === 'document' ? 'bg-blue-500' :
+                        activity.type === 'team' ? 'bg-green-500' :
+                        'bg-purple-500'
+                      }`}></div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-white">{activity.action}</p>
+                        <p className="text-xs text-white/60">{activity.company}</p>
+                      </div>
+                      <span className="text-xs text-white/50">{activity.time}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
+              <CardHeader>
+                <CardTitle className="text-white">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                  >
+                    <Plus className="w-5 h-5 text-edicius-gold" />
+                    <span className="text-sm font-medium text-white">Add New Company</span>
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                  >
+                    <FileText className="w-5 h-5 text-edicius-gold" />
+                    <span className="text-sm font-medium text-white">Create Project</span>
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                  >
+                    <Upload className="w-5 h-5 text-edicius-gold" />
+                    <span className="text-sm font-medium text-white">Upload Document</span>
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                  >
+                    <Eye className="w-5 h-5 text-edicius-gold" />
+                    <span className="text-sm font-medium text-white">View Analytics</span>
+                  </motion.button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 };
