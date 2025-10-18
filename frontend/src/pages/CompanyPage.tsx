@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { 
   ArrowLeft, Building2, Calendar, Users, ArrowRight, Globe, CheckCircle,
   Rocket, Briefcase, Bot, Pickaxe, Leaf, FlaskConical,
-  Film, Smartphone, PartyPopper, Handshake, TrendingUp, Target,
+  Film, Smartphone, PartyPopper, Users2, TrendingUp, Target,
   Truck, Ship, Globe2, Wrench, Hammer, HardHat,
   Bed, UtensilsCrossed, MapPin, Home, Building, Zap
 } from 'lucide-react';
@@ -155,7 +155,7 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Business Development",
           description: "Strategic business development and partnership opportunities across multiple sectors.",
-          icon: Handshake
+          icon: Users2
         },
         {
           title: "Investment Management",
@@ -300,7 +300,7 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Strategic Partnerships",
           description: "Strategic partnerships and collaboration opportunities for growth.",
-          icon: Handshake
+          icon: Users2
         }
       ],
       highlights: [
@@ -487,6 +487,7 @@ const CompanyPage = () => {
                 </div>
               </motion.div>
             </div>
+          </div>
         </div>
       </section>
 
