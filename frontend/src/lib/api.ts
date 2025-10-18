@@ -94,6 +94,10 @@ export const projectsApi = {
     return response.data;
   },
   
+  delete: async (projectId: string): Promise<void> => {
+    await api.delete(`/projects/${projectId}`);
+  },
+  
   update: async (id: string, data: Partial<Project>): Promise<Project> => {
     const response = await api.patch(`/projects/${id}`, data);
     return response.data;

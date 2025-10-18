@@ -203,11 +203,22 @@ const AdminProjects = () => {
     }
   };
 
-  const handleDeleteProject = (projectId: string) => {
-    toast({
-      title: "Project Deleted",
-      description: "Project has been successfully deleted.",
-    });
+  const handleDeleteProject = async (projectId: string) => {
+    try {
+      await projectsApi.delete(projectId);
+      toast({
+        title: "Project Deleted",
+        description: "Project has been successfully deleted.",
+      });
+      loadData(); // Refresh the projects list
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast({
+        title: "Delete Failed",
+        description: "Failed to delete project. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleEditProject = (project: any) => {
