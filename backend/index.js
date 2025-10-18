@@ -86,7 +86,7 @@ app.get('/api/v1/companies', (req, res) => {
       name: 'Edicius Enterprises Private Limited',
       slug: 'edicius-enterprises-private-limited',
       overview: 'Edicius Enterprises serves as our multi-sector B2B venture arm, focusing on industrial innovation and strategic business partnerships. We develop and manufacture industrial goods, provide enterprise solutions, and create value through cross-industry collaborations.',
-      heroImage: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      heroImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
@@ -122,7 +122,7 @@ app.get('/api/v1/companies', (req, res) => {
       name: 'Edicius Productions and Entertainment Private Limited',
       slug: 'edicius-productions-and-entertainment-private-limited',
       overview: 'Edicius Productions and Entertainment creates compelling digital content, film productions, and immersive brand experiences that captivate audiences worldwide. We specialize in creative storytelling, digital media production, and innovative entertainment solutions.',
-      heroImage: 'https://images.unsplash.com/photo-1489599804151-4b0b2b2b2b2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      heroImage: 'https://images.unsplash.com/photo-1574267432644-f02b5ab7e2a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
@@ -140,7 +140,7 @@ app.get('/api/v1/companies', (req, res) => {
       name: 'Edicius Mining and Minerals Private Limited',
       slug: 'edicius-mining-and-minerals-private-limited',
       overview: 'Edicius Mining and Minerals operates with a commitment to ethical resource extraction and environmental stewardship. We employ advanced mining technologies and sustainable practices to optimize mineral recovery while minimizing environmental impact.',
-      heroImage: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      heroImage: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
