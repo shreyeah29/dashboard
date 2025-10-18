@@ -20,3 +20,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )
 // Force deployment trigger
+// Force deployment for both Vercel and Render

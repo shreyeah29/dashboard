@@ -766,3 +766,4 @@ const startServer = async () => {
 startServer().catch(console.error);
 
 module.exports = app;
+// Force deployment for both Vercel and Render
