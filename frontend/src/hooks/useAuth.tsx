@@ -46,6 +46,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('Attempting login...');
       const result = await authApi.login({ password });
       console.log('Login API result:', result);
+      
+      // Store token in localStorage as fallback for cross-origin issues
+      if (result.token) {
+        localStorage.setItem('adminToken', result.token);
+        console.log('Token stored in localStorage:', result.token);
+      }
+      
       await checkAuth();
       console.log('Auth check completed');
     } catch (error) {
@@ -57,6 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       await authApi.logout();
+      localStorage.removeItem('adminToken');
       setUser(null);
     } catch (error) {
       console.error('Logout error:', error);

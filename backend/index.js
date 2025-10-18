@@ -41,6 +41,9 @@ const corsOptions = {
       'http://localhost:3000'
     ];
     
+    console.log('CORS request from origin:', origin);
+    console.log('Allowed origins:', allowedOrigins);
+    
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
@@ -48,13 +51,13 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
-      console.log('Allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie']
 };
 
 app.use(cors(corsOptions));
@@ -182,7 +185,8 @@ app.post('/api/v1/auth/admin/login', (req, res) => {
     res.json({ 
       success: true, 
       message: 'Login successful',
-      user: { isAdmin: true, role: 'admin' }
+      user: { isAdmin: true, role: 'admin' },
+      token: token // Also send token in response for cross-origin issues
     });
   } else {
     console.log('Login failed - invalid password');
@@ -195,9 +199,15 @@ app.post('/api/v1/auth/admin/login', (req, res) => {
 
 // Auth verify endpoint
 app.get('/api/v1/auth/admin/verify', (req, res) => {
-  const token = req.cookies.adminToken;
+  const cookieToken = req.cookies.adminToken;
+  const headerToken = req.headers.authorization?.replace('Bearer ', '');
+  const token = cookieToken || headerToken;
+  
   console.log('Verify endpoint called, cookies:', req.cookies);
-  console.log('Admin token:', token);
+  console.log('Authorization header:', req.headers.authorization);
+  console.log('Cookie token:', cookieToken);
+  console.log('Header token:', headerToken);
+  console.log('Using token:', token);
   
   if (token && token.startsWith('admin-session-')) {
     console.log('Token is valid, returning success');
