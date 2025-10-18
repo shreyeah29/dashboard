@@ -7,10 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { Building2, ArrowRight, Star, Users, Globe } from 'lucide-react';
 
 const Home = () => {
-  const { data: companies, isLoading } = useQuery({
+  const { data: companies, isLoading, error } = useQuery({
     queryKey: ['companies'],
     queryFn: companiesApi.getAll,
   });
+
+  // Debug logging
+  console.log('Companies data:', companies);
+  console.log('Is loading:', isLoading);
+  console.log('Error:', error);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -101,50 +106,61 @@ const Home = () => {
             </p>
           </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-          >
-            {companies?.map((company, index) => (
-              <motion.div key={company._id} variants={itemVariants}>
-                <Link to={`/company/${company.slug}`}>
-                  <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
-                    <div className="relative overflow-hidden rounded-t-lg">
-                      {company.heroImage ? (
-                        <img
-                          src={company.heroImage}
-                          alt={company.name}
-                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-48 bg-gradient-to-br from-edicius-navy to-edicius-gold flex items-center justify-center">
-                          <Building2 className="w-16 h-16 text-white" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold text-edicius-navy mb-3 group-hover:text-edicius-gold transition-colors duration-200">
-                        {company.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                        {company.overview}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="text-xs">
-                          Learn More
-                        </Badge>
-                        <ArrowRight className="w-4 h-4 text-edicius-gold group-hover:translate-x-1 transition-transform duration-200" />
+          {error ? (
+            <div className="text-center py-12">
+              <p className="text-red-600 text-lg">Error loading companies: {error.message}</p>
+            </div>
+          ) : companies && companies.length > 0 ? (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            >
+              {companies.map((company, index) => (
+                <motion.div key={company._id} variants={itemVariants}>
+                  <Link to={`/company/${company.slug}`}>
+                    <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
+                      <div className="relative overflow-hidden rounded-t-lg">
+                        {company.heroImage ? (
+                          <img
+                            src={company.heroImage}
+                            alt={company.name}
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-48 bg-gradient-to-br from-edicius-navy to-edicius-gold flex items-center justify-center">
+                            <Building2 className="w-16 h-16 text-white" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold text-edicius-navy mb-3 group-hover:text-edicius-gold transition-colors duration-200">
+                          {company.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                          {company.overview}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <Badge variant="outline" className="text-xs">
+                            Learn More
+                          </Badge>
+                          <ArrowRight className="w-4 h-4 text-edicius-gold group-hover:translate-x-1 transition-transform duration-200" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">No companies found</p>
+              <p className="text-gray-500 text-sm mt-2">Companies data: {JSON.stringify(companies)}</p>
+            </div>
+          )}
         </div>
       </section>
 
