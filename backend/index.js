@@ -375,15 +375,15 @@ app.get('/api/v1/projects/companies/:slug/projects', async (req, res) => {
 app.get('/api/v1/projects/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
-    
+
     const project = await Project.findOne({ slug })
       .populate('companyId', 'name slug')
       .populate('documents');
-    
+
     if (!project) {
       return res.status(404).json({ error: 'Project not found' });
     }
-    
+
     res.json(project);
   } catch (error) {
     console.error('Error fetching project:', error);
@@ -391,21 +391,65 @@ app.get('/api/v1/projects/:slug', async (req, res) => {
   }
 });
 
+// Delete project
+app.delete('/api/v1/projects/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the project
+    const project = await Project.findById(id).populate('documents');
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    // Delete associated documents and their files
+    for (const document of project.documents) {
+      try {
+        // Delete the local file
+        await deleteLocalFile(document.s3Key);
+        // Delete the document record
+        await Document.findByIdAndDelete(document._id);
+      } catch (error) {
+        console.error('Error deleting document:', document._id, error);
+      }
+    }
+
+    // Delete the project
+    await Project.findByIdAndDelete(id);
+
+    res.json({
+      success: true,
+      message: 'Project deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting project:', error);
+    res.status(500).json({ error: 'Failed to delete project' });
+  }
+});
+
 // Document upload endpoints
 app.post('/api/v1/projects/:projectId/documents', upload.single('document'), async (req, res) => {
   try {
+    console.log('Document upload request:', req.params, req.body, req.file);
+    
     const { projectId } = req.params;
     const { tags } = req.body;
     
     if (!req.file) {
+      console.log('No file uploaded');
       return res.status(400).json({ error: 'No file uploaded' });
     }
+    
+    console.log('File uploaded:', req.file);
     
     // Check if project exists
     const project = await Project.findById(projectId);
     if (!project) {
+      console.log('Project not found:', projectId);
       return res.status(404).json({ error: 'Project not found' });
     }
+    
+    console.log('Project found:', project.name);
     
     // Create document record
     const document = new Document({
@@ -421,11 +465,14 @@ app.post('/api/v1/projects/:projectId/documents', upload.single('document'), asy
       uploadedBy: 'admin'
     });
     
+    console.log('Creating document:', document);
     const savedDocument = await document.save();
+    console.log('Document saved:', savedDocument._id);
     
     // Add document to project
     project.documents.push(savedDocument._id);
     await project.save();
+    console.log('Document added to project');
     
     res.status(201).json({
       success: true,
@@ -434,7 +481,7 @@ app.post('/api/v1/projects/:projectId/documents', upload.single('document'), asy
     });
   } catch (error) {
     console.error('Error uploading document:', error);
-    res.status(500).json({ error: 'Failed to upload document' });
+    res.status(500).json({ error: 'Failed to upload document', details: error.message });
   }
 });
 
