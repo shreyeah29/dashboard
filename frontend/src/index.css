@@ -124,7 +124,7 @@
 
 /* Gradient backgrounds */
 .gradient-bg {
-  background: linear-gradient(135deg, #0B1F3A 0%, #1E40AF 100%);
+  background: linear-gradient(135deg, #0B1F3A 0%, #000000 100%);
 }
 
 .gradient-gold {
