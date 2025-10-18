@@ -154,7 +154,7 @@ const CompanyPage = () => {
                         {project.bannerImage ? (
                           <img
                             src={project.bannerImage}
-                            alt={project.title}
+                            alt={project.name}
                             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
@@ -170,7 +170,7 @@ const CompanyPage = () => {
                       </div>
                       <CardContent className="p-6">
                         <h3 className="text-xl font-bold text-edicius-navy mb-3 group-hover:text-edicius-gold transition-colors duration-200">
-                          {project.title}
+                          {project.name}
                         </h3>
                         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                           {project.description}
@@ -179,7 +179,7 @@ const CompanyPage = () => {
                         <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                           <div className="flex items-center">
                             <Users className="w-4 h-4 mr-1" />
-                            <span>{project.team.length} members</span>
+                            <span>{project.teamSize || 0} members</span>
                           </div>
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 mr-1" />
