@@ -111,34 +111,34 @@ const AdminDashboard = () => {
           className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
         >
           {/* Projects by Company Chart */}
-          <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
+          <Card className="bg-white border border-gray-200">
             <CardHeader>
-              <CardTitle className="text-white">Projects by Company</CardTitle>
+              <CardTitle className="text-black">Projects by Company</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#C9A227" opacity={0.3} />
-                  <XAxis dataKey="name" stroke="#C9A227" />
-                  <YAxis stroke="#C9A227" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#6B7280" opacity={0.3} />
+                  <XAxis dataKey="name" stroke="#374151" />
+                  <YAxis stroke="#374151" />
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#0B1F3A', 
-                      border: '1px solid #C9A227',
+                      backgroundColor: '#FFFFFF', 
+                      border: '1px solid #D1D5DB',
                       borderRadius: '8px',
-                      color: '#C9A227'
+                      color: '#374151'
                     }} 
                   />
-                  <Bar dataKey="projects" fill="#C9A227" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="projects" fill="#000000" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
           {/* Document Types Chart */}
-          <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
+          <Card className="bg-white border border-gray-200">
             <CardHeader>
-              <CardTitle className="text-white">Document Types</CardTitle>
+              <CardTitle className="text-black">Document Types</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -180,11 +180,11 @@ const AdminDashboard = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="lg:col-span-2"
           >
-            <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
+            <Card className="bg-white border border-gray-200">
               <CardHeader>
-                <CardTitle className="flex items-center justify-between text-white">
+                <CardTitle className="flex items-center justify-between text-black">
                   <span>Recent Activities</span>
-                  <Badge variant="outline" className="text-edicius-gold border-edicius-gold">
+                  <Badge variant="outline" className="text-black border-black">
                     Live
                   </Badge>
                 </CardTitle>
@@ -197,19 +197,19 @@ const AdminDashboard = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                      className="flex items-center space-x-4 p-3 rounded-lg hover:bg-white/5 transition-colors border border-edicius-gold/10"
+                      className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200"
                     >
                       <div className={`w-2 h-2 rounded-full ${
-                        activity.type === 'project' ? 'bg-edicius-gold' :
+                        activity.type === 'project' ? 'bg-black' :
                         activity.type === 'document' ? 'bg-blue-500' :
                         activity.type === 'team' ? 'bg-green-500' :
                         'bg-purple-500'
                       }`}></div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-white">{activity.action}</p>
-                        <p className="text-xs text-white/60">{activity.company}</p>
+                        <p className="text-sm font-medium text-black">{activity.action}</p>
+                        <p className="text-xs text-gray-600">{activity.company}</p>
                       </div>
-                      <span className="text-xs text-white/50">{activity.time}</span>
+                      <span className="text-xs text-gray-500">{activity.time}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -223,46 +223,46 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20">
+            <Card className="bg-white border border-gray-200">
               <CardHeader>
-                <CardTitle className="text-white">Quick Actions</CardTitle>
+                <CardTitle className="text-black">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
                   >
-                    <Plus className="w-5 h-5 text-edicius-gold" />
-                    <span className="text-sm font-medium text-white">Add New Company</span>
+                    <Plus className="w-5 h-5 text-black" />
+                    <span className="text-sm font-medium text-black">Add New Company</span>
                   </motion.button>
                   
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
                   >
-                    <FileText className="w-5 h-5 text-edicius-gold" />
-                    <span className="text-sm font-medium text-white">Create Project</span>
+                    <FileText className="w-5 h-5 text-black" />
+                    <span className="text-sm font-medium text-black">Create Project</span>
                   </motion.button>
                   
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
                   >
-                    <Upload className="w-5 h-5 text-edicius-gold" />
-                    <span className="text-sm font-medium text-white">Upload Document</span>
+                    <Upload className="w-5 h-5 text-black" />
+                    <span className="text-sm font-medium text-black">Upload Document</span>
                   </motion.button>
                   
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-edicius-gold/30 hover:bg-edicius-gold/10 transition-all duration-200"
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
                   >
-                    <Eye className="w-5 h-5 text-edicius-gold" />
-                    <span className="text-sm font-medium text-white">View Analytics</span>
+                    <Eye className="w-5 h-5 text-black" />
+                    <span className="text-sm font-medium text-black">View Analytics</span>
                   </motion.button>
                 </div>
               </CardContent>
