@@ -83,73 +83,73 @@ app.get('/api/v1/companies', (req, res) => {
   res.json([
     {
       _id: '1',
-      name: 'Edicius Consumer Products',
-      slug: 'edicius-consumer-products',
-      overview: 'Edicius Consumer Products leads the innovation in smart consumer goods, personal care, and lifestyle solutions. We combine cutting-edge technology with user-centric design to create products that enhance daily life.',
-      heroImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      _id: '2',
-      name: 'Edicius Infrastructure and Developers',
-      slug: 'edicius-infrastructure-and-developers',
-      overview: 'Edicius Infrastructure and Developers specializes in creating sustainable, smart infrastructure solutions for modern cities. We design and develop eco-friendly construction projects, smart buildings, and integrated urban planning solutions.',
-      heroImage: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      _id: '3',
-      name: 'Edicius Mining and Minerals',
-      slug: 'edicius-mining-and-minerals',
-      overview: 'Edicius Mining and Minerals operates with a commitment to ethical resource extraction and environmental stewardship. We employ advanced mining technologies and sustainable practices to optimize mineral recovery while minimizing environmental impact.',
-      heroImage: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      _id: '4',
-      name: 'Edicius Hotels and Hospitality',
-      slug: 'edicius-hotels-and-hospitality',
-      overview: 'Edicius Hotels and Hospitality creates exceptional travel experiences through luxury accommodations, sustainable tourism practices, and authentic cultural immersion. We operate premium hotels and resorts that blend modern comfort with local heritage.',
-      heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      _id: '5',
-      name: 'Edicius Enterprises',
-      slug: 'edicius-enterprises',
+      name: 'Edicius Enterprises Private Limited',
+      slug: 'edicius-enterprises-private-limited',
       overview: 'Edicius Enterprises serves as our multi-sector B2B venture arm, focusing on industrial innovation and strategic business partnerships. We develop and manufacture industrial goods, provide enterprise solutions, and create value through cross-industry collaborations.',
       heroImage: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
-      _id: '6',
-      name: 'Edicius Imports and Exports',
-      slug: 'edicius-imports-and-exports',
-      overview: 'Edicius Imports and Exports facilitates seamless global commerce through advanced logistics, supply chain optimization, and international trade solutions. We connect markets worldwide, ensuring efficient movement of goods while maintaining quality standards.',
-      heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      _id: '7',
-      name: 'Edicius Innovations and Consulting',
-      slug: 'edicius-innovations-and-consulting',
+      _id: '2',
+      name: 'Edicius Innovations and Consulting Private Limited',
+      slug: 'edicius-innovations-and-consulting-private-limited',
       overview: 'Edicius Innovations and Consulting drives digital transformation through cutting-edge technology solutions, AI implementation, and strategic consulting services. We help organizations leverage emerging technologies to optimize operations and achieve sustainable growth.',
       heroImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
-      _id: '8',
-      name: 'Edicius Productions and Entertainment',
-      slug: 'edicius-productions-and-entertainment',
+      _id: '3',
+      name: 'Edicius Infrastructure and Developers Private Limited',
+      slug: 'edicius-infrastructure-and-developers-private-limited',
+      overview: 'Edicius Infrastructure and Developers specializes in creating sustainable, smart infrastructure solutions for modern cities. We design and develop eco-friendly construction projects, smart buildings, and integrated urban planning solutions.',
+      heroImage: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      _id: '4',
+      name: 'Edicius Imports and Exports Private Limited',
+      slug: 'edicius-imports-and-exports-private-limited',
+      overview: 'Edicius Imports and Exports facilitates seamless global commerce through advanced logistics, supply chain optimization, and international trade solutions. We connect markets worldwide, ensuring efficient movement of goods while maintaining quality standards.',
+      heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      _id: '5',
+      name: 'Edicius Productions and Entertainment Private Limited',
+      slug: 'edicius-productions-and-entertainment-private-limited',
       overview: 'Edicius Productions and Entertainment creates compelling digital content, film productions, and immersive brand experiences that captivate audiences worldwide. We specialize in creative storytelling, digital media production, and innovative entertainment solutions.',
       heroImage: 'https://images.unsplash.com/photo-1489599804151-4b0b2b2b2b2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      _id: '6',
+      name: 'Edicius Consumer Products Private Limited',
+      slug: 'edicius-consumer-products-private-limited',
+      overview: 'Edicius Consumer Products leads the innovation in smart consumer goods, personal care, and lifestyle solutions. We combine cutting-edge technology with user-centric design to create products that enhance daily life.',
+      heroImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      _id: '7',
+      name: 'Edicius Mining and Minerals Private Limited',
+      slug: 'edicius-mining-and-minerals-private-limited',
+      overview: 'Edicius Mining and Minerals operates with a commitment to ethical resource extraction and environmental stewardship. We employ advanced mining technologies and sustainable practices to optimize mineral recovery while minimizing environmental impact.',
+      heroImage: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      _id: '8',
+      name: 'Edicius Hotels and Hospitality Private Limited',
+      slug: 'edicius-hotels-and-hospitality-private-limited',
+      overview: 'Edicius Hotels and Hospitality creates exceptional travel experiences through luxury accommodations, sustainable tourism practices, and authentic cultural immersion. We operate premium hotels and resorts that blend modern comfort with local heritage.',
+      heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
