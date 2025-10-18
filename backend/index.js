@@ -38,6 +38,7 @@ const corsOptions = {
     const allowedOrigins = [
       process.env.CLIENT_URL || 'http://localhost:3000',
       'https://dashboard-frontend-six-nu.vercel.app',
+      'https://dashboard-frontend-fe95ng0cq-legal-links-projects-bc18cb27.vercel.app',
       'http://localhost:3000'
     ];
     
@@ -47,9 +48,21 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
+    // Check exact match first
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
-    } else {
+    } 
+    // Allow any Vercel deployment URL for this project
+    else if (origin.includes('dashboard-frontend') && origin.includes('vercel.app')) {
+      console.log('Allowing Vercel deployment URL:', origin);
+      callback(null, true);
+    }
+    // Allow any subdomain of vercel.app for this project
+    else if (origin.includes('legal-links-projects') && origin.includes('vercel.app')) {
+      console.log('Allowing Vercel project URL:', origin);
+      callback(null, true);
+    }
+    else {
       console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
