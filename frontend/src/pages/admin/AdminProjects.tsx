@@ -170,7 +170,7 @@ const AdminProjects = () => {
     formData.append('tags', tags);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/projects/${selectedProject._id}/documents`, {
+      const response = await fetch(`https://edicius-dashboard.onrender.com/api/v1/projects/${selectedProject._id}/documents`, {
         method: 'POST',
         body: formData,
         headers: {
