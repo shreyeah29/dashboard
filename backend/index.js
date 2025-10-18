@@ -294,10 +294,13 @@ app.get('/api/v1/projects', async (req, res) => {
       .sort({ createdAt: -1 });
 
     // Transform the data to include company name for frontend compatibility
-    const transformedProjects = projects.map(project => ({
-      ...project.toObject(),
-      company: project.companyId ? project.companyId.name : 'Unknown Company'
-    }));
+    const transformedProjects = projects.map(project => {
+      const projectObj = project.toObject();
+      return {
+        ...projectObj,
+        company: projectObj.companyId && projectObj.companyId.name ? projectObj.companyId.name : 'Unknown Company'
+      };
+    });
 
     res.json(transformedProjects);
   } catch (error) {
