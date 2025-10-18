@@ -119,13 +119,13 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-white">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-2xl border-r border-gray-200">
           <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
             <Logo width={120} height={40} />
             <button
               onClick={() => setSidebarOpen(false)}
-              className="text-gray-600 hover:text-edicius-red transition-colors"
+              className="text-gray-600 hover:text-black transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -138,8 +138,8 @@ const AdminLayout = () => {
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
-                    ? 'bg-edicius-red/10 text-edicius-red border-r-2 border-edicius-red shadow-lg'
-                    : 'text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red'
+                    ? 'bg-black text-white border-r-2 border-black shadow-lg font-semibold tracking-wide'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-black font-medium tracking-wide'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -152,7 +152,7 @@ const AdminLayout = () => {
           <div className="p-4 border-t border-gray-200">
             <button
               onClick={() => setShowAiPanel(!showAiPanel)}
-              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red transition-all duration-200"
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-black transition-all duration-200 tracking-wide"
             >
               <Bot className="w-5 h-5" />
               <span>Ask Edicius AI</span>
@@ -174,8 +174,8 @@ const AdminLayout = () => {
                 to={item.href}
                 className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
-                    ? 'bg-edicius-red/10 text-edicius-red border-r-2 border-edicius-red shadow-lg'
-                    : 'text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red'
+                    ? 'bg-black text-white border-r-2 border-black shadow-lg font-semibold tracking-wide'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-black font-medium tracking-wide'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -188,7 +188,7 @@ const AdminLayout = () => {
           <div className="p-4 border-t border-gray-200">
             <button
               onClick={() => setShowAiPanel(!showAiPanel)}
-              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red transition-all duration-200"
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-black transition-all duration-200 tracking-wide"
             >
               <Bot className="w-5 h-5" />
               <span>Ask Edicius AI</span>
@@ -200,31 +200,31 @@ const AdminLayout = () => {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-16 items-center justify-between bg-edicius-navy/95 backdrop-blur-xl border-b border-edicius-gold/20 px-4 shadow-lg">
+        <div className="sticky top-0 z-40 flex h-16 items-center justify-between bg-white border-b border-gray-200 px-4 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-edicius-gold/70 hover:text-edicius-gold lg:hidden transition-colors"
+            className="text-gray-600 hover:text-black lg:hidden transition-colors"
           >
             <Menu className="w-6 h-6" />
           </button>
           
           <div className="flex items-center space-x-4">
-            <button className="text-edicius-gold/70 hover:text-edicius-gold transition-colors relative">
+            <button className="text-gray-600 hover:text-black transition-colors relative">
               <Bell className="w-6 h-6" />
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
             </button>
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-edicius-gold/20 rounded-full flex items-center justify-center border border-edicius-gold/30">
-                <User className="w-4 h-4 text-edicius-gold" />
+              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                <User className="w-4 h-4 text-gray-600" />
               </div>
               <div className="hidden md:block">
-                <p className="text-sm font-medium text-white">{user?.email || 'Admin User'}</p>
-                <p className="text-xs text-edicius-gold/70">Administrator</p>
+                <p className="text-sm font-semibold text-black tracking-wide">{user?.email || 'Admin User'}</p>
+                <p className="text-xs text-gray-500 font-medium">Administrator</p>
               </div>
             </div>
             <button 
               onClick={handleLogout}
-              className="text-edicius-gold/70 hover:text-edicius-gold transition-colors"
+              className="text-gray-600 hover:text-black transition-colors"
             >
               <LogOut className="w-5 h-5" />
             </button>
@@ -232,7 +232,7 @@ const AdminLayout = () => {
         </div>
 
         {/* Page content */}
-        <main className="flex-1 bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50 min-h-screen">
+        <main className="flex-1 bg-gray-50 min-h-screen">
           <Outlet />
         </main>
       </div>
@@ -243,17 +243,17 @@ const AdminLayout = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-4 right-4 w-80 bg-edicius-navy/95 backdrop-blur-xl border border-edicius-gold/20 rounded-2xl shadow-2xl z-50"
+          className="fixed bottom-4 right-4 w-80 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50"
         >
-          <div className="p-4 border-b border-edicius-gold/20">
+          <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <Bot className="w-5 h-5 text-edicius-gold" />
-                <h3 className="text-white font-semibold">Edicius AI Assistant</h3>
+                <Bot className="w-5 h-5 text-black" />
+                <h3 className="text-black font-semibold tracking-wide">Edicius AI Assistant</h3>
               </div>
               <button
                 onClick={() => setShowAiPanel(false)}
-                className="text-edicius-gold/70 hover:text-edicius-gold"
+                className="text-gray-600 hover:text-black"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -266,11 +266,11 @@ const AdminLayout = () => {
                 value={aiQuery}
                 onChange={(e) => setAiQuery(e.target.value)}
                 placeholder="Ask me anything..."
-                className="flex-1 px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-edicius-gold"
+                className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:border-black focus:ring-1 focus:ring-black font-medium"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-edicius-gold text-edicius-navy rounded-lg hover:bg-edicius-gold/90 transition-colors"
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
               >
                 <Search className="w-4 h-4" />
               </button>

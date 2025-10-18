@@ -101,7 +101,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
           >
             <Link 
               to={company ? `/company/${company.slug}` : '/'} 
-              className="inline-flex items-center text-edicius-red hover:text-red-600 transition-colors duration-200 mb-8"
+              className="inline-flex items-center text-gray-600 hover:text-black transition-colors duration-200 mb-8 font-medium tracking-wide"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to {company ? company.name : 'Companies'}
@@ -119,10 +119,10 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
               )}
             </div>
             
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 text-gray-900">
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 text-black font-serif tracking-tight">
               {enhancedContent.hero.title}
             </h1>
-            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-medium">
               {enhancedContent.hero.subtitle}
             </p>
           </motion.div>
@@ -140,8 +140,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             className="text-center mb-16"
           >
             <motion.div variants={itemVariants}>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">Project Overview</h2>
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
+              <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">Project Overview</h2>
+              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12 font-medium">
                 {enhancedContent.overview.summary}
               </p>
             </motion.div>
@@ -152,10 +152,10 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                 <motion.div key={index} variants={itemVariants}>
                   <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200">
                     <CardContent className="p-8 text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-edicius-red to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Target className="w-8 h-8 text-gray-900" />
+                      <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Target className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-gray-600 leading-relaxed">{point}</p>
+                      <p className="text-gray-600 leading-relaxed font-medium">{point}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -175,8 +175,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">{enhancedContent.features.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">{enhancedContent.features.title}</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
                 Discover the powerful features that make this project stand out
               </p>
             </motion.div>
@@ -187,8 +187,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                   <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                     <CardContent className="p-8">
                       <div className="text-4xl mb-4">{feature.icon}</div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                      <h3 className="text-xl font-bold text-black mb-3 font-serif tracking-wide">{feature.title}</h3>
+                      <p className="text-gray-600 leading-relaxed font-medium">{feature.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -208,8 +208,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">{enhancedContent.technology.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">{enhancedContent.technology.title}</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
                 Built with modern technologies and best practices
               </p>
             </motion.div>
@@ -218,7 +218,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
               {enhancedContent.technology.stack.map((tech, index) => (
                 <Badge 
                   key={index}
-                  className="bg-gradient-to-r from-edicius-red to-red-600 text-gray-900 px-6 py-3 text-lg font-semibold hover:scale-105 transition-transform duration-200"
+                  className="bg-black text-white px-6 py-3 text-lg font-semibold hover:scale-105 transition-transform duration-200 tracking-wide"
                 >
                   {tech}
                 </Badge>
@@ -238,8 +238,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6">{enhancedContent.benefits.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">{enhancedContent.benefits.title}</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
                 Experience the advantages of our innovative solution
               </p>
             </motion.div>
@@ -247,11 +247,11 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {enhancedContent.benefits.items.map((benefit, index) => (
                 <motion.div key={index} variants={itemVariants}>
-                  <div className="flex items-start space-x-4 p-6 bg-white/10 rounded-xl backdrop-blur-sm">
-                    <div className="w-8 h-8 bg-edicius-gold rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-5 h-5 text-gray-900" />
+                  <div className="flex items-start space-x-4 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-5 h-5 text-white" />
                     </div>
-                    <p className="text-lg text-gray-100">{benefit}</p>
+                    <p className="text-lg text-gray-700 font-medium">{benefit}</p>
                   </div>
                 </motion.div>
               ))}
@@ -270,8 +270,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">{enhancedContent.gallery.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">{enhancedContent.gallery.title}</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
                 Visual insights into our project implementation
               </p>
             </motion.div>
@@ -288,7 +288,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                       />
                     </div>
                     <CardContent className="p-6">
-                      <p className="text-gray-600 text-center">{image.caption}</p>
+                      <p className="text-gray-600 text-center font-medium">{image.caption}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -309,8 +309,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
               viewport={{ once: true }}
             >
               <motion.div variants={itemVariants} className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">Project Documents</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">Project Documents</h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
                   Access important project files and documentation
                 </p>
               </motion.div>
@@ -321,23 +321,23 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                     <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                       <CardContent className="p-8">
                         <div className="flex items-center space-x-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-edicius-red to-red-600 rounded-xl flex items-center justify-center">
-                            <span className="text-2xl text-gray-900">📄</span>
+                          <div className="w-16 h-16 bg-black rounded-xl flex items-center justify-center">
+                            <span className="text-2xl text-white">📄</span>
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">{doc.name}</h3>
-                            <div className="flex items-center space-x-4 text-sm text-gray-300 mb-4">
-                              <span className="bg-edicius-gold/20 text-edicius-gold px-3 py-1 rounded-full font-semibold">
+                            <h3 className="text-xl font-bold text-black mb-2 font-serif tracking-wide">{doc.name}</h3>
+                            <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+                              <span className="bg-gray-100 text-black px-3 py-1 rounded-full font-semibold tracking-wide">
                                 {doc.fileType?.toUpperCase() || 'FILE'}
                               </span>
-                              <span>{new Date(doc.uploadedAt).toLocaleDateString()}</span>
+                              <span className="font-medium">{new Date(doc.uploadedAt).toLocaleDateString()}</span>
                             </div>
                             <Button 
                               onClick={() => {
                                 setSelectedDocument(doc);
                                 setIsDocumentViewerOpen(true);
                               }}
-                              className="bg-edicius-gold hover:bg-edicius-gold/90 text-gray-900"
+                              className="bg-black hover:bg-gray-800 text-white font-medium"
                             >
                               <Eye className="w-4 h-4 mr-2" />
                               View Document
@@ -365,8 +365,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
           >
             <motion.div variants={itemVariants}>
               <Card className="border-0 shadow-xl bg-white border border-gray-200">
-                <CardHeader className="bg-gradient-to-r from-edicius-red to-edicius-gold text-gray-900 rounded-t-lg">
-                  <CardTitle className="text-2xl font-bold flex items-center">
+                <CardHeader className="bg-black text-white rounded-t-lg">
+                  <CardTitle className="text-2xl font-bold flex items-center font-serif tracking-wide">
                     <Award className="w-6 h-6 mr-3" />
                     Project Information
                   </CardTitle>
@@ -375,7 +375,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium text-gray-300">Status</label>
+                        <label className="text-sm font-medium text-gray-500 tracking-wide">Status</label>
                         <div className="mt-1">
                           <Badge className={`${getStatusColor(project.status)} flex items-center space-x-1 w-fit`}>
                             {getStatusIcon(project.status)}
@@ -385,34 +385,34 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                       </div>
                       
                       <div>
-                        <label className="text-sm font-medium text-gray-300">Created</label>
-                        <p className="text-sm text-gray-900">{formatDate(project.createdAt)}</p>
+                        <label className="text-sm font-medium text-gray-500 tracking-wide">Created</label>
+                        <p className="text-sm text-black font-medium">{formatDate(project.createdAt)}</p>
                       </div>
                       
                       <div>
-                        <label className="text-sm font-medium text-gray-300">Last Updated</label>
-                        <p className="text-sm text-gray-900">{formatDate(project.updatedAt)}</p>
+                        <label className="text-sm font-medium text-gray-500 tracking-wide">Last Updated</label>
+                        <p className="text-sm text-black font-medium">{formatDate(project.updatedAt)}</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
                       {project.teamSize && (
                         <div>
-                          <label className="text-sm font-medium text-gray-300">Team Size</label>
-                          <p className="text-sm text-gray-900">{project.teamSize} members</p>
+                          <label className="text-sm font-medium text-gray-500 tracking-wide">Team Size</label>
+                          <p className="text-sm text-black font-medium">{project.teamSize} members</p>
                         </div>
                       )}
 
                       {project.documents && (
                         <div>
-                          <label className="text-sm font-medium text-gray-300">Documents</label>
-                          <p className="text-sm text-gray-900">{project.documents.length} files</p>
+                          <label className="text-sm font-medium text-gray-500 tracking-wide">Documents</label>
+                          <p className="text-sm text-black font-medium">{project.documents.length} files</p>
                         </div>
                       )}
 
                       <div>
-                        <label className="text-sm font-medium text-gray-300">Company</label>
-                        <p className="text-sm text-gray-900">{company?.name || 'Unknown'}</p>
+                        <label className="text-sm font-medium text-gray-500 tracking-wide">Company</label>
+                        <p className="text-sm text-black font-medium">{company?.name || 'Unknown'}</p>
                       </div>
                     </div>
                   </div>
