@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,12 +20,16 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { projectsApi, companiesApi } from '@/lib/api';
 
 const AdminProjects = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   // Form state
@@ -38,84 +42,32 @@ const AdminProjects = () => {
     priority: 'Medium'
   });
 
-  // Mock data
-  const companies = [
-    { id: '1', name: 'Edicius Enterprises Private Limited' },
-    { id: '2', name: 'Edicius Innovations and Consulting Private Limited' },
-    { id: '3', name: 'Edicius Infrastructure and Developers Private Limited' },
-    { id: '4', name: 'Edicius Imports and Exports Private Limited' },
-    { id: '5', name: 'Edicius Productions and Entertainment Private Limited' },
-    { id: '6', name: 'Edicius Consumer Products Private Limited' },
-    { id: '7', name: 'Edicius Mining and Minerals Private Limited' },
-    { id: '8', name: 'Edicius Hotels and Hospitality Private Limited' },
-  ];
+  // Load data on component mount
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const projects = [
-    {
-      _id: '1',
-      name: 'Digital Transformation Platform',
-      companyId: '2',
-      company: 'Edicius Innovations and Consulting Private Limited',
-      description: 'Creating a comprehensive digital transformation platform for enterprise clients with AI integration and cloud infrastructure.',
-      status: 'In Progress',
-      progress: 65,
-      startDate: '2024-01-15',
-      endDate: '2024-12-31',
-      teamSize: 12,
-      priority: 'High',
-      documents: 8,
-      milestones: 5,
-      completedMilestones: 3
-    },
-    {
-      _id: '2',
-      name: 'Smart City Infrastructure',
-      companyId: '3',
-      company: 'Edicius Infrastructure and Developers Private Limited',
-      description: 'Developing sustainable smart city solutions with IoT integration and renewable energy systems.',
-      status: 'In Progress',
-      progress: 45,
-      startDate: '2024-02-10',
-      endDate: '2024-11-30',
-      teamSize: 15,
-      priority: 'High',
-      documents: 12,
-      milestones: 7,
-      completedMilestones: 3
-    },
-    {
-      _id: '3',
-      name: 'Consumer IoT Products',
-      companyId: '6',
-      company: 'Edicius Consumer Products Private Limited',
-      description: 'Innovative smart home devices and wearable technology for the consumer market.',
-      status: 'Planning',
-      progress: 20,
-      startDate: '2024-03-01',
-      endDate: '2024-10-15',
-      teamSize: 8,
-      priority: 'Medium',
-      documents: 3,
-      milestones: 4,
-      completedMilestones: 1
-    },
-    {
-      _id: '4',
-      name: 'Global Supply Chain Optimization',
-      companyId: '4',
-      company: 'Edicius Imports and Exports Private Limited',
-      description: 'Advanced logistics and supply chain management system with real-time tracking.',
-      status: 'Completed',
-      progress: 100,
-      startDate: '2023-09-01',
-      endDate: '2024-01-31',
-      teamSize: 10,
-      priority: 'High',
-      documents: 15,
-      milestones: 6,
-      completedMilestones: 6
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [projectsData, companiesData] = await Promise.all([
+        projectsApi.getAll(),
+        companiesApi.getAll()
+      ]);
+      setProjects(projectsData);
+      setCompanies(companiesData);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load projects and companies data.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -169,8 +121,12 @@ const AdminProjects = () => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log('Creating project with data:', formData);
+      const newProject = await projectsApi.create(formData);
+      console.log('Project created successfully:', newProject);
+      
+      // Reload projects data
+      await loadData();
       
       toast({
         title: "Project Created",
@@ -188,6 +144,7 @@ const AdminProjects = () => {
       });
       setIsCreateModalOpen(false);
     } catch (error) {
+      console.error('Error creating project:', error);
       toast({
         title: "Creation Failed",
         description: "There was an error creating the project. Please try again.",
@@ -245,13 +202,18 @@ const AdminProjects = () => {
         </motion.div>
 
         {/* Projects Grid */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
-        >
-          {projects.map((project, index) => (
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-edicius-gold"></div>
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+          >
+            {projects.map((project, index) => (
             <motion.div
               key={project._id}
               initial={{ opacity: 0, y: 20 }}
@@ -351,7 +313,8 @@ const AdminProjects = () => {
               </Card>
             </motion.div>
           ))}
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Create Project Modal */}
         {isCreateModalOpen && (

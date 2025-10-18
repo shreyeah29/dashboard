@@ -69,6 +69,11 @@ export const companiesApi = {
 
 // Projects API
 export const projectsApi = {
+  getAll: async (): Promise<Project[]> => {
+    const response = await api.get('/projects');
+    return response.data;
+  },
+  
   getByCompanySlug: async (companySlug: string): Promise<Project[]> => {
     const response = await api.get(`/projects/companies/${companySlug}/projects`);
     return response.data;
