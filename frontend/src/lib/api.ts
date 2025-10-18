@@ -3,10 +3,6 @@ import { Company, Project, Document, Comment, AnalyticsSummary, LoginCredentials
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://edicius-dashboard.onrender.com/api/v1';
 
-// Debug logging
-console.log('API_BASE_URL:', API_BASE_URL);
-console.log('VITE_API_URL env var:', import.meta.env.VITE_API_URL);
-
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
