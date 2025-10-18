@@ -156,9 +156,57 @@ app.get('/api/v1/companies', (req, res) => {
   ]);
 });
 
+// Auth login endpoint
+app.post('/api/v1/auth/admin/login', (req, res) => {
+  const { password } = req.body;
+  const adminSecret = process.env.ADMIN_SECRET || 'admin123';
+  
+  if (password === adminSecret) {
+    // Create a simple session token (in production, use proper JWT)
+    const token = 'admin-session-' + Date.now();
+    
+    // Set httpOnly cookie
+    res.cookie('adminToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+    
+    res.json({ 
+      success: true, 
+      message: 'Login successful',
+      user: { role: 'admin' }
+    });
+  } else {
+    res.status(401).json({ 
+      success: false, 
+      message: 'Invalid password' 
+    });
+  }
+});
+
 // Auth verify endpoint
 app.get('/api/v1/auth/admin/verify', (req, res) => {
-  res.status(401).json({ message: 'Not authenticated' });
+  const token = req.cookies.adminToken;
+  
+  if (token && token.startsWith('admin-session-')) {
+    res.json({ 
+      authenticated: true, 
+      user: { role: 'admin' } 
+    });
+  } else {
+    res.status(401).json({ 
+      authenticated: false, 
+      message: 'Not authenticated' 
+    });
+  }
+});
+
+// Auth logout endpoint
+app.post('/api/v1/auth/admin/logout', (req, res) => {
+  res.clearCookie('adminToken');
+  res.json({ success: true, message: 'Logged out successfully' });
 });
 
 // Connect to MongoDB
