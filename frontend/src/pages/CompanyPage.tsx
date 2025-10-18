@@ -165,6 +165,83 @@ const CompanyPage = () => {
         </div>
       </section>
 
+      {/* Company Services Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-black mb-6">Our Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Comprehensive solutions tailored to meet your business needs
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <CardContent className="p-8 text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🚀</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-4">Innovation & Technology</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Cutting-edge technology solutions and digital transformation services
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <CardContent className="p-8 text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-red to-edicius-gold rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">💼</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-4">Strategic Consulting</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Expert business consulting and strategic planning services
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <CardContent className="p-8 text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🎯</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-4">Custom Solutions</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Tailored solutions designed to meet your specific requirements
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Projects Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
