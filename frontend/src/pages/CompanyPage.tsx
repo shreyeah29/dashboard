@@ -8,10 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
   ArrowLeft, Building2, Calendar, Users, ArrowRight, Globe, CheckCircle,
-  Rocket, Briefcase, Bot, Pickaxe, Leaf, FlaskConical,
+  Rocket, Briefcase, Bot, Hammer, Leaf, FlaskConical,
   Film, Smartphone, PartyPopper, Users2, TrendingUp, Target,
-  Truck, Ship, Globe2, Wrench, Hammer, HardHat,
-  Bed, UtensilsCrossed, MapPin, Home, Building, Zap
+  Truck, Ship, Globe2, Wrench, HardHat, MapPin,
+  Bed, UtensilsCrossed, Home, Building, Zap
 } from 'lucide-react';
 import { formatDate, getStatusColor } from '@/lib/utils';
 
@@ -105,7 +105,7 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Mining Operations",
           description: "Advanced mining technologies and sustainable extraction methods for various minerals.",
-          icon: Pickaxe
+          icon: Hammer
         },
         {
           title: "Environmental Management",
