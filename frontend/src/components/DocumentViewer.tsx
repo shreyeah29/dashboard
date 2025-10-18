@@ -10,8 +10,10 @@ interface DocumentViewerProps {
   document: {
     _id: string;
     name: string;
-    type: 'pdf' | 'image' | 'ppt' | 'doc' | 'other';
-    size: number;
+    fileType: string;
+    fileSize: number;
+    s3Url: string;
+    mimeType: string;
   };
   projectName: string;
   isOpen: boolean;
@@ -33,8 +35,8 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
     setLoading(true);
     setError('');
     try {
-      const response = await documentsApi.getViewUrl(document._id);
-      setViewUrl(response.viewUrl);
+      // Use the direct URL from the document
+      setViewUrl(document.s3Url);
     } catch (err) {
       setError('Failed to load document preview');
       console.error('Error fetching document view URL:', err);
@@ -66,78 +68,105 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
       );
     }
 
-    switch (document.type) {
-      case 'pdf':
-        return (
-          <div className="w-full h-full">
-            <iframe
-              src={viewUrl}
-              className="w-full h-full border-0"
-              title={document.name}
-              onContextMenu={handleContextMenu}
-              style={{
-                pointerEvents: 'auto',
-                // Disable right-click and download controls (best effort)
-                WebkitUserSelect: 'none',
-                MozUserSelect: 'none',
-                msUserSelect: 'none',
-                userSelect: 'none'
-              }}
-            />
-          </div>
-        );
+    // Determine file type from mimeType
+    const isPdf = document.mimeType === 'application/pdf';
+    const isImage = document.mimeType.startsWith('image/');
+    const isPresentation = document.mimeType.includes('presentation') || document.mimeType.includes('powerpoint');
+    const isDocument = document.mimeType.includes('document') || document.mimeType.includes('word');
 
-      case 'image':
-        return (
-          <div className="relative w-full h-full flex items-center justify-center">
-            <img
-              src={viewUrl}
-              alt={document.name}
-              className="max-w-full max-h-full object-contain"
-              onContextMenu={handleContextMenu}
-              style={{
-                WebkitUserSelect: 'none',
-                MozUserSelect: 'none',
-                msUserSelect: 'none',
-                userSelect: 'none'
-              }}
-            />
-            {/* Watermark overlay */}
-            <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded text-sm font-medium">
-              {projectName}
-            </div>
-          </div>
-        );
-
-      case 'ppt':
-      case 'doc':
-      case 'other':
-        return (
-          <div className="flex flex-col items-center justify-center h-96 text-center">
-            <Presentation className="w-16 h-16 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">Preview Not Available</h3>
-            <p className="text-gray-500 mb-4">
-              This document type cannot be previewed inline.
-            </p>
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">
-                <strong>File:</strong> {document.name}<br />
-                <strong>Type:</strong> {document.type.toUpperCase()}<br />
-                <strong>Size:</strong> {formatFileSize(document.size)}
-              </p>
-            </div>
-          </div>
-        );
-
-      default:
-        return (
-          <div className="flex flex-col items-center justify-center h-96 text-center">
-            <File className="w-16 h-16 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">Unknown File Type</h3>
-            <p className="text-gray-500">This file type cannot be previewed.</p>
-          </div>
-        );
+    if (isPdf) {
+      return (
+        <div className="w-full h-full">
+          <iframe
+            src={viewUrl}
+            className="w-full h-full border-0"
+            title={document.name}
+            onContextMenu={handleContextMenu}
+            style={{
+              pointerEvents: 'auto',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              msUserSelect: 'none',
+              userSelect: 'none'
+            }}
+          />
+        </div>
+      );
     }
+
+    if (isImage) {
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <img
+            src={viewUrl}
+            alt={document.name}
+            className="max-w-full max-h-full object-contain"
+            onContextMenu={handleContextMenu}
+            style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              msUserSelect: 'none',
+              userSelect: 'none'
+            }}
+          />
+          {/* Watermark overlay */}
+          <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded text-sm font-medium">
+            {projectName}
+          </div>
+        </div>
+      );
+    }
+
+    if (isPresentation || isDocument) {
+      return (
+        <div className="flex flex-col items-center justify-center h-96 text-center">
+          <Presentation className="w-16 h-16 text-gray-400 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">Preview Not Available</h3>
+          <p className="text-gray-500 mb-4">
+            This document type cannot be previewed inline.
+          </p>
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <p className="text-sm text-gray-600">
+              <strong>File:</strong> {document.name}<br />
+              <strong>Type:</strong> {document.fileType.toUpperCase()}<br />
+              <strong>Size:</strong> {formatFileSize(document.fileSize)}
+            </p>
+          </div>
+          <div className="mt-4">
+            <Button 
+              onClick={() => window.open(viewUrl, '_blank')}
+              className="bg-edicius-gold hover:bg-edicius-gold/90 text-white"
+            >
+              Open in New Tab
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    // Default case for other file types
+    return (
+      <div className="flex flex-col items-center justify-center h-96 text-center">
+        <File className="w-16 h-16 text-gray-400 mb-4" />
+        <h3 className="text-lg font-semibold text-gray-600 mb-2">File Preview</h3>
+        <p className="text-gray-500 mb-4">
+          This file type cannot be previewed inline.
+        </p>
+        <div className="bg-gray-100 p-4 rounded-lg mb-4">
+          <p className="text-sm text-gray-600">
+            <strong>File:</strong> {document.name}<br />
+            <strong>Type:</strong> {document.fileType.toUpperCase()}<br />
+            <strong>Size:</strong> {formatFileSize(document.fileSize)}
+          </p>
+        </div>
+        <Button 
+          onClick={() => window.open(viewUrl, '_blank')}
+          className="bg-edicius-gold hover:bg-edicius-gold/90 text-white"
+        >
+          Open in New Tab
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -146,11 +175,11 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
         <DialogHeader className="p-6 pb-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">{getDocumentIcon(document.type)}</span>
+              <span className="text-2xl">{getDocumentIcon(document.fileType)}</span>
               <div>
                 <DialogTitle className="text-left">{document.name}</DialogTitle>
                 <p className="text-sm text-gray-500">
-                  {document.type.toUpperCase()} • {formatFileSize(document.size)}
+                  {document.fileType.toUpperCase()} • {formatFileSize(document.fileSize)}
                 </p>
               </div>
             </div>

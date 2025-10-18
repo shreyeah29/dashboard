@@ -119,10 +119,10 @@ const ProjectPage = () => {
               )}
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               {project.name}
             </h1>
-            <p className="text-xl text-gray-200 max-w-3xl">
+            <p className="text-xl text-gray-200 max-w-3xl leading-relaxed">
               {project.description}
             </p>
           </motion.div>
@@ -140,14 +140,22 @@ const ProjectPage = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card>
-                <CardHeader>
-                  <CardTitle>Project Overview</CardTitle>
+              <Card className="border-0 shadow-xl">
+                <CardHeader className="bg-gradient-to-r from-edicius-navy to-edicius-gold text-white rounded-t-lg">
+                  <CardTitle className="text-2xl font-bold flex items-center">
+                    <FileText className="w-6 h-6 mr-3" />
+                    Project Overview
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                    {project.description}
-                  </p>
+                <CardContent className="p-8">
+                  <div className="prose prose-lg max-w-none">
+                    <div className="bg-gradient-to-r from-gray-50 to-white p-6 rounded-xl border-l-4 border-edicius-gold mb-6">
+                      <h3 className="text-xl font-bold text-black mb-3">About This Project</h3>
+                      <p className="text-gray-700 leading-relaxed text-lg">
+                        {project.description}
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -227,30 +235,47 @@ const ProjectPage = () => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <FileText className="w-5 h-5" />
-                      <span>Project Documents</span>
+                <Card className="border-0 shadow-xl">
+                  <CardHeader className="bg-gradient-to-r from-edicius-red to-edicius-gold text-white rounded-t-lg">
+                    <CardTitle className="text-2xl font-bold flex items-center">
+                      <FileText className="w-6 h-6 mr-3" />
+                      Project Documents
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CardContent className="p-8">
+                    <div className="grid grid-cols-1 gap-6">
                       {project.documents.map((doc: any) => (
-                        <div 
+                        <motion.div 
                           key={doc._id}
-                          className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                          whileHover={{ scale: 1.02 }}
+                          className="flex items-center space-x-4 p-6 bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl hover:shadow-lg cursor-pointer transition-all duration-300 group"
                           onClick={() => handleDocumentClick(doc)}
                         >
-                          <span className="text-2xl">{getDocumentIcon(doc.fileType || 'other')}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 truncate">{doc.name}</p>
-                            <p className="text-sm text-gray-500">
-                              {doc.fileType?.toUpperCase() || 'FILE'} • {formatFileSize(doc.fileSize || 0)}
-                            </p>
+                          <div className="w-16 h-16 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span className="text-2xl text-white">{getDocumentIcon(doc.fileType || 'other')}</span>
                           </div>
-                          <Eye className="w-4 h-4 text-gray-400" />
-                        </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-lg text-black mb-1 group-hover:text-edicius-gold transition-colors duration-200">
+                              {doc.name}
+                            </h4>
+                            <div className="flex items-center space-x-4 text-sm text-gray-600">
+                              <span className="bg-edicius-gold/10 text-edicius-gold px-3 py-1 rounded-full font-semibold">
+                                {doc.fileType?.toUpperCase() || 'FILE'}
+                              </span>
+                              <span className="font-medium">
+                                {formatFileSize(doc.fileSize || 0)}
+                              </span>
+                              <span className="text-gray-500">
+                                {new Date(doc.uploadedAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-10 h-10 bg-edicius-gold/10 rounded-full flex items-center justify-center group-hover:bg-edicius-gold group-hover:text-white transition-all duration-300">
+                              <Eye className="w-5 h-5 text-edicius-gold group-hover:text-white" />
+                            </div>
+                          </div>
+                        </motion.div>
                       ))}
                     </div>
                   </CardContent>
