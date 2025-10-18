@@ -99,6 +99,9 @@ const AdminCompanyProjects = () => {
     setIsLoading(true);
     
     try {
+      console.log('Company object:', company);
+      console.log('Company._id:', company._id);
+      
       const projectData = {
         ...formData,
         companyId: company._id
