@@ -41,15 +41,16 @@ const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
       process.env.CLIENT_URL || 'http://localhost:3000',
+      'http://localhost:3000',
+      'http://localhost:5173',
       'https://dashboard-frontend-six-nu.vercel.app',
-      'https://dashboard-frontend-fe95ng0cq-legal-links-projects-bc18cb27.vercel.app',
-      'http://localhost:3000'
+      'https://dashboard-frontend-fe95ng0cq-legal-links-projects-bc18cb27.vercel.app'
     ];
     
     console.log('CORS request from origin:', origin);
     console.log('Allowed origins:', allowedOrigins);
     
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps, curl requests, or local file access)
     if (!origin) return callback(null, true);
     
     // Check exact match first
@@ -343,8 +344,14 @@ app.post('/api/v1/projects', async (req, res) => {
       return res.status(400).json({ error: 'Name, companyId, and description are required' });
     }
     
-    // Check if company exists
-    const company = await Company.findById(companyId);
+    // Check if company exists (handle both ObjectId and string ID)
+    let company;
+    if (mongoose.Types.ObjectId.isValid(companyId)) {
+      company = await Company.findById(companyId);
+    } else {
+      company = await Company.findOne({ _id: companyId });
+    }
+    
     if (!company) {
       return res.status(404).json({ error: 'Company not found' });
     }

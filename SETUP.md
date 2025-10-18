@@ -2,7 +2,7 @@
 
 ## 🚀 **Complete Document Upload System Setup**
 
-### **Backend Setup (MongoDB + AWS S3)**
+### **Backend Setup (MongoDB + Local File Storage)**
 
 #### 1. **Environment Variables**
 Create a `.env` file in the `backend` directory with:
@@ -21,24 +21,17 @@ ADMIN_SECRET=admin123
 
 # CORS Configuration
 CLIENT_URL=http://localhost:3000
-
-# AWS S3 Configuration (for file uploads)
-AWS_ACCESS_KEY_ID=your-aws-access-key-id
-AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
-AWS_REGION=us-east-1
-AWS_S3_BUCKET_NAME=your-s3-bucket-name
 ```
 
-#### 2. **AWS S3 Setup**
-1. Create an AWS S3 bucket
-2. Configure bucket permissions for public read access
-3. Create IAM user with S3 permissions
-4. Add the credentials to your `.env` file
+#### 2. **Local File Storage**
+✅ **No AWS S3 setup needed!** Files are stored locally in the `backend/uploads` directory.
 
 #### 3. **MongoDB Setup**
 1. Install MongoDB locally or use MongoDB Atlas
 2. Update `MONGODB_URI` in your `.env` file
 3. The app will automatically seed initial data on first run
+
+**Note**: If you don't have MongoDB, the app will still work with mock data for testing!
 
 ### **Frontend Setup**
 
@@ -70,10 +63,10 @@ VITE_API_URL=http://localhost:5000
 - Real-time data synchronization
 
 ✅ **File Upload System**
-- AWS S3 integration
+- Local file storage (no AWS S3 needed!)
 - Support for PDF, PPT, DOC, images, videos
 - File size validation (50MB limit)
-- Secure pre-signed URLs
+- Direct file access via URLs
 
 ✅ **Admin Dashboard**
 - Create projects with real database
@@ -97,7 +90,7 @@ VITE_API_URL=http://localhost:5000
 
 ### **Complete Flow**
 1. Admin creates project → Database
-2. Admin uploads PPT → AWS S3 + Database
+2. Admin uploads PPT → Local storage + Database
 3. Public views project → Shows uploaded PPT
 4. Real-time updates across admin and public sites
 

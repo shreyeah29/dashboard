@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edicius Group Portal - System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #0B1F3A 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logo-bars {
+            display: flex;
+            align-items: end;
+            margin-right: 15px;
+        }
+        .bar {
+            width: 8px;
+            background: #DC2626;
+            margin: 0 2px;
+            border-radius: 2px;
+        }
+        .bar:nth-child(1) { height: 20px; }
+        .bar:nth-child(2) { height: 25px; }
+        .bar:nth-child(3) { height: 30px; }
+        .bar:nth-child(4) { height: 35px; background: #000; }
+        .bar:nth-child(5) { height: 40px; background: #000; }
+        .logo-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #DC2626;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .success { background: rgba(34, 197, 94, 0.2); border-color: #22C55E; }
+        .error { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; }
+        .info { background: rgba(59, 130, 246, 0.2); border-color: #3B82F6; }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .btn {
+            background: #DC2626;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #B91C1C; }
+        .btn:disabled { background: #666; cursor: not-allowed; }
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .link-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .link-card:hover { transform: translateY(-5px); }
+        .link-card a {
+            color: #F59E0B;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .link-card a:hover { color: #D97706; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div class="logo-text">EDICIUS</div>
+            </div>
+            <h1>Edicius Group Portal - System Test</h1>
+            <p>Complete Document Upload System Testing</p>
+        </div>
+
+        <div id="status-container">
+            <div class="status info">
+                <strong>🔄 Testing System Components...</strong>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 System Tests</h3>
+            <button class="btn" onclick="testBackend()">Test Backend API</button>
+            <button class="btn" onclick="testAdminLogin()">Test Admin Login</button>
+            <button class="btn" onclick="testCompanies()">Test Companies Data</button>
+            <button class="btn" onclick="testProjects()">Test Projects Data</button>
+        </div>
+
+        <div class="links">
+            <div class="link-card">
+                <h3>🌐 Public Website</h3>
+                <p>View the public website with companies and projects</p>
+                <a href="http://localhost:5173" target="_blank">Open Public Site</a>
+            </div>
+            <div class="link-card">
+                <h3>🔐 Admin Dashboard</h3>
+                <p>Access admin dashboard to create projects and upload files</p>
+                <a href="http://localhost:5173/admin" target="_blank">Open Admin Dashboard</a>
+            </div>
+            <div class="link-card">
+                <h3>📊 Backend API</h3>
+                <p>Direct access to backend API endpoints</p>
+                <a href="http://localhost:5001/health" target="_blank">Check Backend Health</a>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Test Instructions</h3>
+            <ol>
+                <li><strong>Test Backend:</strong> Click "Test Backend API" to verify the server is running</li>
+                <li><strong>Test Admin Login:</strong> Click "Test Admin Login" to verify authentication works</li>
+                <li><strong>Open Admin Dashboard:</strong> Click the admin link above and login with password: <code>admin123</code></li>
+                <li><strong>Create Project:</strong> Go to Companies → Select a company → Add Project</li>
+                <li><strong>Upload PPT:</strong> Click "Manage Files" → Upload a PowerPoint file</li>
+                <li><strong>View Public Site:</strong> Open the public site and see your uploaded document</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://edicius-dashboard.onrender.com';
+        
+        function addStatus(message, type = 'info') {
+            const container = document.getElementById('status-container');
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.innerHTML = message;
+            container.appendChild(status);
+        }
+
+        async function testBackend() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                if (data.status === 'OK') {
+                    addStatus('✅ Backend API is running successfully!', 'success');
+                } else {
+                    addStatus('❌ Backend API returned unexpected response', 'error');
+                }
+            } catch (error) {
+                addStatus('❌ Backend API is not accessible: ' + error.message, 'error');
+            }
+        }
+
+        async function testAdminLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/auth/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: 'admin123' })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    addStatus('✅ Admin login successful! Token: ' + data.token.substring(0, 20) + '...', 'success');
+                } else {
+                    addStatus('❌ Admin login failed: ' + data.message, 'error');
+                }
+            } catch (error) {
+                addStatus('❌ Admin login test failed: ' + error.message, 'error');
+            }
+        }
+
+        async function testCompanies() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/companies`);
+                const data = await response.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    addStatus(`✅ Companies data loaded successfully! Found ${data.length} companies.`, 'success');
+                } else {
+                    addStatus('❌ Companies data is empty or invalid', 'error');
+                }
+            } catch (error) {
+                addStatus('❌ Companies test failed: ' + error.message, 'error');
+            }
+        }
+
+        async function testProjects() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/projects`);
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    addStatus(`✅ Projects API working! Found ${data.length} projects.`, 'success');
+                } else {
+                    addStatus('❌ Projects data is invalid: ' + JSON.stringify(data), 'error');
+                }
+            } catch (error) {
+                addStatus('❌ Projects test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Auto-run tests on page load
+        window.onload = function() {
+            setTimeout(() => {
+                testBackend();
+                setTimeout(() => testAdminLogin(), 1000);
+                setTimeout(() => testCompanies(), 2000);
+                setTimeout(() => testProjects(), 3000);
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
