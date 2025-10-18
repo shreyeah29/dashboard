@@ -69,7 +69,7 @@ const CompanyPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-edicius-navy via-blue-900 to-edicius-navy text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-black via-gray-800 to-black text-white overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-30"></div>
         {company.heroImage && (
           <div 
