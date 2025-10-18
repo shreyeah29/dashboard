@@ -25,9 +25,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = async () => {
     try {
+      console.log('Checking auth...');
       const userData = await authApi.verify();
+      console.log('Auth verify result:', userData);
       setUser(userData);
     } catch (error) {
+      console.error('Auth check error:', error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -40,9 +43,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (password: string) => {
     try {
-      await authApi.login({ password });
+      console.log('Attempting login...');
+      const result = await authApi.login({ password });
+      console.log('Login API result:', result);
       await checkAuth();
+      console.log('Auth check completed');
     } catch (error) {
+      console.error('Login error:', error);
       throw error;
     }
   };
