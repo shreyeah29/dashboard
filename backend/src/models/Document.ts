@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document as MongoDocument, Schema } from 'mongoose';
 
-export interface IDocumentDocument extends Document {
+export interface IDocumentDocument extends MongoDocument {
   projectId: mongoose.Types.ObjectId;
   name: string;
   type: 'pdf' | 'image' | 'ppt' | 'doc' | 'other';
