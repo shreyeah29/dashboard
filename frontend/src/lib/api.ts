@@ -3,8 +3,14 @@ import { Company, Project, Document, Comment, AnalyticsSummary, LoginCredentials
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://edicius-dashboard.onrender.com/api/v1';
 
+// Force the correct URL for debugging
+const FORCED_API_URL = 'https://edicius-dashboard.onrender.com/api/v1';
+console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('Computed API_BASE_URL:', API_BASE_URL);
+console.log('Using FORCED_API_URL:', FORCED_API_URL);
+
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: FORCED_API_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
