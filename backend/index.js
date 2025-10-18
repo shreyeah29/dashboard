@@ -209,6 +209,134 @@ app.post('/api/v1/auth/admin/logout', (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
+// Documents endpoints
+app.get('/api/v1/documents', (req, res) => {
+  // Mock documents data
+  const documents = [
+    {
+      _id: '1',
+      name: 'Q4 Financial Report.pdf',
+      type: 'pdf',
+      size: '2.4 MB',
+      company: 'Edicius Innovations and Consulting Private Limited',
+      project: 'Digital Transformation Platform',
+      tags: ['Financial', 'Planning'],
+      uploadedBy: 'Admin User',
+      uploadedAt: '2024-01-15',
+      url: 'https://example.com/documents/q4-report.pdf'
+    },
+    {
+      _id: '2',
+      name: 'Project Proposal.pptx',
+      type: 'pptx',
+      size: '5.1 MB',
+      company: 'Edicius Infrastructure and Developers Private Limited',
+      project: 'Smart City Infrastructure',
+      tags: ['Planning', 'Technical'],
+      uploadedBy: 'Admin User',
+      uploadedAt: '2024-01-14',
+      url: 'https://example.com/documents/project-proposal.pptx'
+    }
+  ];
+  
+  res.json(documents);
+});
+
+app.post('/api/v1/documents/upload', (req, res) => {
+  // Mock upload response
+  const { company, project, tags, files } = req.body;
+  
+  // Simulate processing
+  setTimeout(() => {
+    res.json({
+      success: true,
+      message: 'Documents uploaded successfully',
+      documents: files.map((file, index) => ({
+        _id: `new_${Date.now()}_${index}`,
+        name: file.name,
+        type: file.name.split('.').pop(),
+        size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
+        company,
+        project,
+        tags,
+        uploadedBy: 'Admin User',
+        uploadedAt: new Date().toISOString().split('T')[0],
+        url: `https://example.com/documents/${file.name}`
+      }))
+    });
+  }, 1000);
+});
+
+app.delete('/api/v1/documents/:id', (req, res) => {
+  const { id } = req.params;
+  
+  // Mock delete response
+  res.json({
+    success: true,
+    message: 'Document deleted successfully',
+    documentId: id
+  });
+});
+
+// Projects endpoints
+app.get('/api/v1/projects', (req, res) => {
+  const projects = [
+    {
+      _id: '1',
+      name: 'Digital Transformation Platform',
+      companyId: '2',
+      company: 'Edicius Innovations and Consulting Private Limited',
+      description: 'Creating a comprehensive digital transformation platform for enterprise clients.',
+      status: 'In Progress',
+      progress: 65,
+      startDate: '2024-01-15',
+      endDate: '2024-12-31',
+      teamSize: 12,
+      priority: 'High'
+    },
+    {
+      _id: '2',
+      name: 'Smart City Infrastructure',
+      companyId: '3',
+      company: 'Edicius Infrastructure and Developers Private Limited',
+      description: 'Developing sustainable smart city solutions with IoT integration.',
+      status: 'In Progress',
+      progress: 45,
+      startDate: '2024-02-10',
+      endDate: '2024-11-30',
+      teamSize: 15,
+      priority: 'High'
+    }
+  ];
+  
+  res.json(projects);
+});
+
+app.post('/api/v1/projects', (req, res) => {
+  const { name, companyId, description, startDate, endDate } = req.body;
+  
+  // Mock project creation
+  const newProject = {
+    _id: `project_${Date.now()}`,
+    name,
+    companyId,
+    description,
+    status: 'Planning',
+    progress: 0,
+    startDate,
+    endDate,
+    teamSize: 0,
+    priority: 'Medium',
+    createdAt: new Date().toISOString()
+  };
+  
+  res.json({
+    success: true,
+    message: 'Project created successfully',
+    project: newProject
+  });
+});
+
 // Connect to MongoDB
 const connectDB = async () => {
   try {

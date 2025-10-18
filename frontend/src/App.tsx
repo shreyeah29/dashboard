@@ -16,6 +16,7 @@ import AdminDashboard from '@/pages/admin/AdminDashboard';
 import AdminCompanies from '@/pages/admin/AdminCompanies';
 import AdminProjects from '@/pages/admin/AdminProjects';
 import AdminProjectDetail from '@/pages/admin/AdminProjectDetail';
+import AdminDocuments from '@/pages/admin/AdminDocuments';
 import AdminLayout from '@/components/layout/AdminLayout';
 
 // Layout components
@@ -49,16 +50,17 @@ function App() {
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={
-                <ProtectedRoute>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }>
-                <Route index element={<AdminDashboard />} />
-                <Route path="companies" element={<AdminCompanies />} />
-                <Route path="projects" element={<AdminProjects />} />
-                <Route path="projects/:id" element={<AdminProjectDetail />} />
-              </Route>
+                  <Route path="/admin" element={
+                    <ProtectedRoute>
+                      <AdminLayout />
+                    </ProtectedRoute>
+                  }>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="companies" element={<AdminCompanies />} />
+                    <Route path="projects" element={<AdminProjects />} />
+                    <Route path="projects/:id" element={<AdminProjectDetail />} />
+                    <Route path="documents" element={<AdminDocuments />} />
+                  </Route>
             </Routes>
             <Toaster />
           </div>
