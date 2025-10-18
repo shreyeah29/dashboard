@@ -20,19 +20,23 @@ const getCompanyHeroImage = (companyName: string) => {
   const name = companyName.toLowerCase();
   
   if (name.includes('innovations') || name.includes('consulting')) {
-    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1926&q=80'; // Business/Office
+    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Technology/Consulting
   } else if (name.includes('mining') || name.includes('minerals')) {
     return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
   } else if (name.includes('productions') || name.includes('entertainment')) {
     return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
   } else if (name.includes('enterprises')) {
-    return 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Enterprise/Corporate
-  } else if (name.includes('technologies')) {
-    return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2025&q=80'; // Technology
-  } else if (name.includes('solutions')) {
-    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Solutions/Consulting
-  } else if (name.includes('ventures')) {
-    return 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Ventures/Startup
+    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1926&q=80'; // Business/Corporate
+  } else if (name.includes('infrastructure') || name.includes('developers')) {
+    return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Construction/Infrastructure
+  } else if (name.includes('imports') || name.includes('exports')) {
+    return 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Trade/Logistics
+  } else if (name.includes('consumer') || name.includes('products')) {
+    return 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Consumer Products
+  } else if (name.includes('hotels') || name.includes('hospitality')) {
+    return 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Hotels/Hospitality
+  } else if (name.includes('real estate')) {
+    return 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Real Estate
   } else {
     return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1926&q=80'; // Default business
   }
@@ -43,13 +47,13 @@ const getCompanyFeatureImage = (companyName: string) => {
   const name = companyName.toLowerCase();
   
   if (name.includes('innovations') || name.includes('consulting')) {
-    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Consulting/Strategy
+    return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2025&q=80'; // Technology/Digital
   } else if (name.includes('mining') || name.includes('minerals')) {
     return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
   } else if (name.includes('productions') || name.includes('entertainment')) {
     return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
   } else if (name.includes('enterprises')) {
-    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Enterprise/Corporate
+    return 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Business/Partnerships
   } else if (name.includes('infrastructure') || name.includes('developers')) {
     return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Infrastructure/Construction
   } else if (name.includes('imports') || name.includes('exports')) {
@@ -445,48 +449,47 @@ const CompanyPage = () => {
 
           {/* Visual Content Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-              >
-                <img
-                  src={getCompanyFeatureImage(company.name)}
-                  alt={`${company.name} operations`}
-                  className="w-full h-96 object-cover rounded-2xl shadow-2xl"
-                />
-              </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <img
+                src={getCompanyFeatureImage(company.name)}
+                alt={`${company.name} operations`}
+                className="w-full h-96 object-cover rounded-2xl shadow-2xl"
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
+                {getCompanyContent(company.name).mission}
+              </h3>
+              <p className="text-lg text-gray-600 leading-relaxed font-medium">
+                {company.overview}
+              </p>
               
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className="space-y-6"
-              >
-                <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
-                  {getCompanyContent(company.name).mission}
-                </h3>
-                <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                  {company.overview}
-                </p>
-                
-                {/* Company Highlights */}
-                <div className="space-y-4">
-                  {getCompanyContent(company.name).highlights.map((highlight, index) => (
-                    <div key={index} className="flex items-start space-x-4">
-                      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <CheckCircle className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-gray-600 font-medium">{highlight}</p>
-                      </div>
+              {/* Company Highlights */}
+              <div className="space-y-4">
+                {getCompanyContent(company.name).highlights.map((highlight, index) => (
+                  <div key={index} className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-4 h-4 text-white" />
                     </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
+                    <div>
+                      <p className="text-gray-600 font-medium">{highlight}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
