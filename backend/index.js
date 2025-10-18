@@ -6,7 +6,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
-const { upload, getFileType, generatePresignedUrl, deleteFileFromS3 } = require('./src/config/s3');
+const { upload, getFileType, generateFileUrl, deleteLocalFile } = require('./src/config/s3');
 const Project = require('./src/models/Project');
 const Document = require('./src/models/Document');
 const Company = require('./src/models/Company');
@@ -83,6 +83,9 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -442,8 +445,8 @@ app.post('/api/v1/projects/:projectId/documents', upload.single('document'), asy
       fileType: getFileType(req.file.mimetype),
       mimeType: req.file.mimetype,
       fileSize: req.file.size,
-      s3Key: req.file.key,
-      s3Url: req.file.location,
+      s3Key: req.file.filename, // Store local filename
+      s3Url: generateFileUrl(req.file.filename), // Generate local URL
       tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
       uploadedBy: 'admin'
     });
@@ -494,12 +497,12 @@ app.get('/api/v1/documents/:id', async (req, res) => {
     document.lastAccessed = new Date();
     await document.save();
     
-    // Generate pre-signed URL for secure access
-    const presignedUrl = generatePresignedUrl(document.s3Key, 3600); // 1 hour expiry
+    // Generate local file URL
+    const fileUrl = generateFileUrl(document.s3Key);
     
     res.json({
       ...document.toObject(),
-      presignedUrl
+      presignedUrl: fileUrl // Use local URL instead of pre-signed URL
     });
   } catch (error) {
     console.error('Error fetching document:', error);
@@ -517,10 +520,10 @@ app.delete('/api/v1/documents/:id', async (req, res) => {
       return res.status(404).json({ error: 'Document not found' });
     }
     
-    // Delete from S3
-    const deletedFromS3 = await deleteFileFromS3(document.s3Key);
-    if (!deletedFromS3) {
-      console.warn('Failed to delete file from S3, but continuing with database deletion');
+    // Delete local file
+    const deletedLocally = await deleteLocalFile(document.s3Key);
+    if (!deletedLocally) {
+      console.warn('Failed to delete local file, but continuing with database deletion');
     }
     
     // Remove document from project

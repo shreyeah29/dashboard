@@ -1,15 +1,13 @@
-const AWS = require('aws-sdk');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const fs = require('fs');
 
-// Configure AWS S3
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION || 'us-east-1'
-});
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, '../../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // File filter for allowed file types
 const fileFilter = (req, file, cb) => {
@@ -35,28 +33,24 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Multer configuration for S3 upload
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.AWS_S3_BUCKET_NAME,
-    acl: 'public-read',
-    key: function (req, file, cb) {
-      const fileExtension = path.extname(file.originalname);
-      const fileName = `${uuidv4()}${fileExtension}`;
-      const folder = 'project-documents';
-      cb(null, `${folder}/${fileName}`);
-    },
-    contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: function (req, file, cb) {
-      cb(null, {
-        fieldName: file.fieldname,
-        originalName: file.originalname,
-        uploadedBy: 'admin',
-        projectId: req.params.projectId || 'unknown'
-      });
+// Multer configuration for local storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const projectDir = path.join(uploadsDir, 'project-documents');
+    if (!fs.existsSync(projectDir)) {
+      fs.mkdirSync(projectDir, { recursive: true });
     }
-  }),
+    cb(null, projectDir);
+  },
+  filename: function (req, file, cb) {
+    const fileExtension = path.extname(file.originalname);
+    const fileName = `${uuidv4()}${fileExtension}`;
+    cb(null, fileName);
+  }
+});
+
+const upload = multer({
+  storage: storage,
   fileFilter: fileFilter,
   limits: {
     fileSize: 50 * 1024 * 1024 // 50MB limit
@@ -78,33 +72,30 @@ const getFileType = (mimeType) => {
   }
 };
 
-// Helper function to generate pre-signed URL for secure access
-const generatePresignedUrl = (s3Key, expiresIn = 3600) => {
-  return s3.getSignedUrl('getObject', {
-    Bucket: process.env.AWS_S3_BUCKET_NAME,
-    Key: s3Key,
-    Expires: expiresIn
-  });
+// Helper function to generate local file URL
+const generateFileUrl = (filename) => {
+  const baseUrl = process.env.CLIENT_URL || 'http://localhost:5000';
+  return `${baseUrl}/uploads/project-documents/${filename}`;
 };
 
-// Helper function to delete file from S3
-const deleteFileFromS3 = async (s3Key) => {
+// Helper function to delete local file
+const deleteLocalFile = async (filename) => {
   try {
-    await s3.deleteObject({
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: s3Key
-    }).promise();
-    return true;
+    const filePath = path.join(uploadsDir, 'project-documents', filename);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      return true;
+    }
+    return false;
   } catch (error) {
-    console.error('Error deleting file from S3:', error);
+    console.error('Error deleting local file:', error);
     return false;
   }
 };
 
 module.exports = {
-  s3,
   upload,
   getFileType,
-  generatePresignedUrl,
-  deleteFileFromS3
+  generateFileUrl,
+  deleteLocalFile
 };
