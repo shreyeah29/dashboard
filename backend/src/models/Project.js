@@ -8,7 +8,7 @@ const projectSchema = new mongoose.Schema({
   },
   slug: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
     lowercase: true
   },
@@ -82,7 +82,7 @@ projectSchema.pre('save', function(next) {
 
 // Create slug from name
 projectSchema.pre('save', function(next) {
-  if (this.isModified('name') && !this.slug) {
+  if (this.isModified('name') || !this.slug) {
     this.slug = this.name
       .toLowerCase()
       .replace(/[^a-z0-9 -]/g, '')
