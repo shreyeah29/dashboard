@@ -69,8 +69,8 @@ const CompanyPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black via-edicius-red to-black text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-60"></div>
+      <section className="relative bg-gradient-to-br from-white via-gray-50 to-white text-gray-900 overflow-hidden">
+        <div className="absolute inset-0 bg-white opacity-90"></div>
         {company.heroImage && (
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -83,15 +83,15 @@ const CompanyPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <Link to="/" className="inline-flex items-center text-edicius-gold hover:text-yellow-300 transition-colors duration-200 mb-8">
+            <Link to="/" className="inline-flex items-center text-edicius-red hover:text-red-600 transition-colors duration-200 mb-8">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Companies
             </Link>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
               {company.name}
             </h1>
-            <p className="text-xl text-gray-200 max-w-3xl">
+            <p className="text-xl text-gray-600 max-w-3xl">
               {company.overview}
             </p>
           </motion.div>
@@ -99,7 +99,7 @@ const CompanyPage = () => {
       </section>
 
       {/* Company Overview */}
-      <section className="py-20 bg-gradient-to-br from-black to-edicius-red">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -108,11 +108,11 @@ const CompanyPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-8">
+            <h2 className="text-4xl font-bold text-gray-900 mb-8">
               About {company.name}
             </h2>
             <div className="max-w-5xl mx-auto">
-              <p className="text-xl text-gray-200 leading-relaxed mb-8">
+              <p className="text-xl text-gray-600 leading-relaxed mb-8">
                 {company.overview}
               </p>
               
@@ -123,13 +123,13 @@ const CompanyPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/20"
+                  className="bg-white border border-gray-200 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-edicius-red"
                 >
-                  <div className="w-16 h-16 bg-edicius-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-edicius-red rounded-full flex items-center justify-center mx-auto mb-4">
                     <Building2 className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Innovation Focus</h3>
-                  <p className="text-gray-200">Cutting-edge technology solutions and strategic consulting services</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Innovation Focus</h3>
+                  <p className="text-gray-600">Cutting-edge technology solutions and strategic consulting services</p>
                 </motion.div>
                 
                 <motion.div
@@ -137,13 +137,13 @@ const CompanyPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/20"
+                  className="bg-white border border-gray-200 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-edicius-red"
                 >
                   <div className="w-16 h-16 bg-edicius-red rounded-full flex items-center justify-center mx-auto mb-4">
                     <Users className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Expert Team</h3>
-                  <p className="text-gray-200">Experienced professionals dedicated to digital transformation</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Expert Team</h3>
+                  <p className="text-gray-600">Experienced professionals dedicated to digital transformation</p>
                 </motion.div>
                 
                 <motion.div
@@ -151,13 +151,13 @@ const CompanyPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/20"
+                  className="bg-white border border-gray-200 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-edicius-red"
                 >
-                  <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-edicius-red rounded-full flex items-center justify-center mx-auto mb-4">
                     <Globe className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Global Reach</h3>
-                  <p className="text-gray-200">Serving clients worldwide with innovative solutions</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Global Reach</h3>
+                  <p className="text-gray-600">Serving clients worldwide with innovative solutions</p>
                 </motion.div>
               </div>
             </div>
@@ -166,7 +166,7 @@ const CompanyPage = () => {
       </section>
 
       {/* Company Services Section */}
-      <section className="py-20 bg-gradient-to-br from-edicius-red to-black">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -175,8 +175,8 @@ const CompanyPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">Our Services</h2>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Comprehensive solutions tailored to meet your business needs
             </p>
           </motion.div>
@@ -188,13 +188,13 @@ const CompanyPage = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/10 backdrop-blur-sm border-white/20">
+              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                 <CardContent className="p-8 text-center">
-                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-red to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <span className="text-3xl">🚀</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">Innovation & Technology</h3>
-                  <p className="text-gray-200 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Innovation & Technology</h3>
+                  <p className="text-gray-600 leading-relaxed">
                     Cutting-edge technology solutions and digital transformation services
                   </p>
                 </CardContent>
@@ -207,13 +207,13 @@ const CompanyPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/10 backdrop-blur-sm border-white/20">
+              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                 <CardContent className="p-8 text-center">
                   <div className="w-20 h-20 bg-gradient-to-br from-edicius-red to-edicius-gold rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <span className="text-3xl">💼</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">Strategic Consulting</h3>
-                  <p className="text-gray-200 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Strategic Consulting</h3>
+                  <p className="text-gray-600 leading-relaxed">
                     Expert business consulting and strategic planning services
                   </p>
                 </CardContent>
@@ -226,13 +226,13 @@ const CompanyPage = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/10 backdrop-blur-sm border-white/20">
+              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                 <CardContent className="p-8 text-center">
-                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-edicius-red to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <span className="text-3xl">🎯</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">Custom Solutions</h3>
-                  <p className="text-gray-200 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Custom Solutions</h3>
+                  <p className="text-gray-600 leading-relaxed">
                     Tailored solutions designed to meet your specific requirements
                   </p>
                 </CardContent>
@@ -243,7 +243,7 @@ const CompanyPage = () => {
       </section>
 
       {/* Projects Section */}
-      <section className="py-20 bg-gradient-to-br from-black to-edicius-red">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -252,10 +252,10 @@ const CompanyPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
               Our Projects
             </h2>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Explore the innovative projects and initiatives driving our success in digital transformation
             </p>
           </motion.div>
@@ -271,7 +271,7 @@ const CompanyPage = () => {
               {projects.map((project) => (
                 <motion.div key={project._id} variants={itemVariants}>
                   <Link to={`/project/${project.slug}`}>
-                    <Card className="h-full hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group cursor-pointer border-0 shadow-lg bg-white/10 backdrop-blur-sm border-white/20">
+                    <Card className="h-full hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group cursor-pointer border-0 shadow-lg bg-white border border-gray-200">
                       <div className="relative overflow-hidden rounded-t-xl">
                         {project.bannerImage ? (
                           <img
@@ -280,7 +280,7 @@ const CompanyPage = () => {
                             className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         ) : (
-                          <div className="w-full h-56 bg-gradient-to-br from-black via-edicius-red to-edicius-gold flex items-center justify-center">
+                          <div className="w-full h-56 bg-gradient-to-br from-edicius-red to-red-600 flex items-center justify-center">
                             <Building2 className="w-20 h-20 text-white group-hover:scale-110 transition-transform duration-300" />
                           </div>
                         )}
@@ -292,29 +292,29 @@ const CompanyPage = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
                       <CardContent className="p-8">
-                        <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-edicius-gold transition-colors duration-200">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-edicius-red transition-colors duration-200">
                           {project.name}
                         </h3>
-                        <p className="text-gray-200 text-base mb-6 line-clamp-3 leading-relaxed">
+                        <p className="text-gray-600 text-base mb-6 line-clamp-3 leading-relaxed">
                           {project.description}
                         </p>
                         
-                        <div className="flex items-center justify-between text-sm text-gray-300 mb-6">
-                          <div className="flex items-center bg-white/10 px-3 py-2 rounded-full">
-                            <Users className="w-4 h-4 mr-2 text-edicius-gold" />
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-full">
+                            <Users className="w-4 h-4 mr-2 text-edicius-red" />
                             <span className="font-medium">{project.teamSize || 0} members</span>
                           </div>
-                          <div className="flex items-center bg-white/10 px-3 py-2 rounded-full">
-                            <Calendar className="w-4 h-4 mr-2 text-edicius-gold" />
+                          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-full">
+                            <Calendar className="w-4 h-4 mr-2 text-edicius-red" />
                             <span className="font-medium">{formatDate(project.createdAt)}</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-4 border-t border-white/20">
-                          <span className="text-lg font-semibold text-edicius-gold group-hover:text-white transition-colors duration-200">
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                          <span className="text-lg font-semibold text-edicius-red group-hover:text-red-600 transition-colors duration-200">
                             View Project Details
                           </span>
-                          <ArrowRight className="w-5 h-5 text-edicius-gold group-hover:translate-x-2 transition-transform duration-200" />
+                          <ArrowRight className="w-5 h-5 text-edicius-red group-hover:translate-x-2 transition-transform duration-200" />
                         </div>
                       </CardContent>
                     </Card>

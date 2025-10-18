@@ -116,16 +116,16 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-edicius-red to-black">
+    <div className="min-h-screen bg-white">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
-        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-black/95 backdrop-blur-xl shadow-2xl border-r border-edicius-red/20">
-          <div className="flex h-16 items-center justify-between px-4 border-b border-edicius-red/20">
+        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-2xl border-r border-gray-200">
+          <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
             <Logo width={120} height={40} />
             <button
               onClick={() => setSidebarOpen(false)}
-              className="text-edicius-gold/70 hover:text-edicius-gold transition-colors"
+              className="text-gray-600 hover:text-edicius-red transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -138,8 +138,8 @@ const AdminLayout = () => {
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
-                    ? 'bg-edicius-gold/20 text-edicius-gold border-r-2 border-edicius-gold shadow-lg'
-                    : 'text-white/80 hover:bg-edicius-gold/10 hover:text-edicius-gold'
+                    ? 'bg-edicius-red/10 text-edicius-red border-r-2 border-edicius-red shadow-lg'
+                    : 'text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -149,10 +149,10 @@ const AdminLayout = () => {
           </nav>
           
           {/* AI Assistant */}
-          <div className="p-4 border-t border-edicius-red/20">
+          <div className="p-4 border-t border-gray-200">
             <button
               onClick={() => setShowAiPanel(!showAiPanel)}
-              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-edicius-gold/10 hover:text-edicius-gold transition-all duration-200"
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red transition-all duration-200"
             >
               <Bot className="w-5 h-5" />
               <span>Ask Edicius AI</span>
@@ -163,8 +163,8 @@ const AdminLayout = () => {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow bg-black/95 backdrop-blur-xl border-r border-edicius-red/20 shadow-2xl">
-          <div className="flex h-16 items-center px-4 border-b border-edicius-red/20">
+        <div className="flex flex-col flex-grow bg-white border-r border-gray-200 shadow-2xl">
+          <div className="flex h-16 items-center px-4 border-b border-gray-200">
             <Logo width={120} height={40} />
           </div>
           <nav className="flex-1 px-4 py-4 space-y-2">
@@ -174,8 +174,8 @@ const AdminLayout = () => {
                 to={item.href}
                 className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
-                    ? 'bg-edicius-gold/20 text-edicius-gold border-r-2 border-edicius-gold shadow-lg'
-                    : 'text-white/80 hover:bg-edicius-gold/10 hover:text-edicius-gold'
+                    ? 'bg-edicius-red/10 text-edicius-red border-r-2 border-edicius-red shadow-lg'
+                    : 'text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -185,10 +185,10 @@ const AdminLayout = () => {
           </nav>
           
           {/* AI Assistant */}
-          <div className="p-4 border-t border-edicius-red/20">
+          <div className="p-4 border-t border-gray-200">
             <button
               onClick={() => setShowAiPanel(!showAiPanel)}
-              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-edicius-gold/10 hover:text-edicius-gold transition-all duration-200"
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-edicius-red/5 hover:text-edicius-red transition-all duration-200"
             >
               <Bot className="w-5 h-5" />
               <span>Ask Edicius AI</span>
