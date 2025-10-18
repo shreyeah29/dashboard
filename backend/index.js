@@ -86,7 +86,7 @@ app.get('/api/v1/companies', (req, res) => {
       name: 'Edicius Enterprises Private Limited',
       slug: 'edicius-enterprises-private-limited',
       overview: 'Edicius Enterprises serves as our multi-sector B2B venture arm, focusing on industrial innovation and strategic business partnerships. We develop and manufacture industrial goods, provide enterprise solutions, and create value through cross-industry collaborations.',
-      heroImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      heroImage: 'https://images.unsplash.com/photo-1565008576549-57569a49371d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
