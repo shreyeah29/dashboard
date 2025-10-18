@@ -145,6 +145,20 @@ app.get('/api/v1/companies', async (req, res) => {
   }
 });
 
+app.get('/api/v1/companies/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const company = await Company.findOne({ slug });
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+    res.json(company);
+  } catch (error) {
+    console.error('Error fetching company:', error);
+    res.status(500).json({ error: 'Failed to fetch company' });
+  }
+});
+
 // Auth login endpoint
 app.post('/api/v1/auth/admin/login', (req, res) => {
   const { password } = req.body;
