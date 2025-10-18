@@ -9,6 +9,52 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Building2, Calendar, Users, ArrowRight, Globe } from 'lucide-react';
 import { formatDate, getStatusColor } from '@/lib/utils';
 
+// Function to get appropriate hero image based on company name
+const getCompanyHeroImage = (companyName: string) => {
+  const name = companyName.toLowerCase();
+  
+  if (name.includes('innovations') || name.includes('consulting')) {
+    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1926&q=80'; // Business/Office
+  } else if (name.includes('mining') || name.includes('minerals')) {
+    return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
+  } else if (name.includes('productions') || name.includes('entertainment')) {
+    return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
+  } else if (name.includes('enterprises')) {
+    return 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Enterprise/Corporate
+  } else if (name.includes('technologies')) {
+    return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2025&q=80'; // Technology
+  } else if (name.includes('solutions')) {
+    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Solutions/Consulting
+  } else if (name.includes('ventures')) {
+    return 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Ventures/Startup
+  } else {
+    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1926&q=80'; // Default business
+  }
+};
+
+// Function to get feature images for company sections
+const getCompanyFeatureImage = (companyName: string) => {
+  const name = companyName.toLowerCase();
+  
+  if (name.includes('innovations') || name.includes('consulting')) {
+    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Consulting/Strategy
+  } else if (name.includes('mining') || name.includes('minerals')) {
+    return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
+  } else if (name.includes('productions') || name.includes('entertainment')) {
+    return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
+  } else if (name.includes('enterprises')) {
+    return 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Enterprise/Corporate
+  } else if (name.includes('technologies')) {
+    return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2025&q=80'; // Technology
+  } else if (name.includes('solutions')) {
+    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Solutions/Consulting
+  } else if (name.includes('ventures')) {
+    return 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Ventures/Startup
+  } else {
+    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Default business
+  }
+};
+
 const CompanyPage = () => {
   const { slug } = useParams<{ slug: string }>();
 
@@ -69,31 +115,52 @@ const CompanyPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-white via-gray-50 to-white text-gray-900 overflow-hidden">
-        <div className="absolute inset-0 bg-white opacity-90"></div>
-        {company.heroImage && (
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Dynamic Background Image based on company */}
+        <div className="absolute inset-0">
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${company.heroImage})` }}
+            style={{ 
+              backgroundImage: `url(${getCompanyHeroImage(company.name)})` 
+            }}
           ></div>
-        )}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            className="text-white"
           >
-            <Link to="/" className="inline-flex items-center text-gray-600 hover:text-black transition-colors duration-200 mb-8 font-medium tracking-wide">
+            <Link to="/" className="inline-flex items-center text-white/80 hover:text-white transition-colors duration-200 mb-8 font-medium tracking-wide">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Companies
             </Link>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-black font-serif tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white font-serif tracking-tight">
               {company.name}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl font-medium">
+            <p className="text-xl text-white/90 max-w-4xl mx-auto font-medium leading-relaxed">
               {company.overview}
             </p>
+            
+            {/* Company Stats Overlay */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
+                <div className="text-white/80 font-medium">Active Projects</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                <div className="text-3xl font-bold text-white mb-2">5+</div>
+                <div className="text-white/80 font-medium">Years Experience</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                <div className="text-3xl font-bold text-white mb-2">100+</div>
+                <div className="text-white/80 font-medium">Happy Clients</div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -115,53 +182,73 @@ const CompanyPage = () => {
               <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
                 {company.overview}
               </p>
-              
-              {/* Company Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white border border-gray-200 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-edicius-red"
-                >
-                  <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Building2 className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-black mb-2 font-serif tracking-wide">Innovation Focus</h3>
-                  <p className="text-gray-600 font-medium">Cutting-edge technology solutions and strategic consulting services</p>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="bg-white border border-gray-200 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-edicius-red"
-                >
-                  <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-black mb-2 font-serif tracking-wide">Expert Team</h3>
-                  <p className="text-gray-600 font-medium">Experienced professionals dedicated to digital transformation</p>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  viewport={{ once: true }}
-                  className="bg-white border border-gray-200 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-edicius-red"
-                >
-                  <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Globe className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-black mb-2 font-serif tracking-wide">Global Reach</h3>
-                  <p className="text-gray-600 font-medium">Serving clients worldwide with innovative solutions</p>
-                </motion.div>
-              </div>
             </div>
           </motion.div>
+
+          {/* Visual Content Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <img
+                src={getCompanyFeatureImage(company.name)}
+                alt={`${company.name} operations`}
+                className="w-full h-96 object-cover rounded-2xl shadow-2xl"
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
+                Our Commitment to Excellence
+              </h3>
+              <p className="text-lg text-gray-600 leading-relaxed font-medium">
+                We are dedicated to delivering innovative solutions that drive business growth and transformation. 
+                Our team combines deep industry expertise with cutting-edge technology to create value for our clients.
+              </p>
+              
+              {/* Key Features */}
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Building2 className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-black font-serif tracking-wide">Industry Expertise</h4>
+                    <p className="text-gray-600 font-medium">Deep knowledge across multiple sectors and industries</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Users className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-black font-serif tracking-wide">Expert Team</h4>
+                    <p className="text-gray-600 font-medium">Experienced professionals with proven track records</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Globe className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-black font-serif tracking-wide">Global Presence</h4>
+                    <p className="text-gray-600 font-medium">Serving clients worldwide with local expertise</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
