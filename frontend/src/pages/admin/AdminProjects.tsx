@@ -408,7 +408,7 @@ const AdminProjects = () => {
                     >
                       <option value="">Choose a company...</option>
                       {companies.map(company => (
-                        <option key={company.id} value={company.id}>{company.name}</option>
+                        <option key={company._id} value={company._id}>{company.name}</option>
                       ))}
                     </select>
                   </div>
