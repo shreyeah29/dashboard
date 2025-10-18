@@ -29,13 +29,18 @@ export const authApi = {
     return response.data;
   },
   
-  verify: async (): Promise<AuthUser> => {
+  verify: async (): Promise<AuthUser | null> => {
     // Get token from localStorage as fallback
     const token = localStorage.getItem('adminToken');
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
     
     const response = await api.get('/auth/admin/verify', { headers });
-    return response.data.user;
+    
+    if (response.data.authenticated && response.data.user) {
+      return response.data.user;
+    }
+    
+    return null;
   }
 };
 
