@@ -2,11 +2,11 @@
   "name": "edicius-portal-backend",
   "version": "1.0.0",
   "description": "Backend API for Edicius Group Portal",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
+    "build": "echo 'Using JavaScript version for deployment'",
+    "start": "node index.js",
     "seed": "ts-node src/scripts/seed.ts",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix"
