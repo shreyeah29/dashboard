@@ -8,6 +8,7 @@ import Home from '@/pages/Home';
 import Companies from '@/pages/Companies';
 import CompanyPage from '@/pages/CompanyPage';
 import ProjectPage from '@/pages/ProjectPage';
+import Contact from '@/pages/Contact';
 
 // Admin pages
 import AdminLogin from '@/pages/admin/AdminLogin';
@@ -43,6 +44,7 @@ function App() {
                 <Route path="companies" element={<Companies />} />
                 <Route path="company/:slug" element={<CompanyPage />} />
                 <Route path="project/:slug" element={<ProjectPage />} />
+                <Route path="contact" element={<Contact />} />
               </Route>
 
               {/* Admin Routes */}

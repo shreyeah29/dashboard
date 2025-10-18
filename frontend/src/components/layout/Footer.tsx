@@ -8,28 +8,34 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-edicius-gold to-yellow-400 rounded-lg flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-edicius-navy" />
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="flex items-center space-x-1">
+                <div className="w-1 h-6 bg-edicius-red"></div>
+                <div className="w-1 h-6 bg-edicius-red"></div>
+                <div className="w-1 h-6 bg-edicius-red"></div>
               </div>
-              <span className="text-xl font-bold">Edicius Group</span>
+              <span className="text-lg font-bold">EDICIUS GROUP OF COMPANIES</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
-              Innovating across industries with cutting-edge solutions, sustainable practices, 
-              and transformative technologies that shape the future.
+              where innovation meets precision. With over 7 years of relentless dedication, 
+              we've been shaping industries, setting standards.
             </p>
             <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-gray-300">
-                <MapPin className="w-4 h-4" />
-                <span>Hyderabad, India</span>
+              <div className="flex items-start space-x-2 text-gray-300">
+                <MapPin className="w-4 h-4 mt-0.5" />
+                <div className="text-sm">
+                  <p>Flat. No.105 Lake Melody Apartment,</p>
+                  <p>Rajbhavan Road, Somajiguda,</p>
+                  <p>Hyderabad. Pin: 500082.</p>
+                </div>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="w-4 h-4" />
-                <span>info@ediciusgroup.com</span>
+                <span>info@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Phone className="w-4 h-4" />
-                <span>+91 40 1234 5678</span>
+                <span>+91 8341 029 691</span>
               </div>
             </div>
           </div>

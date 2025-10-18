@@ -49,41 +49,97 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-edicius-navy via-blue-900 to-edicius-navy text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
+      <section className="relative bg-gradient-to-br from-gray-50 to-white text-edicius-navy overflow-hidden min-h-screen flex items-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              The Edicius Group
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              Innovating Across Industries
-            </p>
-            <p className="text-lg text-gray-300 mb-12 max-w-4xl mx-auto">
-              A diverse portfolio of companies driving innovation, sustainability, and excellence 
-              across consumer products, infrastructure, technology, and entertainment sectors.
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-8 mb-16">
-              <div className="flex items-center space-x-2">
-                <Building2 className="w-6 h-6 text-edicius-gold" />
-                <span className="text-lg font-semibold">8 Companies</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                <span className="block">Consulting Minds.</span>
+                <span className="block">Diverse Ventures.</span>
+                <span className="block">One Vision.</span>
+              </h1>
+              <p className="text-lg text-edicius-gray leading-relaxed max-w-2xl">
+                Edicius Group blends expert consulting with a wide spectrum of industries — 
+                from consumer products to infrastructure — driving innovation, efficiency, 
+                and excellence across every vertical.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-edicius-navy text-white px-8 py-4 rounded-lg font-semibold hover:bg-edicius-navy/90 transition-colors duration-200 flex items-center space-x-2"
+              >
+                <span>Explore More</span>
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            </motion.div>
+
+            {/* Right Content - Contact Info */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="bg-white p-8 rounded-xl shadow-lg border"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-1 h-6 bg-edicius-red"></div>
+                    <div className="w-1 h-6 bg-edicius-red"></div>
+                    <div className="w-1 h-6 bg-edicius-red"></div>
+                  </div>
+                  <span className="text-lg font-bold text-edicius-navy">EDICIUS GROUP OF COMPANIES</span>
+                </div>
+                
+                <p className="text-edicius-gray text-sm leading-relaxed">
+                  where innovation meets precision. With over 7 years of relentless dedication, 
+                  we've been shaping industries, setting standards.
+                </p>
+
+                <div className="space-y-4">
+                  <h3 className="font-bold text-edicius-navy">Registered Office</h3>
+                  
+                  <div className="flex items-start space-x-3">
+                    <div className="w-5 h-5 text-edicius-red mt-0.5">
+                      <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="text-sm text-edicius-gray">
+                      <p>Flat. No.105 Lake Melody Apartment,</p>
+                      <p>Rajbhavan Road, Somajiguda,</p>
+                      <p>Hyderabad. Pin: 500082.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 text-edicius-red">
+                      <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                      </svg>
+                    </div>
+                    <span className="text-sm text-edicius-gray">+91 8341 029 691</span>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 text-edicius-red">
+                      <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                      </svg>
+                    </div>
+                    <span className="text-sm text-edicius-gray">info@gmail.com</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Globe className="w-6 h-6 text-edicius-gold" />
-                <span className="text-lg font-semibold">Global Reach</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Star className="w-6 h-6 text-edicius-gold" />
-                <span className="text-lg font-semibold">Innovation Leader</span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 

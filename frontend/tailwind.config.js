@@ -56,7 +56,10 @@ export default {
           navy: "#0B1F3A",
           gold: "#C9A227",
           slate: "#64748B",
-          light: "#F8FAFC"
+          light: "#F8FAFC",
+          red: "#DC2626",
+          gray: "#6B7280",
+          lightGray: "#F3F4F6"
         }
       },
       borderRadius: {

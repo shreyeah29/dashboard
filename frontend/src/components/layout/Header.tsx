@@ -8,8 +8,9 @@ const Header = () => {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Companies', href: '/companies' },
-    { name: 'About', href: '/about' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Business', href: '/companies' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -22,12 +23,14 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-edicius-navy to-edicius-gold rounded-lg flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-white" />
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1">
+              <div className="w-1 h-8 bg-edicius-red"></div>
+              <div className="w-1 h-8 bg-edicius-red"></div>
+              <div className="w-1 h-8 bg-edicius-red"></div>
             </div>
-            <span className="text-xl font-bold text-edicius-navy">
-              Edicius Group
+            <span className="text-lg font-bold text-edicius-navy tracking-wide">
+              EDICIUS GROUP OF COMPANIES
             </span>
           </Link>
 
