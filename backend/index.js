@@ -347,13 +347,8 @@ app.post('/api/v1/projects', async (req, res) => {
       return res.status(400).json({ error: 'Name, companyId, and description are required' });
     }
     
-    // Check if company exists (handle both ObjectId and string ID)
-    let company;
-    if (mongoose.Types.ObjectId.isValid(companyId)) {
-      company = await Company.findById(companyId);
-    } else {
-      company = await Company.findOne({ _id: companyId });
-    }
+    // Check if company exists
+    const company = await Company.findOne({ _id: companyId });
     
     if (!company) {
       return res.status(404).json({ error: 'Company not found' });

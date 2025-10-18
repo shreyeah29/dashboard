@@ -13,8 +13,7 @@ const projectSchema = new mongoose.Schema({
     lowercase: true
   },
   companyId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    type: String,
     required: true
   },
   description: {
