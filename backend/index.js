@@ -296,9 +296,12 @@ app.get('/api/v1/projects', async (req, res) => {
     // Transform the data to include company name for frontend compatibility
     const transformedProjects = projects.map(project => {
       const projectObj = project.toObject();
+      console.log('Project companyId:', projectObj.companyId);
+      const companyName = projectObj.companyId && projectObj.companyId.name ? projectObj.companyId.name : 'Unknown Company';
+      console.log('Company name:', companyName);
       return {
         ...projectObj,
-        company: projectObj.companyId && projectObj.companyId.name ? projectObj.companyId.name : 'Unknown Company'
+        company: companyName
       };
     });
 
