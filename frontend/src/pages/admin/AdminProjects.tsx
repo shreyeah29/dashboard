@@ -258,7 +258,7 @@ const AdminProjects = () => {
         {/* Projects Grid */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-edicius-gold"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
           </div>
         ) : (
           <motion.div
@@ -274,14 +274,14 @@ const AdminProjects = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
             >
-              <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20 hover:bg-white/15 transition-all duration-300 h-full">
+              <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 h-full">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="text-white text-lg mb-2">{project.name}</CardTitle>
+                      <CardTitle className="text-black text-lg mb-2">{project.name}</CardTitle>
                       <div className="flex items-center space-x-2 mb-3">
-                        <Building2 className="w-4 h-4 text-edicius-gold" />
-                        <span className="text-white/70 text-sm">{project.company || (project.companyId && project.companyId.name) || 'Unknown Company'}</span>
+                        <Building2 className="w-4 h-4 text-gray-600" />
+                        <span className="text-gray-600 text-sm">{project.company || (project.companyId && project.companyId.name) || 'Unknown Company'}</span>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -299,17 +299,17 @@ const AdminProjects = () => {
                 </CardHeader>
                 
                 <CardContent className="pt-0">
-                  <p className="text-white/80 text-sm mb-4 line-clamp-2">{project.description}</p>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.description}</p>
                   
                   {/* Progress Bar */}
                   <div className="mb-4">
-                    <div className="flex items-center justify-between text-sm text-white/70 mb-2">
+                    <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                       <span>Progress</span>
                       <span>{project.progress}%</span>
                     </div>
-                    <div className="w-full bg-white/10 rounded-full h-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-edicius-gold to-edicius-gold/80 h-2 rounded-full transition-all duration-300"
+                        className="bg-black h-2 rounded-full transition-all duration-300"
                         style={{ width: `${project.progress}%` }}
                       ></div>
                     </div>
@@ -317,20 +317,20 @@ const AdminProjects = () => {
 
                   {/* Project Stats */}
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="flex items-center space-x-2 text-sm text-white/70">
-                      <Users className="w-4 h-4 text-edicius-gold" />
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <Users className="w-4 h-4 text-gray-600" />
                       <span>{project.teamSize} members</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-white/70">
-                      <FileText className="w-4 h-4 text-edicius-gold" />
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <FileText className="w-4 h-4 text-gray-600" />
                       <span>{project.documents ? project.documents.length : 0} docs</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-white/70">
-                      <TrendingUp className="w-4 h-4 text-edicius-gold" />
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <TrendingUp className="w-4 h-4 text-gray-600" />
                       <span>{project.milestones ? project.milestones.filter((m: any) => m.completed).length : 0}/{project.milestones ? project.milestones.length : 0} milestones</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-sm text-white/70">
-                      <Calendar className="w-4 h-4 text-edicius-gold" />
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <Calendar className="w-4 h-4 text-gray-600" />
                       <span>{project.endDate ? new Date(project.endDate).toLocaleDateString() : 'No end date'}</span>
                     </div>
                   </div>
@@ -341,7 +341,7 @@ const AdminProjects = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => handleManageFiles(project)}
-                      className="flex-1 border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                      className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       Manage Files
@@ -350,7 +350,7 @@ const AdminProjects = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditProject(project)}
-                      className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                      className="border-gray-300 text-gray-700 hover:bg-gray-50"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
