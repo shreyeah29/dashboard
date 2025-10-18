@@ -14,6 +14,7 @@ import Contact from '@/pages/Contact';
 import AdminLogin from '@/pages/admin/AdminLogin';
 import AdminDashboard from '@/pages/admin/AdminDashboard';
 import AdminCompanies from '@/pages/admin/AdminCompanies';
+import AdminCompanyProjects from '@/pages/admin/AdminCompanyProjects';
 import AdminProjects from '@/pages/admin/AdminProjects';
 import AdminProjectDetail from '@/pages/admin/AdminProjectDetail';
 import AdminDocuments from '@/pages/admin/AdminDocuments';
@@ -57,6 +58,7 @@ function App() {
                   }>
                     <Route index element={<AdminDashboard />} />
                     <Route path="companies" element={<AdminCompanies />} />
+                    <Route path="companies/:slug/projects" element={<AdminCompanyProjects />} />
                     <Route path="projects" element={<AdminProjects />} />
                     <Route path="projects/:id" element={<AdminProjectDetail />} />
                     <Route path="documents" element={<AdminDocuments />} />
