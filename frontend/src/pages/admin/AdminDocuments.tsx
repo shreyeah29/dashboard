@@ -185,7 +185,7 @@ const AdminDocuments = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -196,14 +196,14 @@ const AdminDocuments = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Documents Management</h1>
-              <p className="text-white/70">Upload and manage documents for all projects</p>
+              <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Documents Management</h1>
+              <p className="text-gray-600 text-lg font-medium">Upload and manage documents for all projects</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsUploadModalOpen(true)}
-              className="bg-gradient-to-r from-edicius-gold to-edicius-gold/80 text-edicius-navy px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-edicius-gold/20 transition-all duration-200 flex items-center space-x-2"
+              className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 hover:shadow-lg transition-all duration-200 flex items-center space-x-2"
             >
               <Plus className="w-5 h-5" />
               <span>Upload Document</span>
@@ -225,14 +225,14 @@ const AdminDocuments = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
             >
-              <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20 hover:bg-white/15 transition-all duration-300">
+              <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       {getFileIcon(document.type)}
                       <div>
-                        <h3 className="text-lg font-semibold text-white">{document.name}</h3>
-                        <div className="flex items-center space-x-4 text-sm text-white/60 mt-1">
+                        <h3 className="text-lg font-semibold text-black">{document.name}</h3>
+                        <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
                           <span>{document.size}</span>
                           <span>•</span>
                           <span>{document.company}</span>
@@ -244,7 +244,7 @@ const AdminDocuments = () => {
                             <Badge 
                               key={tagIndex}
                               variant="outline" 
-                              className="text-xs border-edicius-gold/30 text-edicius-gold"
+                              className="text-xs border-gray-300 text-gray-700"
                             >
                               {tag}
                             </Badge>
@@ -258,14 +258,14 @@ const AdminDocuments = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handlePreview(document)}
-                        className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50"
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50"
                       >
                         <Download className="w-4 h-4" />
                       </Button>
@@ -280,8 +280,8 @@ const AdminDocuments = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-edicius-gold/10">
-                    <div className="flex items-center space-x-4 text-xs text-white/50">
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex items-center space-x-4 text-xs text-gray-500">
                       <div className="flex items-center space-x-1">
                         <User className="w-3 h-3" />
                         <span>Uploaded by {document.uploadedBy}</span>
@@ -311,14 +311,14 @@ const AdminDocuments = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-2xl bg-edicius-navy/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-edicius-gold/20"
+              className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-gray-200"
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Upload Documents</h2>
+                  <h2 className="text-2xl font-bold text-black">Upload Documents</h2>
                   <button
                     onClick={() => setIsUploadModalOpen(false)}
-                    className="text-edicius-gold/70 hover:text-edicius-gold transition-colors"
+                    className="text-gray-500 hover:text-black transition-colors"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -327,11 +327,11 @@ const AdminDocuments = () => {
                 <div className="space-y-6">
                   {/* Company Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">Select Company</label>
+                    <label className="block text-sm font-medium text-black mb-2">Select Company</label>
                     <select
                       value={selectedCompany}
                       onChange={(e) => setSelectedCompany(e.target.value)}
-                      className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-white focus:outline-none focus:border-edicius-gold"
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
                     >
                       <option value="">Choose a company...</option>
                       {companies.map(company => (
@@ -342,11 +342,11 @@ const AdminDocuments = () => {
 
                   {/* Project Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">Select Project</label>
+                    <label className="block text-sm font-medium text-black mb-2">Select Project</label>
                     <select
                       value={selectedProject}
                       onChange={(e) => setSelectedProject(e.target.value)}
-                      className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-white focus:outline-none focus:border-edicius-gold"
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
                       disabled={!selectedCompany}
                     >
                       <option value="">Choose a project...</option>
@@ -360,7 +360,7 @@ const AdminDocuments = () => {
 
                   {/* Tags Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">Document Tags</label>
+                    <label className="block text-sm font-medium text-black mb-2">Document Tags</label>
                     <div className="flex flex-wrap gap-2">
                       {documentTags.map(tag => (
                         <button
@@ -368,8 +368,8 @@ const AdminDocuments = () => {
                           onClick={() => toggleTag(tag)}
                           className={`px-3 py-1 rounded-full text-sm transition-colors ${
                             selectedTags.includes(tag)
-                              ? 'bg-edicius-gold text-edicius-navy'
-                              : 'bg-white/10 text-white/70 hover:bg-white/20'
+                              ? 'bg-black text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
                           {tag}
@@ -380,8 +380,8 @@ const AdminDocuments = () => {
 
                   {/* File Upload */}
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">Upload Files</label>
-                    <div className="border-2 border-dashed border-edicius-gold/30 rounded-lg p-6 text-center">
+                    <label className="block text-sm font-medium text-black mb-2">Upload Files</label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                       <input
                         type="file"
                         multiple
@@ -391,9 +391,9 @@ const AdminDocuments = () => {
                         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
                       />
                       <label htmlFor="file-upload" className="cursor-pointer">
-                        <Upload className="w-12 h-12 text-edicius-gold mx-auto mb-4" />
-                        <p className="text-white mb-2">Click to upload or drag and drop</p>
-                        <p className="text-white/60 text-sm">PDF, DOC, PPT, XLS, Images (Max 10MB each)</p>
+                        <Upload className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                        <p className="text-black mb-2">Click to upload or drag and drop</p>
+                        <p className="text-gray-600 text-sm">PDF, DOC, PPT, XLS, Images (Max 10MB each)</p>
                       </label>
                     </div>
                     
@@ -401,11 +401,11 @@ const AdminDocuments = () => {
                     {uploadedFiles.length > 0 && (
                       <div className="mt-4 space-y-2">
                         {uploadedFiles.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                             <div className="flex items-center space-x-3">
                               {getFileIcon(file.name.split('.').pop() || '')}
-                              <span className="text-white text-sm">{file.name}</span>
-                              <span className="text-white/60 text-xs">({(file.size / 1024 / 1024).toFixed(1)} MB)</span>
+                              <span className="text-black text-sm">{file.name}</span>
+                              <span className="text-gray-600 text-xs">({(file.size / 1024 / 1024).toFixed(1)} MB)</span>
                             </div>
                             <button
                               onClick={() => removeFile(index)}
@@ -424,18 +424,18 @@ const AdminDocuments = () => {
                     <Button
                       variant="outline"
                       onClick={() => setIsUploadModalOpen(false)}
-                      className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                      className="border-gray-300 text-gray-700 hover:bg-gray-50"
                     >
                       Cancel
                     </Button>
                     <Button
                       onClick={handleUpload}
                       disabled={isUploading || !selectedCompany || !selectedProject || uploadedFiles.length === 0}
-                      className="bg-edicius-gold text-edicius-navy hover:bg-edicius-gold/90 disabled:opacity-50"
+                      className="bg-black text-white hover:bg-gray-800 disabled:opacity-50"
                     >
                       {isUploading ? (
                         <div className="flex items-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-edicius-navy/30 border-t-edicius-navy rounded-full animate-spin" />
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           <span>Uploading...</span>
                         </div>
                       ) : (
