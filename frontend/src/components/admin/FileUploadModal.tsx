@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, X, FileText, Image, Video, File, Eye, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { documentsApi } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface FileUploadModalProps {
   project: any;
@@ -19,6 +20,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
   const [isLoadingDocuments, setIsLoadingDocuments] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // Fetch existing documents when modal opens
   useEffect(() => {
@@ -120,10 +122,45 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
       // Refresh the documents list
       const documents = await documentsApi.getByProject(project._id);
       setExistingDocuments(documents);
+      
+      // Invalidate project queries to update public website
+      queryClient.invalidateQueries({ queryKey: ['project'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
     } catch (error) {
       console.error('Upload error:', error);
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleDeleteDocument = async (documentId: string, documentName: string) => {
+    if (!window.confirm(`Are you sure you want to delete "${documentName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await documentsApi.delete(documentId);
+      toast({
+        title: "Document Deleted",
+        description: `"${documentName}" has been deleted successfully.`,
+      });
+      
+      // Refresh the documents list
+      const documents = await documentsApi.getByProject(project._id);
+      setExistingDocuments(documents);
+      
+      // Invalidate project queries to update public website
+      queryClient.invalidateQueries({ queryKey: ['project'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete document. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -251,9 +288,19 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
                         size="sm"
                         variant="outline"
                         onClick={() => window.open(doc.s3Url, '_blank')}
-                        className="text-edicius-gold border-edicius-gold hover:bg-edicius-gold/10"
+                        className="text-gray-600 border-gray-300 hover:bg-gray-50"
+                        title="View Document"
                       >
                         <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeleteDocument(doc._id, doc.name)}
+                        className="text-red-600 border-red-300 hover:bg-red-50"
+                        title="Delete Document"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>

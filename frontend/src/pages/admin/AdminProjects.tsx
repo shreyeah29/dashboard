@@ -22,19 +22,33 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { projectsApi, companiesApi } from '@/lib/api';
 import FileUploadModal from '@/components/admin/FileUploadModal';
+import { useQueryClient } from '@tanstack/react-query';
 
 const AdminProjects = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [editingProject, setEditingProject] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState<any[]>([]);
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // Form state
   const [formData, setFormData] = useState({
+    name: '',
+    companyId: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    priority: 'Medium'
+  });
+
+  // Edit form state
+  const [editFormData, setEditFormData] = useState({
     name: '',
     companyId: '',
     description: '',
@@ -129,6 +143,9 @@ const AdminProjects = () => {
       // Reload projects data
       await loadData();
       
+      // Invalidate companies query to refresh home page
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+      
       toast({
         title: "Project Created",
         description: `Project "${formData.name}" has been created successfully.`,
@@ -222,10 +239,44 @@ const AdminProjects = () => {
   };
 
   const handleEditProject = (project: any) => {
-    toast({
-      title: "Edit Project",
-      description: `Editing project: ${project.name}`,
+    setEditingProject(project);
+    setEditFormData({
+      name: project.name || '',
+      companyId: project.companyId || '',
+      description: project.description || '',
+      startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
+      endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
+      priority: project.priority || 'Medium'
     });
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateProject = async () => {
+    if (!editingProject) return;
+
+    setIsLoading(true);
+    try {
+      await projectsApi.update(editingProject._id, editFormData);
+      toast({
+        title: "Success",
+        description: "Project updated successfully!",
+      });
+      setIsEditModalOpen(false);
+      setEditingProject(null);
+      loadData(); // Refresh the projects list
+      
+      // Invalidate companies query to refresh home page
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+    } catch (error) {
+      console.error('Error updating project:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update project. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -493,6 +544,140 @@ const AdminProjects = () => {
                         </div>
                       ) : (
                         'Create Project'
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Edit Project Modal */}
+        {isEditModalOpen && editingProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <div className="fixed inset-0 bg-black/50" onClick={() => setIsEditModalOpen(false)} />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-black">Edit Project</h2>
+                  <button
+                    onClick={() => setIsEditModalOpen(false)}
+                    className="text-gray-500 hover:text-black transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Project Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Project Name</label>
+                    <input
+                      type="text"
+                      value={editFormData.name}
+                      onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
+                      placeholder="Enter project name"
+                    />
+                  </div>
+
+                  {/* Company */}
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Company</label>
+                    <select
+                      value={editFormData.companyId}
+                      onChange={(e) => setEditFormData({ ...editFormData, companyId: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
+                    >
+                      <option value="">Select a company</option>
+                      {companies.map((company) => (
+                        <option key={company._id} value={company._id}>
+                          {company.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Description</label>
+                    <textarea
+                      value={editFormData.description}
+                      onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                      rows={4}
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
+                      placeholder="Enter project description"
+                    />
+                  </div>
+
+                  {/* Date Range */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-black mb-2">Start Date</label>
+                      <input
+                        type="date"
+                        value={editFormData.startDate}
+                        onChange={(e) => setEditFormData({ ...editFormData, startDate: e.target.value })}
+                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-black mb-2">End Date</label>
+                      <input
+                        type="date"
+                        value={editFormData.endDate}
+                        onChange={(e) => setEditFormData({ ...editFormData, endDate: e.target.value })}
+                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Priority */}
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Priority</label>
+                    <select
+                      value={editFormData.priority}
+                      onChange={(e) => setEditFormData({ ...editFormData, priority: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-end space-x-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEditModalOpen(false)}
+                      className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleUpdateProject}
+                      disabled={isLoading}
+                      className="bg-black text-white hover:bg-gray-800 disabled:opacity-50"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center space-x-2">
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span>Updating...</span>
+                        </div>
+                      ) : (
+                        'Update Project'
                       )}
                     </Button>
                   </div>

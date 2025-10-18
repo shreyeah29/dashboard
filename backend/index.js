@@ -415,6 +415,43 @@ app.get('/api/v1/projects/:slug', async (req, res) => {
   }
 });
 
+// Update project
+app.patch('/api/v1/projects/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    // Validate required fields
+    if (!updateData.name) {
+      return res.status(400).json({ error: 'Project name is required' });
+    }
+
+    // Check if company exists if companyId is provided
+    if (updateData.companyId) {
+      const company = await Company.findById(updateData.companyId);
+      if (!company) {
+        return res.status(404).json({ error: 'Company not found' });
+      }
+    }
+
+    // Update the project
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    ).populate('companyId').populate('documents');
+
+    if (!updatedProject) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    res.json(updatedProject);
+  } catch (error) {
+    console.error('Error updating project:', error);
+    res.status(500).json({ error: 'Failed to update project' });
+  }
+});
+
 // Delete project
 app.delete('/api/v1/projects/:id', async (req, res) => {
   try {
