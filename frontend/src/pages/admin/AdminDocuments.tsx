@@ -48,6 +48,8 @@ const AdminDocuments = () => {
     { id: '2', name: 'Smart City Infrastructure', companyId: '3' },
     { id: '3', name: 'Consumer IoT Products', companyId: '6' },
     { id: '4', name: 'Global Supply Chain Optimization', companyId: '4' },
+    { id: '5', name: 'AI Consulting Services', companyId: '2' },
+    { id: '6', name: 'Enterprise Solutions', companyId: '2' },
   ];
 
   const documentTags = ['Legal', 'Financial', 'Planning', 'Technical', 'Marketing', 'HR'];
