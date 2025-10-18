@@ -281,7 +281,7 @@ const AdminProjects = () => {
                       <CardTitle className="text-white text-lg mb-2">{project.name}</CardTitle>
                       <div className="flex items-center space-x-2 mb-3">
                         <Building2 className="w-4 h-4 text-edicius-gold" />
-                        <span className="text-white/70 text-sm">{project.company}</span>
+                        <span className="text-white/70 text-sm">{project.company || (project.companyId && project.companyId.name) || 'Unknown Company'}</span>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -323,15 +323,15 @@ const AdminProjects = () => {
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-white/70">
                       <FileText className="w-4 h-4 text-edicius-gold" />
-                      <span>{project.documents} docs</span>
+                      <span>{project.documents ? project.documents.length : 0} docs</span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-white/70">
                       <TrendingUp className="w-4 h-4 text-edicius-gold" />
-                      <span>{project.completedMilestones}/{project.milestones} milestones</span>
+                      <span>{project.milestones ? project.milestones.filter((m: any) => m.completed).length : 0}/{project.milestones ? project.milestones.length : 0} milestones</span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-white/70">
                       <Calendar className="w-4 h-4 text-edicius-gold" />
-                      <span>{project.endDate}</span>
+                      <span>{project.endDate ? new Date(project.endDate).toLocaleDateString() : 'No end date'}</span>
                     </div>
                   </div>
 
