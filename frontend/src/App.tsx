@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 // Public pages
 import Home from '@/pages/Home';
+import Companies from '@/pages/Companies';
 import CompanyPage from '@/pages/CompanyPage';
 import ProjectPage from '@/pages/ProjectPage';
 
@@ -39,6 +40,7 @@ function App() {
               {/* Public Routes */}
               <Route path="/" element={<PublicLayout />}>
                 <Route index element={<Home />} />
+                <Route path="companies" element={<Companies />} />
                 <Route path="company/:slug" element={<CompanyPage />} />
                 <Route path="project/:slug" element={<ProjectPage />} />
               </Route>
