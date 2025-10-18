@@ -90,7 +90,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${enhancedContent.hero.backgroundImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-edicius-red/80 to-black/90"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -130,7 +130,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
       </section>
 
       {/* Project Overview Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gradient-to-br from-black to-edicius-red">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
@@ -140,8 +140,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             className="text-center mb-16"
           >
             <motion.div variants={itemVariants}>
-              <h2 className="text-4xl font-bold text-black mb-6">Project Overview</h2>
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
+              <h2 className="text-4xl font-bold text-white mb-6">Project Overview</h2>
+              <p className="text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed mb-12">
                 {enhancedContent.overview.summary}
               </p>
             </motion.div>
@@ -150,12 +150,12 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {enhancedContent.overview.keyPoints.map((point, index) => (
                 <motion.div key={index} variants={itemVariants}>
-                  <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-sm border-white/20">
                     <CardContent className="p-8 text-center">
                       <div className="w-16 h-16 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-full flex items-center justify-center mx-auto mb-4">
                         <Target className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-gray-700 leading-relaxed">{point}</p>
+                      <p className="text-gray-200 leading-relaxed">{point}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -166,7 +166,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-20 bg-gradient-to-br from-edicius-red to-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
@@ -175,8 +175,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-6">{enhancedContent.features.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-white mb-6">{enhancedContent.features.title}</h2>
+              <p className="text-xl text-gray-200 max-w-3xl mx-auto">
                 Discover the powerful features that make this project stand out
               </p>
             </motion.div>
@@ -184,11 +184,11 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {enhancedContent.features.items.map((feature, index) => (
                 <motion.div key={index} variants={itemVariants}>
-                  <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                  <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/10 backdrop-blur-sm border-white/20">
                     <CardContent className="p-8">
                       <div className="text-4xl mb-4">{feature.icon}</div>
-                      <h3 className="text-xl font-bold text-black mb-3">{feature.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                      <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                      <p className="text-gray-200 leading-relaxed">{feature.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -199,7 +199,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
       </section>
 
       {/* Technology Stack Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gradient-to-br from-black to-edicius-red">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
@@ -208,8 +208,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-6">{enhancedContent.technology.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-white mb-6">{enhancedContent.technology.title}</h2>
+              <p className="text-xl text-gray-200 max-w-3xl mx-auto">
                 Built with modern technologies and best practices
               </p>
             </motion.div>
@@ -229,7 +229,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-br from-edicius-navy to-edicius-red text-white">
+      <section className="py-20 bg-gradient-to-br from-edicius-red to-black text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
@@ -261,7 +261,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
       </section>
 
       {/* Project Gallery Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gradient-to-br from-black to-edicius-red">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
@@ -270,8 +270,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants} className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-6">{enhancedContent.gallery.title}</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-white mb-6">{enhancedContent.gallery.title}</h2>
+              <p className="text-xl text-gray-200 max-w-3xl mx-auto">
                 Visual insights into our project implementation
               </p>
             </motion.div>
@@ -279,7 +279,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {enhancedContent.gallery.images.map((image, index) => (
                 <motion.div key={index} variants={itemVariants}>
-                  <Card className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <Card className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-sm border-white/20">
                     <div className="aspect-video overflow-hidden">
                       <img
                         src={image.src}
@@ -288,7 +288,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                       />
                     </div>
                     <CardContent className="p-6">
-                      <p className="text-gray-600 text-center">{image.caption}</p>
+                      <p className="text-gray-200 text-center">{image.caption}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -300,7 +300,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
 
       {/* Documents Section */}
       {project.documents && project.documents.length > 0 && (
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gradient-to-br from-edicius-red to-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               variants={containerVariants}
@@ -309,8 +309,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
               viewport={{ once: true }}
             >
               <motion.div variants={itemVariants} className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-black mb-6">Project Documents</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-4xl font-bold text-white mb-6">Project Documents</h2>
+                <p className="text-xl text-gray-200 max-w-3xl mx-auto">
                   Access important project files and documentation
                 </p>
               </motion.div>
@@ -318,16 +318,16 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {project.documents.map((doc: any) => (
                   <motion.div key={doc._id} variants={itemVariants}>
-                    <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/10 backdrop-blur-sm border-white/20">
                       <CardContent className="p-8">
                         <div className="flex items-center space-x-4">
                           <div className="w-16 h-16 bg-gradient-to-br from-edicius-gold to-edicius-red rounded-xl flex items-center justify-center">
                             <span className="text-2xl text-white">📄</span>
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-black mb-2">{doc.name}</h3>
-                            <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                              <span className="bg-edicius-gold/10 text-edicius-gold px-3 py-1 rounded-full font-semibold">
+                            <h3 className="text-xl font-bold text-white mb-2">{doc.name}</h3>
+                            <div className="flex items-center space-x-4 text-sm text-gray-300 mb-4">
+                              <span className="bg-edicius-gold/20 text-edicius-gold px-3 py-1 rounded-full font-semibold">
                                 {doc.fileType?.toUpperCase() || 'FILE'}
                               </span>
                               <span>{new Date(doc.uploadedAt).toLocaleDateString()}</span>
@@ -355,7 +355,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
       )}
 
       {/* Project Information Sidebar */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gradient-to-br from-black to-edicius-red">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
@@ -364,8 +364,8 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             viewport={{ once: true }}
           >
             <motion.div variants={itemVariants}>
-              <Card className="border-0 shadow-xl">
-                <CardHeader className="bg-gradient-to-r from-edicius-navy to-edicius-gold text-white rounded-t-lg">
+              <Card className="border-0 shadow-xl bg-white/10 backdrop-blur-sm border-white/20">
+                <CardHeader className="bg-gradient-to-r from-edicius-red to-edicius-gold text-white rounded-t-lg">
                   <CardTitle className="text-2xl font-bold flex items-center">
                     <Award className="w-6 h-6 mr-3" />
                     Project Information
@@ -375,7 +375,7 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium text-gray-500">Status</label>
+                        <label className="text-sm font-medium text-gray-300">Status</label>
                         <div className="mt-1">
                           <Badge className={`${getStatusColor(project.status)} flex items-center space-x-1 w-fit`}>
                             {getStatusIcon(project.status)}
@@ -385,34 +385,34 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
                       </div>
                       
                       <div>
-                        <label className="text-sm font-medium text-gray-500">Created</label>
-                        <p className="text-sm text-gray-900">{formatDate(project.createdAt)}</p>
+                        <label className="text-sm font-medium text-gray-300">Created</label>
+                        <p className="text-sm text-white">{formatDate(project.createdAt)}</p>
                       </div>
                       
                       <div>
-                        <label className="text-sm font-medium text-gray-500">Last Updated</label>
-                        <p className="text-sm text-gray-900">{formatDate(project.updatedAt)}</p>
+                        <label className="text-sm font-medium text-gray-300">Last Updated</label>
+                        <p className="text-sm text-white">{formatDate(project.updatedAt)}</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
                       {project.teamSize && (
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Team Size</label>
-                          <p className="text-sm text-gray-900">{project.teamSize} members</p>
+                          <label className="text-sm font-medium text-gray-300">Team Size</label>
+                          <p className="text-sm text-white">{project.teamSize} members</p>
                         </div>
                       )}
 
                       {project.documents && (
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Documents</label>
-                          <p className="text-sm text-gray-900">{project.documents.length} files</p>
+                          <label className="text-sm font-medium text-gray-300">Documents</label>
+                          <p className="text-sm text-white">{project.documents.length} files</p>
                         </div>
                       )}
 
                       <div>
-                        <label className="text-sm font-medium text-gray-500">Company</label>
-                        <p className="text-sm text-gray-900">{company?.name || 'Unknown'}</p>
+                        <label className="text-sm font-medium text-gray-300">Company</label>
+                        <p className="text-sm text-white">{company?.name || 'Unknown'}</p>
                       </div>
                     </div>
                   </div>
