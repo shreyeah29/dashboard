@@ -37,8 +37,8 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({
   className = "",
-  width = 200,
-  height = 120,
+  width = 600,
+  height = 420,
 }) => {
   return (
     <div
