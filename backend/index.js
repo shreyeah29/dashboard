@@ -339,6 +339,9 @@ app.post('/api/v1/projects', async (req, res) => {
   try {
     const { name, companyId, description, startDate, endDate, priority } = req.body;
     
+    console.log('Project creation request body:', req.body);
+    console.log('CompanyId received:', companyId, 'Type:', typeof companyId);
+    
     // Validate required fields
     if (!name || !companyId || !description) {
       return res.status(400).json({ error: 'Name, companyId, and description are required' });
