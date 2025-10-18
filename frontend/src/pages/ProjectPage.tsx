@@ -73,7 +73,9 @@ const ProjectPage = () => {
         return <CheckCircle className="w-4 h-4" />;
       case 'In Progress':
         return <PlayCircle className="w-4 h-4" />;
-      case 'Planned':
+      case 'Planning':
+        return <Clock className="w-4 h-4" />;
+      case 'On Hold':
         return <Clock className="w-4 h-4" />;
       default:
         return <Clock className="w-4 h-4" />;
@@ -118,7 +120,7 @@ const ProjectPage = () => {
             </div>
             
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              {project.title}
+              {project.name}
             </h1>
             <p className="text-xl text-gray-200 max-w-3xl">
               {project.description}
@@ -151,7 +153,7 @@ const ProjectPage = () => {
             </motion.div>
 
             {/* Team Section */}
-            {project.team && project.team.length > 0 && (
+            {project.teamSize && project.teamSize > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -166,20 +168,14 @@ const ProjectPage = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {project.team.map((member, index) => (
-                        <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                          <div className="w-10 h-10 bg-edicius-gold rounded-full flex items-center justify-center">
-                            <span className="text-white font-semibold text-sm">
-                              {member.name.split(' ').map(n => n[0]).join('')}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900">{member.name}</p>
-                            <p className="text-sm text-gray-600">{member.role}</p>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="text-center py-8">
+                      <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600">
+                        Team size: {project.teamSize} members
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Team member details will be displayed here when available.
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -209,10 +205,10 @@ const ProjectPage = () => {
                             <span className="text-white font-semibold text-sm">{index + 1}</span>
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900">{milestone.title}</h4>
-                            <p className="text-sm text-gray-600">{formatDate(milestone.date)}</p>
-                            {milestone.note && (
-                              <p className="text-sm text-gray-500 mt-1">{milestone.note}</p>
+                            <h4 className="font-semibold text-gray-900">{milestone.name}</h4>
+                            <p className="text-sm text-gray-600">{milestone.dueDate ? formatDate(milestone.dueDate) : 'No due date'}</p>
+                            {milestone.description && (
+                              <p className="text-sm text-gray-500 mt-1">{milestone.description}</p>
                             )}
                           </div>
                         </div>
@@ -246,11 +242,11 @@ const ProjectPage = () => {
                           className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
                           onClick={() => handleDocumentClick(doc)}
                         >
-                          <span className="text-2xl">{getDocumentIcon(doc.type)}</span>
+                          <span className="text-2xl">{getDocumentIcon(doc.fileType || 'other')}</span>
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">{doc.name}</p>
                             <p className="text-sm text-gray-500">
-                              {doc.type.toUpperCase()} • {formatFileSize(doc.size)}
+                              {doc.fileType?.toUpperCase() || 'FILE'} • {formatFileSize(doc.fileSize || 0)}
                             </p>
                           </div>
                           <Eye className="w-4 h-4 text-gray-400" />
@@ -338,10 +334,10 @@ const ProjectPage = () => {
                     <p className="text-sm text-gray-900">{formatDate(project.updatedAt)}</p>
                   </div>
 
-                  {project.team && (
+                  {project.teamSize && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Team Size</label>
-                      <p className="text-sm text-gray-900">{project.team.length} members</p>
+                      <p className="text-sm text-gray-900">{project.teamSize} members</p>
                     </div>
                   )}
 
@@ -362,7 +358,7 @@ const ProjectPage = () => {
       {selectedDocument && (
         <DocumentViewer
           document={selectedDocument}
-          projectName={project.title}
+          projectName={project.name}
           isOpen={isDocumentViewerOpen}
           onClose={() => {
             setIsDocumentViewerOpen(false);
