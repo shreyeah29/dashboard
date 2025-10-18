@@ -43,11 +43,11 @@ const getCompanyFeatureImage = (companyName: string) => {
   } else if (name.includes('productions') || name.includes('entertainment')) {
     return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
   } else if (name.includes('enterprises')) {
-    return 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Enterprise/Corporate
+    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Enterprise/Corporate
   } else if (name.includes('infrastructure') || name.includes('developers')) {
     return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Infrastructure/Construction
   } else if (name.includes('imports') || name.includes('exports')) {
-    return 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Trade/Logistics
+    return 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Trade/Logistics
   } else if (name.includes('consumer') || name.includes('products')) {
     return 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Consumer Products
   } else if (name.includes('hotels') || name.includes('hospitality')) {
@@ -498,7 +498,7 @@ const CompanyPage = () => {
           >
             <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">Our Services</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
-              Comprehensive solutions tailored to meet your business needs
+              {getCompanyContent(company.name).mission}
             </p>
           </motion.div>
 
