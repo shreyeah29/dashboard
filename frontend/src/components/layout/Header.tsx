@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <>
       <motion.header 
-        className="bg-black shadow-lg border-b border-edicius-red/20"
+        className="bg-slate-900 shadow-lg border-b border-edicius-red/20"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
