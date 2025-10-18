@@ -42,15 +42,6 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Admin Link */}
-          <div className="hidden md:block">
-            <Link
-              to="/admin/login"
-              className="text-sm text-gray-600 hover:text-edicius-gold transition-colors duration-200"
-            >
-              Admin
-            </Link>
-          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
