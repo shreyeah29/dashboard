@@ -6,6 +6,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const { upload, getFileType, generatePresignedUrl, deleteFileFromS3 } = require('./src/config/s3');
+const Project = require('./src/models/Project');
+const Document = require('./src/models/Document');
+const Company = require('./src/models/Company');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -313,206 +317,354 @@ app.delete('/api/v1/documents/:id', (req, res) => {
 });
 
 // Projects endpoints
-app.get('/api/v1/projects', (req, res) => {
-  const projects = [
-    {
-      _id: '1',
-      name: 'Digital Transformation Platform',
-      companyId: '2',
-      company: 'Edicius Innovations and Consulting Private Limited',
-      description: 'Creating a comprehensive digital transformation platform for enterprise clients.',
-      status: 'In Progress',
-      progress: 65,
-      startDate: '2024-01-15',
-      endDate: '2024-12-31',
-      teamSize: 12,
-      priority: 'High'
-    },
-    {
-      _id: '2',
-      name: 'Smart City Infrastructure',
-      companyId: '3',
-      company: 'Edicius Infrastructure and Developers Private Limited',
-      description: 'Developing sustainable smart city solutions with IoT integration.',
-      status: 'In Progress',
-      progress: 45,
-      startDate: '2024-02-10',
-      endDate: '2024-11-30',
-      teamSize: 15,
-      priority: 'High'
-    }
-  ];
-  
-  res.json(projects);
+app.get('/api/v1/projects', async (req, res) => {
+  try {
+    const projects = await Project.find()
+      .populate('companyId', 'name slug')
+      .populate('documents')
+      .sort({ createdAt: -1 });
+    
+    res.json(projects);
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
 });
 
-app.post('/api/v1/projects', (req, res) => {
-  const { name, companyId, description, startDate, endDate } = req.body;
-  
-  // Mock project creation
-  const newProject = {
-    _id: `project_${Date.now()}`,
-    name,
-    companyId,
-    description,
-    status: 'Planning',
-    progress: 0,
-    startDate,
-    endDate,
-    teamSize: 0,
-    priority: 'Medium',
-    createdAt: new Date().toISOString()
-  };
-  
-  res.json({
-    success: true,
-    message: 'Project created successfully',
-    project: newProject
-  });
+app.post('/api/v1/projects', async (req, res) => {
+  try {
+    const { name, companyId, description, startDate, endDate, priority } = req.body;
+    
+    // Validate required fields
+    if (!name || !companyId || !description) {
+      return res.status(400).json({ error: 'Name, companyId, and description are required' });
+    }
+    
+    // Check if company exists
+    const company = await Company.findById(companyId);
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+    
+    // Create new project
+    const newProject = new Project({
+      name,
+      companyId,
+      description,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+      priority: priority || 'Medium',
+      status: 'Planning',
+      progress: 0,
+      teamSize: 0,
+      documents: [],
+      milestones: []
+    });
+    
+    const savedProject = await newProject.save();
+    await savedProject.populate('companyId', 'name slug');
+    
+    res.status(201).json({
+      success: true,
+      message: 'Project created successfully',
+      project: savedProject
+    });
+  } catch (error) {
+    console.error('Error creating project:', error);
+    res.status(500).json({ error: 'Failed to create project' });
+  }
 });
 
 // Get projects by company slug
-app.get('/api/v1/projects/companies/:slug/projects', (req, res) => {
-  const { slug } = req.params;
-  
-  // Mock data - in real app, this would query the database
-  const allProjects = [
-    {
-      _id: '1',
-      name: 'Digital Transformation Platform',
-      companyId: '2',
-      company: 'Edicius Innovations and Consulting Private Limited',
-      description: 'Creating a comprehensive digital transformation platform for enterprise clients.',
-      status: 'In Progress',
-      progress: 65,
-      startDate: '2024-01-15',
-      endDate: '2024-12-31',
-      teamSize: 12,
-      priority: 'High'
-    },
-    {
-      _id: '2',
-      name: 'Smart City Infrastructure',
-      companyId: '3',
-      company: 'Edicius Infrastructure and Developers Private Limited',
-      description: 'Developing sustainable smart city solutions with IoT integration.',
-      status: 'In Progress',
-      progress: 45,
-      startDate: '2024-02-10',
-      endDate: '2024-11-30',
-      teamSize: 15,
-      priority: 'High'
+app.get('/api/v1/projects/companies/:slug/projects', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    
+    // Find company by slug
+    const company = await Company.findOne({ slug });
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
     }
-  ];
-  
-  // Find company by slug to get companyId
-  const companies = [
-    { _id: '1', slug: 'edicius-enterprises-private-limited' },
-    { _id: '2', slug: 'edicius-innovations-and-consulting-private-limited' },
-    { _id: '3', slug: 'edicius-infrastructure-and-developers-private-limited' },
-    { _id: '4', slug: 'edicius-imports-and-exports-private-limited' },
-    { _id: '5', slug: 'edicius-productions-and-entertainment-private-limited' },
-    { _id: '6', slug: 'edicius-consumer-products-private-limited' },
-    { _id: '7', slug: 'edicius-mining-and-minerals-private-limited' },
-    { _id: '8', slug: 'edicius-hotels-and-hospitality-private-limited' }
-  ];
-  
-  const company = companies.find(c => c.slug === slug);
-  if (!company) {
-    return res.status(404).json({ error: 'Company not found' });
+    
+    // Find projects for this company
+    const projects = await Project.find({ companyId: company._id })
+      .populate('documents')
+      .sort({ createdAt: -1 });
+    
+    res.json(projects);
+  } catch (error) {
+    console.error('Error fetching company projects:', error);
+    res.status(500).json({ error: 'Failed to fetch company projects' });
   }
-  
-  // Filter projects for this company
-  const companyProjects = allProjects.filter(project => project.companyId === company._id);
-  
-  res.json(companyProjects);
 });
 
 // Get project by slug
-app.get('/api/v1/projects/:slug', (req, res) => {
-  const { slug } = req.params;
-  
-  // Mock data - in real app, this would query the database
-  const projects = [
-    {
-      _id: '1',
-      slug: 'digital-transformation-platform',
-      name: 'Digital Transformation Platform',
-      companyId: '2',
-      company: 'Edicius Innovations and Consulting Private Limited',
-      description: 'Creating a comprehensive digital transformation platform for enterprise clients with AI integration and cloud infrastructure. This project focuses on modernizing legacy systems and implementing cutting-edge technologies to drive business growth.',
-      status: 'In Progress',
-      progress: 65,
-      startDate: '2024-01-15',
-      endDate: '2024-12-31',
-      teamSize: 12,
-      priority: 'High',
-      documents: [
-        {
-          _id: 'doc1',
-          name: 'Project Overview Presentation',
-          type: 'presentation',
-          url: 'https://example.com/presentation.pdf',
-          size: '2.5 MB',
-          uploadedAt: '2024-01-20'
-        },
-        {
-          _id: 'doc2',
-          name: 'Technical Specifications',
-          type: 'document',
-          url: 'https://example.com/specs.pdf',
-          size: '1.8 MB',
-          uploadedAt: '2024-01-25'
-        }
-      ],
-      milestones: [
-        { id: '1', name: 'Project Planning', completed: true, dueDate: '2024-02-01' },
-        { id: '2', name: 'System Architecture', completed: true, dueDate: '2024-03-15' },
-        { id: '3', name: 'Core Development', completed: true, dueDate: '2024-06-30' },
-        { id: '4', name: 'Testing & QA', completed: false, dueDate: '2024-09-30' },
-        { id: '5', name: 'Deployment', completed: false, dueDate: '2024-12-31' }
-      ]
-    },
-    {
-      _id: '2',
-      slug: 'smart-city-infrastructure',
-      name: 'Smart City Infrastructure',
-      companyId: '3',
-      company: 'Edicius Infrastructure and Developers Private Limited',
-      description: 'Developing sustainable smart city solutions with IoT integration and renewable energy systems. This project aims to create intelligent infrastructure that improves urban living while reducing environmental impact.',
-      status: 'In Progress',
-      progress: 45,
-      startDate: '2024-02-10',
-      endDate: '2024-11-30',
-      teamSize: 15,
-      priority: 'High',
-      documents: [
-        {
-          _id: 'doc3',
-          name: 'Smart City Blueprint',
-          type: 'presentation',
-          url: 'https://example.com/blueprint.pdf',
-          size: '3.2 MB',
-          uploadedAt: '2024-02-15'
-        }
-      ],
-      milestones: [
-        { id: '1', name: 'Feasibility Study', completed: true, dueDate: '2024-03-01' },
-        { id: '2', name: 'Design Phase', completed: true, dueDate: '2024-05-15' },
-        { id: '3', name: 'Infrastructure Setup', completed: false, dueDate: '2024-08-30' },
-        { id: '4', name: 'IoT Integration', completed: false, dueDate: '2024-10-15' },
-        { id: '5', name: 'Testing & Launch', completed: false, dueDate: '2024-11-30' }
-      ]
+app.get('/api/v1/projects/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    
+    const project = await Project.findOne({ slug })
+      .populate('companyId', 'name slug')
+      .populate('documents');
+    
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
     }
-  ];
-  
-  const project = projects.find(p => p.slug === slug);
-  if (!project) {
-    return res.status(404).json({ error: 'Project not found' });
+    
+    res.json(project);
+  } catch (error) {
+    console.error('Error fetching project:', error);
+    res.status(500).json({ error: 'Failed to fetch project' });
   }
-  
-  res.json(project);
 });
+
+// Document upload endpoints
+app.post('/api/v1/projects/:projectId/documents', upload.single('document'), async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { tags } = req.body;
+    
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    
+    // Check if project exists
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    
+    // Create document record
+    const document = new Document({
+      name: req.body.name || req.file.originalname,
+      originalName: req.file.originalname,
+      projectId: projectId,
+      fileType: getFileType(req.file.mimetype),
+      mimeType: req.file.mimetype,
+      fileSize: req.file.size,
+      s3Key: req.file.key,
+      s3Url: req.file.location,
+      tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+      uploadedBy: 'admin'
+    });
+    
+    const savedDocument = await document.save();
+    
+    // Add document to project
+    project.documents.push(savedDocument._id);
+    await project.save();
+    
+    res.status(201).json({
+      success: true,
+      message: 'Document uploaded successfully',
+      document: savedDocument
+    });
+  } catch (error) {
+    console.error('Error uploading document:', error);
+    res.status(500).json({ error: 'Failed to upload document' });
+  }
+});
+
+// Get documents for a project
+app.get('/api/v1/projects/:projectId/documents', async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    
+    const documents = await Document.find({ projectId })
+      .sort({ uploadedAt: -1 });
+    
+    res.json(documents);
+  } catch (error) {
+    console.error('Error fetching documents:', error);
+    res.status(500).json({ error: 'Failed to fetch documents' });
+  }
+});
+
+// Get document by ID with pre-signed URL
+app.get('/api/v1/documents/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const document = await Document.findById(id);
+    if (!document) {
+      return res.status(404).json({ error: 'Document not found' });
+    }
+    
+    // Update last accessed time
+    document.lastAccessed = new Date();
+    await document.save();
+    
+    // Generate pre-signed URL for secure access
+    const presignedUrl = generatePresignedUrl(document.s3Key, 3600); // 1 hour expiry
+    
+    res.json({
+      ...document.toObject(),
+      presignedUrl
+    });
+  } catch (error) {
+    console.error('Error fetching document:', error);
+    res.status(500).json({ error: 'Failed to fetch document' });
+  }
+});
+
+// Delete document
+app.delete('/api/v1/documents/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const document = await Document.findById(id);
+    if (!document) {
+      return res.status(404).json({ error: 'Document not found' });
+    }
+    
+    // Delete from S3
+    const deletedFromS3 = await deleteFileFromS3(document.s3Key);
+    if (!deletedFromS3) {
+      console.warn('Failed to delete file from S3, but continuing with database deletion');
+    }
+    
+    // Remove document from project
+    await Project.findByIdAndUpdate(
+      document.projectId,
+      { $pull: { documents: document._id } }
+    );
+    
+    // Delete document record
+    await Document.findByIdAndDelete(id);
+    
+    res.json({
+      success: true,
+      message: 'Document deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting document:', error);
+    res.status(500).json({ error: 'Failed to delete document' });
+  }
+});
+
+// Seed data function
+const seedData = async () => {
+  try {
+    // Check if companies already exist
+    const existingCompanies = await Company.countDocuments();
+    if (existingCompanies > 0) {
+      console.log('Companies already exist, skipping seed data');
+      return;
+    }
+
+    console.log('Seeding database with initial data...');
+
+    // Create companies
+    const companies = [
+      {
+        name: 'Edicius Enterprises Private Limited',
+        slug: 'edicius-enterprises-private-limited',
+        overview: 'Multi-sector B2B venture arm focusing on industrial innovation and strategic business partnerships.',
+        heroImage: 'https://images.unsplash.com/photo-1565008576549-57569a49371d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Multi-sector'
+      },
+      {
+        name: 'Edicius Innovations and Consulting Private Limited',
+        slug: 'edicius-innovations-and-consulting-private-limited',
+        overview: 'Digital transformation through cutting-edge technology solutions and strategic consulting services.',
+        heroImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Technology & Consulting'
+      },
+      {
+        name: 'Edicius Infrastructure and Developers Private Limited',
+        slug: 'edicius-infrastructure-and-developers-private-limited',
+        overview: 'Sustainable, smart infrastructure solutions for modern cities and eco-friendly construction projects.',
+        heroImage: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Infrastructure'
+      },
+      {
+        name: 'Edicius Imports and Exports Private Limited',
+        slug: 'edicius-imports-and-exports-private-limited',
+        overview: 'Seamless global commerce through advanced logistics and international trade solutions.',
+        heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Trade & Logistics'
+      },
+      {
+        name: 'Edicius Productions and Entertainment Private Limited',
+        slug: 'edicius-productions-and-entertainment-private-limited',
+        overview: 'Compelling digital content, film productions, and immersive brand experiences.',
+        heroImage: 'https://images.unsplash.com/photo-1574267432644-f02b5ab7e2a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Entertainment & Media'
+      },
+      {
+        name: 'Edicius Consumer Products Private Limited',
+        slug: 'edicius-consumer-products-private-limited',
+        overview: 'Smart consumer goods, personal care, and lifestyle solutions with cutting-edge technology.',
+        heroImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Consumer Goods'
+      },
+      {
+        name: 'Edicius Mining and Minerals Private Limited',
+        slug: 'edicius-mining-and-minerals-private-limited',
+        overview: 'Ethical resource extraction and environmental stewardship with advanced mining technologies.',
+        heroImage: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Mining & Minerals'
+      },
+      {
+        name: 'Edicius Hotels and Hospitality Private Limited',
+        slug: 'edicius-hotels-and-hospitality-private-limited',
+        overview: 'Exceptional travel experiences through luxury accommodations and sustainable tourism practices.',
+        heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        sector: 'Hospitality'
+      }
+    ];
+
+    const createdCompanies = await Company.insertMany(companies);
+    console.log(`Created ${createdCompanies.length} companies`);
+
+    // Create sample projects
+    const projects = [
+      {
+        name: 'Digital Transformation Platform',
+        companyId: createdCompanies[1]._id, // Edicius Innovations
+        description: 'Creating a comprehensive digital transformation platform for enterprise clients with AI integration and cloud infrastructure.',
+        status: 'In Progress',
+        progress: 65,
+        startDate: new Date('2024-01-15'),
+        endDate: new Date('2024-12-31'),
+        teamSize: 12,
+        priority: 'High',
+        milestones: [
+          { name: 'Project Planning', completed: true, dueDate: new Date('2024-02-01') },
+          { name: 'System Architecture', completed: true, dueDate: new Date('2024-03-15') },
+          { name: 'Core Development', completed: true, dueDate: new Date('2024-06-30') },
+          { name: 'Testing & QA', completed: false, dueDate: new Date('2024-09-30') },
+          { name: 'Deployment', completed: false, dueDate: new Date('2024-12-31') }
+        ]
+      },
+      {
+        name: 'Smart City Infrastructure',
+        companyId: createdCompanies[2]._id, // Edicius Infrastructure
+        description: 'Developing sustainable smart city solutions with IoT integration and renewable energy systems.',
+        status: 'In Progress',
+        progress: 45,
+        startDate: new Date('2024-02-10'),
+        endDate: new Date('2024-11-30'),
+        teamSize: 15,
+        priority: 'High',
+        milestones: [
+          { name: 'Feasibility Study', completed: true, dueDate: new Date('2024-03-01') },
+          { name: 'Design Phase', completed: true, dueDate: new Date('2024-05-15') },
+          { name: 'Infrastructure Setup', completed: false, dueDate: new Date('2024-08-30') },
+          { name: 'IoT Integration', completed: false, dueDate: new Date('2024-10-15') },
+          { name: 'Testing & Launch', completed: false, dueDate: new Date('2024-11-30') }
+        ]
+      }
+    ];
+
+    const createdProjects = await Project.insertMany(projects);
+    console.log(`Created ${createdProjects.length} projects`);
+
+    console.log('Database seeded successfully!');
+  } catch (error) {
+    console.error('Error seeding database:', error);
+  }
+};
 
 // Connect to MongoDB
 const connectDB = async () => {
@@ -520,6 +672,9 @@ const connectDB = async () => {
     if (process.env.MONGODB_URI) {
       await mongoose.connect(process.env.MONGODB_URI);
       console.log('MongoDB connected successfully');
+      
+      // Seed database with initial data
+      await seedData();
     } else {
       console.log('MongoDB URI not provided, running without database');
     }
