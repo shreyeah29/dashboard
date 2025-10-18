@@ -379,8 +379,17 @@ app.post('/api/v1/projects', async (req, res) => {
       return res.status(400).json({ error: 'Name, companyId, and description are required' });
     }
     
-    // Check if company exists
-    const company = await Company.findOne({ _id: companyId });
+    // Check if company exists - try both string ID and ObjectId
+    let company = await Company.findOne({ _id: companyId });
+    
+    // If not found by string ID, try ObjectId
+    if (!company) {
+      try {
+        company = await Company.findById(companyId);
+      } catch (error) {
+        // ObjectId conversion failed, company not found
+      }
+    }
     
     if (!company) {
       return res.status(404).json({ error: 'Company not found' });
