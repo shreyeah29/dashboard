@@ -58,7 +58,7 @@ const Logo: React.FC<LogoProps> = ({
         <rect x="35" y="30" width="10" height="35" fill="#C62828" rx="1" />
 
         {/* Black Bars */}
-        <rect x="50" y="20" width="10" height="45" fill="#212121" rx="1" />
+        <rect x="50" y="20" width="10" height="45" fill="#000000" rx="1" />
         <rect x="65" y="10" width="10" height="55" fill="#000000" rx="1" />
       </svg>
 
