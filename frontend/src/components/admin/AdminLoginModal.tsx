@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,6 +21,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose }) =>
   
   const { login } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,13 +29,21 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose }) =>
     setError('');
 
     try {
+      console.log('AdminLoginModal - attempting login...');
       await login(password);
+      console.log('AdminLoginModal - login successful, redirecting to admin dashboard...');
+      
       toast({
         title: "Login Successful",
         description: "Welcome to the Admin Dashboard",
       });
+      
+      // Close modal and redirect to admin dashboard
       onClose();
+      navigate('/admin');
+      console.log('AdminLoginModal - navigate called');
     } catch (err: any) {
+      console.error('AdminLoginModal - login error:', err);
       setError(err.message || 'Login failed. Please try again.');
       toast({
         title: "Login Failed",
