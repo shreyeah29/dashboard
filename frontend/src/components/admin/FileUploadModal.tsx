@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Upload, X, FileText, Image, Video, File } from 'lucide-react';
+import { Upload, X, FileText, Image, Video, File, Eye, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { documentsApi } from '@/lib/api';
 
 interface FileUploadModalProps {
   project: any;
@@ -14,8 +15,34 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [tags, setTags] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [existingDocuments, setExistingDocuments] = useState<any[]>([]);
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Fetch existing documents when modal opens
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        setIsLoadingDocuments(true);
+        const documents = await documentsApi.getByProject(project._id);
+        setExistingDocuments(documents);
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load existing documents.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingDocuments(false);
+      }
+    };
+
+    if (project._id) {
+      fetchDocuments();
+    }
+  }, [project._id, toast]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -89,6 +116,10 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
       await onUpload(selectedFile, tags);
       setSelectedFile(null);
       setTags('');
+      
+      // Refresh the documents list
+      const documents = await documentsApi.getByProject(project._id);
+      setExistingDocuments(documents);
     } catch (error) {
       console.error('Upload error:', error);
     } finally {
@@ -103,6 +134,21 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
       return <FileText className="w-8 h-8 text-orange-500" />;
     }
     return <File className="w-8 h-8 text-gray-500" />;
+  };
+
+  const getDocumentIcon = (fileType: string) => {
+    switch (fileType) {
+      case 'image':
+        return <Image className="w-6 h-6 text-blue-500" />;
+      case 'video':
+        return <Video className="w-6 h-6 text-purple-500" />;
+      case 'presentation':
+        return <FileText className="w-6 h-6 text-orange-500" />;
+      case 'document':
+        return <FileText className="w-6 h-6 text-green-500" />;
+      default:
+        return <File className="w-6 h-6 text-gray-500" />;
+    }
   };
 
   const formatFileSize = (bytes: number) => {
@@ -175,6 +221,48 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ project, onClose, onU
                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-2">Drag and drop files here, or click to select</p>
                 <p className="text-sm text-gray-500">PDF, PPT, DOC, Images, Videos (max 50MB)</p>
+              </div>
+            )}
+          </div>
+
+          {/* Existing Documents */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Existing Documents</h3>
+            {isLoadingDocuments ? (
+              <div className="text-center py-4">
+                <div className="w-6 h-6 border-2 border-edicius-gold/30 border-t-edicius-gold rounded-full animate-spin mx-auto"></div>
+                <p className="text-gray-500 mt-2">Loading documents...</p>
+              </div>
+            ) : existingDocuments.length > 0 ? (
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {existingDocuments.map((doc) => (
+                  <div key={doc._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      {getDocumentIcon(doc.fileType)}
+                      <div>
+                        <p className="font-medium text-gray-900">{doc.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {doc.fileType} • {formatFileSize(doc.fileSize)} • {new Date(doc.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(doc.s3Url, '_blank')}
+                        className="text-edicius-gold border-edicius-gold hover:bg-edicius-gold/10"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-4 text-gray-500">
+                <FileText className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                <p>No documents uploaded yet</p>
               </div>
             )}
           </div>
