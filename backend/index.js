@@ -371,6 +371,149 @@ app.post('/api/v1/projects', (req, res) => {
   });
 });
 
+// Get projects by company slug
+app.get('/api/v1/projects/companies/:slug/projects', (req, res) => {
+  const { slug } = req.params;
+  
+  // Mock data - in real app, this would query the database
+  const allProjects = [
+    {
+      _id: '1',
+      name: 'Digital Transformation Platform',
+      companyId: '2',
+      company: 'Edicius Innovations and Consulting Private Limited',
+      description: 'Creating a comprehensive digital transformation platform for enterprise clients.',
+      status: 'In Progress',
+      progress: 65,
+      startDate: '2024-01-15',
+      endDate: '2024-12-31',
+      teamSize: 12,
+      priority: 'High'
+    },
+    {
+      _id: '2',
+      name: 'Smart City Infrastructure',
+      companyId: '3',
+      company: 'Edicius Infrastructure and Developers Private Limited',
+      description: 'Developing sustainable smart city solutions with IoT integration.',
+      status: 'In Progress',
+      progress: 45,
+      startDate: '2024-02-10',
+      endDate: '2024-11-30',
+      teamSize: 15,
+      priority: 'High'
+    }
+  ];
+  
+  // Find company by slug to get companyId
+  const companies = [
+    { _id: '1', slug: 'edicius-enterprises-private-limited' },
+    { _id: '2', slug: 'edicius-innovations-and-consulting-private-limited' },
+    { _id: '3', slug: 'edicius-infrastructure-and-developers-private-limited' },
+    { _id: '4', slug: 'edicius-imports-and-exports-private-limited' },
+    { _id: '5', slug: 'edicius-productions-and-entertainment-private-limited' },
+    { _id: '6', slug: 'edicius-consumer-products-private-limited' },
+    { _id: '7', slug: 'edicius-mining-and-minerals-private-limited' },
+    { _id: '8', slug: 'edicius-hotels-and-hospitality-private-limited' }
+  ];
+  
+  const company = companies.find(c => c.slug === slug);
+  if (!company) {
+    return res.status(404).json({ error: 'Company not found' });
+  }
+  
+  // Filter projects for this company
+  const companyProjects = allProjects.filter(project => project.companyId === company._id);
+  
+  res.json(companyProjects);
+});
+
+// Get project by slug
+app.get('/api/v1/projects/:slug', (req, res) => {
+  const { slug } = req.params;
+  
+  // Mock data - in real app, this would query the database
+  const projects = [
+    {
+      _id: '1',
+      slug: 'digital-transformation-platform',
+      name: 'Digital Transformation Platform',
+      companyId: '2',
+      company: 'Edicius Innovations and Consulting Private Limited',
+      description: 'Creating a comprehensive digital transformation platform for enterprise clients with AI integration and cloud infrastructure. This project focuses on modernizing legacy systems and implementing cutting-edge technologies to drive business growth.',
+      status: 'In Progress',
+      progress: 65,
+      startDate: '2024-01-15',
+      endDate: '2024-12-31',
+      teamSize: 12,
+      priority: 'High',
+      documents: [
+        {
+          _id: 'doc1',
+          name: 'Project Overview Presentation',
+          type: 'presentation',
+          url: 'https://example.com/presentation.pdf',
+          size: '2.5 MB',
+          uploadedAt: '2024-01-20'
+        },
+        {
+          _id: 'doc2',
+          name: 'Technical Specifications',
+          type: 'document',
+          url: 'https://example.com/specs.pdf',
+          size: '1.8 MB',
+          uploadedAt: '2024-01-25'
+        }
+      ],
+      milestones: [
+        { id: '1', name: 'Project Planning', completed: true, dueDate: '2024-02-01' },
+        { id: '2', name: 'System Architecture', completed: true, dueDate: '2024-03-15' },
+        { id: '3', name: 'Core Development', completed: true, dueDate: '2024-06-30' },
+        { id: '4', name: 'Testing & QA', completed: false, dueDate: '2024-09-30' },
+        { id: '5', name: 'Deployment', completed: false, dueDate: '2024-12-31' }
+      ]
+    },
+    {
+      _id: '2',
+      slug: 'smart-city-infrastructure',
+      name: 'Smart City Infrastructure',
+      companyId: '3',
+      company: 'Edicius Infrastructure and Developers Private Limited',
+      description: 'Developing sustainable smart city solutions with IoT integration and renewable energy systems. This project aims to create intelligent infrastructure that improves urban living while reducing environmental impact.',
+      status: 'In Progress',
+      progress: 45,
+      startDate: '2024-02-10',
+      endDate: '2024-11-30',
+      teamSize: 15,
+      priority: 'High',
+      documents: [
+        {
+          _id: 'doc3',
+          name: 'Smart City Blueprint',
+          type: 'presentation',
+          url: 'https://example.com/blueprint.pdf',
+          size: '3.2 MB',
+          uploadedAt: '2024-02-15'
+        }
+      ],
+      milestones: [
+        { id: '1', name: 'Feasibility Study', completed: true, dueDate: '2024-03-01' },
+        { id: '2', name: 'Design Phase', completed: true, dueDate: '2024-05-15' },
+        { id: '3', name: 'Infrastructure Setup', completed: false, dueDate: '2024-08-30' },
+        { id: '4', name: 'IoT Integration', completed: false, dueDate: '2024-10-15' },
+        { id: '5', name: 'Testing & Launch', completed: false, dueDate: '2024-11-30' }
+      ]
+    }
+  ];
+  
+  const project = projects.find(p => p.slug === slug);
+  if (!project) {
+    return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  res.json(project);
+});
+
 // Connect to MongoDB
 const connectDB = async () => {
   try {
