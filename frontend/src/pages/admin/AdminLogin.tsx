@@ -38,9 +38,13 @@ const AdminLogin = () => {
     setError('');
 
     try {
+      console.log('Login form submitted, attempting login...');
       await login(data.password);
+      console.log('Login successful, redirecting to:', from);
       navigate(from, { replace: true });
+      console.log('Navigate called');
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
