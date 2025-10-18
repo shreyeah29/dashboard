@@ -161,24 +161,31 @@ app.post('/api/v1/auth/admin/login', (req, res) => {
   const { password } = req.body;
   const adminSecret = process.env.ADMIN_SECRET || 'admin123';
   
+  console.log('Login attempt with password:', password);
+  console.log('Expected password:', adminSecret);
+  
   if (password === adminSecret) {
     // Create a simple session token (in production, use proper JWT)
     const token = 'admin-session-' + Date.now();
+    console.log('Login successful, setting token:', token);
     
     // Set httpOnly cookie
     res.cookie('adminToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Set to false for now to test
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      domain: undefined // Let browser handle domain
     });
     
+    console.log('Cookie set, sending response');
     res.json({ 
       success: true, 
       message: 'Login successful',
       user: { isAdmin: true, role: 'admin' }
     });
   } else {
+    console.log('Login failed - invalid password');
     res.status(401).json({ 
       success: false, 
       message: 'Invalid password' 
@@ -189,13 +196,17 @@ app.post('/api/v1/auth/admin/login', (req, res) => {
 // Auth verify endpoint
 app.get('/api/v1/auth/admin/verify', (req, res) => {
   const token = req.cookies.adminToken;
+  console.log('Verify endpoint called, cookies:', req.cookies);
+  console.log('Admin token:', token);
   
   if (token && token.startsWith('admin-session-')) {
+    console.log('Token is valid, returning success');
     res.json({ 
       authenticated: true, 
       user: { isAdmin: true, role: 'admin' } 
     });
   } else {
+    console.log('Token is invalid or missing');
     res.status(401).json({ 
       authenticated: false, 
       message: 'Not authenticated' 
