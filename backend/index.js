@@ -93,6 +93,38 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Debug endpoint to check company by ID
+app.get('/debug/company/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('Looking for company with ID:', id, 'Type:', typeof id);
+    
+    // Try to find by string ID
+    const companyByString = await Company.findOne({ _id: id });
+    console.log('Company found by string ID:', companyByString ? 'YES' : 'NO');
+    
+    // Try to find by ObjectId
+    let companyByObjectId = null;
+    try {
+      companyByObjectId = await Company.findById(id);
+      console.log('Company found by ObjectId:', companyByObjectId ? 'YES' : 'NO');
+    } catch (error) {
+      console.log('ObjectId lookup failed:', error.message);
+    }
+    
+    res.json({
+      id,
+      type: typeof id,
+      foundByString: !!companyByString,
+      foundByObjectId: !!companyByObjectId,
+      companyByString,
+      companyByObjectId
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Basic API routes
 app.get('/api/v1/health', (req, res) => {
   res.json({ 
