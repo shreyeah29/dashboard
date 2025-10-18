@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <>
       <motion.header 
-        className="bg-white shadow-sm border-b"
+        className="bg-black shadow-lg border-b border-edicius-red/20"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
@@ -32,22 +32,22 @@ const Header = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="text-gray-700 hover:text-edicius-gold transition-colors duration-200 font-medium"
-                >
-                  {item.name}
-                </Link>
-              ))}
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-white hover:text-edicius-red transition-colors duration-200 font-medium"
+              >
+                {item.name}
+              </Link>
+            ))}
             </nav>
 
             {/* Mobile menu button */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 hover:text-edicius-gold transition-colors duration-200"
+                className="text-white hover:text-edicius-red transition-colors duration-200"
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -63,18 +63,18 @@ const Header = () => {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex flex-col space-y-4">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="text-gray-700 hover:text-edicius-gold transition-colors duration-200 font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
+            <div className="flex flex-col space-y-4">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-white hover:text-edicius-red transition-colors duration-200 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
             </motion.div>
           )}
         </div>
