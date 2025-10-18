@@ -36,6 +36,10 @@ const Logo: React.FC<LogoProps> = ({ className = '', width = 120, height = 40 })
         width={width}
         height={height}
         className="object-contain"
+        style={{ 
+          backgroundColor: 'transparent',
+          mixBlendMode: 'multiply'
+        }}
         onError={() => setImageError(true)}
       />
     </div>
