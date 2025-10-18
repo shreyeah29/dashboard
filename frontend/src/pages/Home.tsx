@@ -49,7 +49,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden min-h-screen flex items-center">
+      <section className="relative bg-gradient-to-br from-black via-gray-800 to-black text-white overflow-hidden min-h-screen flex items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-edicius-red/10 rounded-full blur-3xl animate-pulse"></div>
@@ -105,13 +105,13 @@ const Home = () => {
               transition={{ duration: 1, delay: 0.5 }}
               className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8"
             >
-              <span className="block bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
                 Consulting Minds.
               </span>
-              <span className="block bg-gradient-to-r from-edicius-red via-red-500 to-edicius-red bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-edicius-red via-red-600 to-edicius-red bg-clip-text text-transparent">
                 Diverse Ventures.
               </span>
-              <span className="block bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
                 One Vision.
               </span>
             </motion.h1>
