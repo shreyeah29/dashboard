@@ -27,6 +27,7 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
 
   useEffect(() => {
     if (isOpen && document._id) {
+      console.log('DocumentViewer opened with document:', document);
       fetchViewUrl();
     }
   }, [isOpen, document._id]);
@@ -35,11 +36,42 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
     setLoading(true);
     setError('');
     try {
-      // Use the direct URL from the document
-      setViewUrl(document.s3Url);
+      // Check if the document URL is accessible
+      const testUrl = document.s3Url;
+      console.log('Testing document URL:', testUrl);
+      
+      // Try to fetch the document to check if it's accessible
+      const response = await fetch(testUrl, { method: 'HEAD' });
+      
+      if (response.ok) {
+        setViewUrl(testUrl);
+      } else {
+        // If direct URL fails, try to get it through the API
+        const apiResponse = await documentsApi.getById(document._id);
+        if (apiResponse.presignedUrl) {
+          setViewUrl(apiResponse.presignedUrl);
+        } else {
+          setError('Document not accessible. Please try again later.');
+        }
+      }
     } catch (err) {
-      setError('Failed to load document preview');
       console.error('Error fetching document view URL:', err);
+      // Try alternative approach - use the API endpoint
+      try {
+        const apiResponse = await documentsApi.getById(document._id);
+        if (apiResponse.presignedUrl) {
+          setViewUrl(apiResponse.presignedUrl);
+        } else {
+          setError('Failed to load document preview. The file may not be accessible.');
+        }
+      } catch (apiErr) {
+        console.error('API call failed:', apiErr);
+        // Try direct backend URL as last resort
+        const directUrl = `https://edicius-dashboard.onrender.com/uploads/project-documents/${document.s3Key || document.name}`;
+        console.log('Trying direct URL:', directUrl);
+        setViewUrl(directUrl);
+        setError('Using direct file access. If this fails, the file may not be available.');
+      }
     } finally {
       setLoading(false);
     }
@@ -125,19 +157,64 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
           <p className="text-gray-500 mb-4">
             This document type cannot be previewed inline.
           </p>
-          <div className="bg-gray-100 p-4 rounded-lg">
+          <div className="bg-gray-100 p-4 rounded-lg mb-4">
             <p className="text-sm text-gray-600">
               <strong>File:</strong> {document.name}<br />
               <strong>Type:</strong> {document.fileType.toUpperCase()}<br />
               <strong>Size:</strong> {formatFileSize(document.fileSize)}
             </p>
           </div>
-          <div className="mt-4">
+          <div className="flex space-x-3">
             <Button 
-              onClick={() => window.open(viewUrl, '_blank')}
+              onClick={async () => {
+                try {
+                  if (viewUrl) {
+                    const newWindow = window.open(viewUrl, '_blank');
+                    if (!newWindow) {
+                      setError('Please allow popups to view this document');
+                    }
+                  } else {
+                    // Try to get the document URL again
+                    const apiResponse = await documentsApi.getById(document._id);
+                    if (apiResponse.presignedUrl) {
+                      const newWindow = window.open(apiResponse.presignedUrl, '_blank');
+                      if (!newWindow) {
+                        setError('Please allow popups to view this document');
+                      }
+                    } else {
+                      setError('Document URL not available');
+                    }
+                  }
+                } catch (err) {
+                  setError('Failed to open document. Please try again.');
+                }
+              }}
               className="bg-edicius-gold hover:bg-edicius-gold/90 text-white"
             >
               Open in New Tab
+            </Button>
+            <Button 
+              onClick={async () => {
+                try {
+                  const docUrl = viewUrl || (await documentsApi.getById(document._id)).presignedUrl;
+                  if (docUrl) {
+                    // Try Google Docs Viewer as fallback
+                    const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(docUrl)}&embedded=true`;
+                    const newWindow = window.open(googleViewerUrl, '_blank');
+                    if (!newWindow) {
+                      setError('Please allow popups to view this document');
+                    }
+                  } else {
+                    setError('Document URL not available');
+                  }
+                } catch (err) {
+                  setError('Failed to open document viewer. Please try again.');
+                }
+              }}
+              variant="outline"
+              className="border-edicius-gold text-edicius-gold hover:bg-edicius-gold hover:text-white"
+            >
+              View with Google Docs
             </Button>
           </div>
         </div>
@@ -160,7 +237,29 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
           </p>
         </div>
         <Button 
-          onClick={() => window.open(viewUrl, '_blank')}
+          onClick={async () => {
+            try {
+              if (viewUrl) {
+                const newWindow = window.open(viewUrl, '_blank');
+                if (!newWindow) {
+                  setError('Please allow popups to view this document');
+                }
+              } else {
+                // Try to get the document URL again
+                const apiResponse = await documentsApi.getById(document._id);
+                if (apiResponse.presignedUrl) {
+                  const newWindow = window.open(apiResponse.presignedUrl, '_blank');
+                  if (!newWindow) {
+                    setError('Please allow popups to view this document');
+                  }
+                } else {
+                  setError('Document URL not available');
+                }
+              }
+            } catch (err) {
+              setError('Failed to open document. Please try again.');
+            }
+          }}
           className="bg-edicius-gold hover:bg-edicius-gold/90 text-white"
         >
           Open in New Tab

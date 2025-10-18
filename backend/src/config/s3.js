@@ -79,7 +79,8 @@ const getFileType = (mimeType) => {
 
 // Helper function to generate local file URL
 const generateFileUrl = (filename) => {
-  const baseUrl = process.env.CLIENT_URL || 'http://localhost:5000';
+  // Use the backend URL for serving files
+  const baseUrl = process.env.BACKEND_URL || 'https://edicius-dashboard.onrender.com';
   return `${baseUrl}/uploads/project-documents/${filename}`;
 };
 
