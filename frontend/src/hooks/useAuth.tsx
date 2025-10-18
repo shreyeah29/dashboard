@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { authApi, AuthUser } from '@/lib/api';
 
 interface AuthContextType {
@@ -64,9 +64,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isAuthenticated: !!user?.isAdmin
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return React.createElement(AuthContext.Provider, { value }, children);
 };
