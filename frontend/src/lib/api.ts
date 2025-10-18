@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Company, Project, Document, Comment, AnalyticsSummary, LoginCredentials, AuthUser } from '@/types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://edicius-dashboard.onrender.com/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
