@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Building2, Mail, Phone, MapPin } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 const Footer = () => {
   return (
@@ -8,15 +9,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="flex items-center space-x-1">
-                <div className="w-1 h-3 bg-edicius-red"></div>
-                <div className="w-1 h-4 bg-edicius-red"></div>
-                <div className="w-1 h-5 bg-edicius-red"></div>
-                <div className="w-1 h-6 bg-white"></div>
-                <div className="w-1 h-7 bg-white"></div>
-              </div>
-              <span className="text-lg font-bold">EDICIUS</span>
+            <div className="mb-4">
+              <Logo width={120} height={40} />
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               where innovation meets precision. With over 7 years of relentless dedication, 

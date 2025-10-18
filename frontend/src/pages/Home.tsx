@@ -5,6 +5,7 @@ import { companiesApi } from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Building2, ArrowRight, Star, Users, Globe } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 const Home = () => {
   const { data: companies, isLoading, error } = useQuery({
@@ -66,46 +67,13 @@ const Home = () => {
               transition={{ duration: 1, delay: 0.2 }}
               className="mb-12"
             >
-              <div className="flex items-center justify-center space-x-4 mb-8">
-                <div className="flex items-center space-x-1">
-                  <motion.div 
-                    className="w-3 h-6 bg-edicius-red"
-                    initial={{ height: 0 }}
-                    animate={{ height: 24 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                  ></motion.div>
-                  <motion.div 
-                    className="w-3 h-9 bg-edicius-red"
-                    initial={{ height: 0 }}
-                    animate={{ height: 36 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                  ></motion.div>
-                  <motion.div 
-                    className="w-3 h-12 bg-edicius-red"
-                    initial={{ height: 0 }}
-                    animate={{ height: 48 }}
-                    transition={{ duration: 0.8, delay: 0.7 }}
-                  ></motion.div>
-                  <motion.div 
-                    className="w-3 h-15 bg-black"
-                    initial={{ height: 0 }}
-                    animate={{ height: 60 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                  ></motion.div>
-                  <motion.div 
-                    className="w-3 h-18 bg-black"
-                    initial={{ height: 0 }}
-                    animate={{ height: 72 }}
-                    transition={{ duration: 0.8, delay: 0.9 }}
-                  ></motion.div>
-                </div>
+              <div className="flex items-center justify-center mb-8">
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 1.2 }}
-                  className="text-2xl md:text-3xl font-bold tracking-wider"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
                 >
-                  EDICIUS
+                  <Logo width={200} height={80} />
                 </motion.div>
               </div>
             </motion.div>
@@ -261,12 +229,8 @@ const Home = () => {
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/40 transition-all duration-300"></div>
                         <div className="absolute bottom-4 left-4 right-4">
-                          <div className="flex items-center space-x-1">
-                            <div className="w-1 h-3 bg-edicius-red"></div>
-                            <div className="w-1 h-4 bg-edicius-red"></div>
-                            <div className="w-1 h-5 bg-edicius-red"></div>
-                            <div className="w-1 h-6 bg-black"></div>
-                            <div className="w-1 h-7 bg-black"></div>
+                          <div className="opacity-80">
+                            <Logo width={60} height={20} />
                           </div>
                         </div>
                       </div>

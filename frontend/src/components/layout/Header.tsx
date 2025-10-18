@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Building2, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import Logo from '@/components/Logo';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,17 +24,8 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-4 bg-edicius-red"></div>
-              <div className="w-2 h-6 bg-edicius-red"></div>
-              <div className="w-2 h-8 bg-edicius-red"></div>
-              <div className="w-2 h-10 bg-black"></div>
-              <div className="w-2 h-12 bg-black"></div>
-            </div>
-            <span className="text-lg font-bold text-edicius-navy tracking-wide">
-              EDICIUS
-            </span>
+          <Link to="/" className="flex items-center">
+            <Logo width={140} height={50} />
           </Link>
 
           {/* Desktop Navigation */}
