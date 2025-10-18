@@ -292,8 +292,14 @@ app.get('/api/v1/projects', async (req, res) => {
       .populate('companyId', 'name slug')
       .populate('documents')
       .sort({ createdAt: -1 });
-    
-    res.json(projects);
+
+    // Transform the data to include company name for frontend compatibility
+    const transformedProjects = projects.map(project => ({
+      ...project.toObject(),
+      company: project.companyId ? project.companyId.name : 'Unknown Company'
+    }));
+
+    res.json(transformedProjects);
   } catch (error) {
     console.error('Error fetching projects:', error);
     res.status(500).json({ error: 'Failed to fetch projects' });
