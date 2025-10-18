@@ -20,7 +20,7 @@ const getCompanyHeroImage = (companyName: string) => {
   const name = companyName.toLowerCase();
   
   if (name.includes('innovations') || name.includes('consulting')) {
-    return 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Technology/Consulting
+    return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2025&q=80'; // Technology/Digital
   } else if (name.includes('mining') || name.includes('minerals')) {
     return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
   } else if (name.includes('productions') || name.includes('entertainment')) {

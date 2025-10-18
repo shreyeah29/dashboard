@@ -229,7 +229,7 @@ const AdminProjects = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -240,14 +240,14 @@ const AdminProjects = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Projects Management</h1>
-              <p className="text-white/70">Manage all projects across Edicius companies</p>
+              <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Projects Management</h1>
+              <p className="text-gray-600 text-lg font-medium">Manage all projects across Edicius companies</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-gradient-to-r from-edicius-gold to-edicius-gold/80 text-edicius-navy px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-edicius-gold/20 transition-all duration-200 flex items-center space-x-2"
+              className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 hover:shadow-lg transition-all duration-200 flex items-center space-x-2"
             >
               <Plus className="w-5 h-5" />
               <span>Add Project</span>

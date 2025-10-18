@@ -11,10 +11,10 @@ const AdminDashboard = () => {
 
   // Mock data for demonstration
   const stats = [
-    { title: 'Total Companies', value: '8', icon: Building2, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
-    { title: 'Active Projects', value: '24', icon: FileText, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
-    { title: 'Team Members', value: '156', icon: Users, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
-    { title: 'Documents', value: '89', icon: FileText, color: 'text-edicius-gold', bgColor: 'bg-edicius-gold/10' },
+    { title: 'Total Companies', value: '8', icon: Building2, color: 'text-black', bgColor: 'bg-gray-100' },
+    { title: 'Active Projects', value: '24', icon: FileText, color: 'text-black', bgColor: 'bg-gray-100' },
+    { title: 'Team Members', value: '156', icon: Users, color: 'text-black', bgColor: 'bg-gray-100' },
+    { title: 'Documents', value: '89', icon: FileText, color: 'text-black', bgColor: 'bg-gray-100' },
   ];
 
   const recentActivities = [
@@ -36,9 +36,9 @@ const AdminDashboard = () => {
 
   const pieData = [
     { name: 'Legal', value: 25, color: '#DC2626' },
-    { name: 'Financial', value: 30, color: '#C9A227' },
-    { name: 'Planning', value: 20, color: '#0B1F3A' },
-    { name: 'Technical', value: 25, color: '#64748B' },
+    { name: 'Financial', value: 30, color: '#000000' },
+    { name: 'Planning', value: 20, color: '#374151' },
+    { name: 'Technical', value: 25, color: '#6B7280' },
   ];
 
   useEffect(() => {
@@ -49,17 +49,17 @@ const AdminDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-edicius-gold/30 border-t-edicius-gold rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white/70">Loading Dashboard...</p>
+          <div className="w-16 h-16 border-4 border-gray-300 border-t-black rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading Dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-edicius-navy/50 to-edicius-black/50">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -68,8 +68,8 @@ const AdminDashboard = () => {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-          <p className="text-white/70">Manage your Edicius Group companies and projects</p>
+          <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Admin Dashboard</h1>
+          <p className="text-gray-600 text-lg font-medium">Manage your Edicius Group companies and projects</p>
         </motion.div>
 
         {/* Stats Grid */}
@@ -86,14 +86,14 @@ const AdminDashboard = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
             >
-              <Card className="bg-white/10 backdrop-blur-xl border border-edicius-gold/20 hover:bg-white/15 transition-all duration-300 hover:shadow-2xl hover:shadow-edicius-gold/20">
+              <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 hover:shadow-gray-200">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-white/70">{stat.title}</p>
-                      <p className="text-2xl font-bold text-white">{stat.value}</p>
+                      <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                      <p className="text-2xl font-bold text-black">{stat.value}</p>
                     </div>
-                    <div className={`p-3 rounded-full ${stat.bgColor} border border-edicius-gold/30`}>
+                    <div className={`p-3 rounded-full ${stat.bgColor} border border-gray-200`}>
                       <stat.icon className={`w-6 h-6 ${stat.color}`} />
                     </div>
                   </div>
