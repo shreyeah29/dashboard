@@ -36,42 +36,45 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
     setLoading(true);
     setError('');
     try {
-      // Check if the document URL is accessible
-      const testUrl = document.s3Url;
-      console.log('Testing document URL:', testUrl);
+      // First, try to get the document URL through the API
+      console.log('Fetching document URL for:', document._id);
+      const apiResponse = await documentsApi.getById(document._id);
       
-      // Try to fetch the document to check if it's accessible
-      const response = await fetch(testUrl, { method: 'HEAD' });
+      if (apiResponse.presignedUrl) {
+        console.log('Got presigned URL from API:', apiResponse.presignedUrl);
+        setViewUrl(apiResponse.presignedUrl);
+        return;
+      }
       
-      if (response.ok) {
-        setViewUrl(testUrl);
-      } else {
-        // If direct URL fails, try to get it through the API
-        const apiResponse = await documentsApi.getById(document._id);
-        if (apiResponse.presignedUrl) {
-          setViewUrl(apiResponse.presignedUrl);
+      // If API doesn't provide URL, construct it manually
+      const backendUrl = 'https://edicius-dashboard.onrender.com';
+      const fileName = document.s3Key || document.name;
+      const constructedUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
+      
+      console.log('Constructed URL:', constructedUrl);
+      
+      // Test if the constructed URL is accessible
+      try {
+        const response = await fetch(constructedUrl, { method: 'HEAD' });
+        if (response.ok) {
+          setViewUrl(constructedUrl);
+          console.log('Constructed URL is accessible');
         } else {
-          setError('Document not accessible. Please try again later.');
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch (fetchErr) {
+        console.error('Constructed URL not accessible:', fetchErr);
+        // Try the original s3Url as fallback
+        if (document.s3Url) {
+          console.log('Trying original s3Url:', document.s3Url);
+          setViewUrl(document.s3Url);
+        } else {
+          setError('Document file not found. Please contact support.');
         }
       }
     } catch (err) {
       console.error('Error fetching document view URL:', err);
-      // Try alternative approach - use the API endpoint
-      try {
-        const apiResponse = await documentsApi.getById(document._id);
-        if (apiResponse.presignedUrl) {
-          setViewUrl(apiResponse.presignedUrl);
-        } else {
-          setError('Failed to load document preview. The file may not be accessible.');
-        }
-      } catch (apiErr) {
-        console.error('API call failed:', apiErr);
-        // Try direct backend URL as last resort
-        const directUrl = `https://edicius-dashboard.onrender.com/uploads/project-documents/${document.s3Key || document.name}`;
-        console.log('Trying direct URL:', directUrl);
-        setViewUrl(directUrl);
-        setError('Using direct file access. If this fails, the file may not be available.');
-      }
+      setError('Failed to load document. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -168,38 +171,61 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
             <Button 
               onClick={async () => {
                 try {
-                  if (viewUrl) {
-                    const newWindow = window.open(viewUrl, '_blank');
+                  let docUrl = viewUrl;
+                  
+                  // If we don't have a viewUrl, try to get it
+                  if (!docUrl) {
+                    try {
+                      const apiResponse = await documentsApi.getById(document._id);
+                      docUrl = apiResponse.presignedUrl;
+                    } catch (apiErr) {
+                      // Construct URL manually
+                      const backendUrl = 'https://edicius-dashboard.onrender.com';
+                      const fileName = document.s3Key || document.name;
+                      docUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
+                    }
+                  }
+                  
+                  if (docUrl) {
+                    console.log('Opening document in new tab:', docUrl);
+                    const newWindow = window.open(docUrl, '_blank');
                     if (!newWindow) {
                       setError('Please allow popups to view this document');
                     }
                   } else {
-                    // Try to get the document URL again
-                    const apiResponse = await documentsApi.getById(document._id);
-                    if (apiResponse.presignedUrl) {
-                      const newWindow = window.open(apiResponse.presignedUrl, '_blank');
-                      if (!newWindow) {
-                        setError('Please allow popups to view this document');
-                      }
-                    } else {
-                      setError('Document URL not available');
-                    }
+                    setError('Document URL not available');
                   }
                 } catch (err) {
+                  console.error('Error opening document:', err);
                   setError('Failed to open document. Please try again.');
                 }
               }}
-              className="bg-edicius-gold hover:bg-edicius-gold/90 text-white"
+              className="bg-black hover:bg-gray-800 text-white"
             >
               Open in New Tab
             </Button>
             <Button 
               onClick={async () => {
                 try {
-                  const docUrl = viewUrl || (await documentsApi.getById(document._id)).presignedUrl;
+                  let docUrl = viewUrl;
+                  
+                  // If we don't have a viewUrl, try to get it
+                  if (!docUrl) {
+                    try {
+                      const apiResponse = await documentsApi.getById(document._id);
+                      docUrl = apiResponse.presignedUrl;
+                    } catch (apiErr) {
+                      // Construct URL manually
+                      const backendUrl = 'https://edicius-dashboard.onrender.com';
+                      const fileName = document.s3Key || document.name;
+                      docUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
+                    }
+                  }
+                  
                   if (docUrl) {
-                    // Try Google Docs Viewer as fallback
+                    // Use Google Docs Viewer for presentations and documents
                     const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(docUrl)}&embedded=true`;
+                    console.log('Opening Google Docs Viewer with URL:', googleViewerUrl);
                     const newWindow = window.open(googleViewerUrl, '_blank');
                     if (!newWindow) {
                       setError('Please allow popups to view this document');
@@ -208,11 +234,12 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
                     setError('Document URL not available');
                   }
                 } catch (err) {
+                  console.error('Error opening Google Docs Viewer:', err);
                   setError('Failed to open document viewer. Please try again.');
                 }
               }}
               variant="outline"
-              className="border-edicius-gold text-edicius-gold hover:bg-edicius-gold hover:text-white"
+              className="border-black text-black hover:bg-black hover:text-white"
             >
               View with Google Docs
             </Button>
@@ -239,28 +266,36 @@ const DocumentViewer = ({ document, projectName, isOpen, onClose }: DocumentView
         <Button 
           onClick={async () => {
             try {
-              if (viewUrl) {
-                const newWindow = window.open(viewUrl, '_blank');
+              let docUrl = viewUrl;
+              
+              // If we don't have a viewUrl, try to get it
+              if (!docUrl) {
+                try {
+                  const apiResponse = await documentsApi.getById(document._id);
+                  docUrl = apiResponse.presignedUrl;
+                } catch (apiErr) {
+                  // Construct URL manually
+                  const backendUrl = 'https://edicius-dashboard.onrender.com';
+                  const fileName = document.s3Key || document.name;
+                  docUrl = `${backendUrl}/uploads/project-documents/${fileName}`;
+                }
+              }
+              
+              if (docUrl) {
+                console.log('Opening document in new tab:', docUrl);
+                const newWindow = window.open(docUrl, '_blank');
                 if (!newWindow) {
                   setError('Please allow popups to view this document');
                 }
               } else {
-                // Try to get the document URL again
-                const apiResponse = await documentsApi.getById(document._id);
-                if (apiResponse.presignedUrl) {
-                  const newWindow = window.open(apiResponse.presignedUrl, '_blank');
-                  if (!newWindow) {
-                    setError('Please allow popups to view this document');
-                  }
-                } else {
-                  setError('Document URL not available');
-                }
+                setError('Document URL not available');
               }
             } catch (err) {
+              console.error('Error opening document:', err);
               setError('Failed to open document. Please try again.');
             }
           }}
-          className="bg-edicius-gold hover:bg-edicius-gold/90 text-white"
+          className="bg-black hover:bg-gray-800 text-white"
         >
           Open in New Tab
         </Button>

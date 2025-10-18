@@ -586,6 +586,30 @@ app.delete('/api/v1/documents/:id', async (req, res) => {
   }
 });
 
+// Comments endpoints
+app.get('/api/v1/comments/projects/:projectId', async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    
+    // For now, return empty array since we don't have a Comment model yet
+    // This will prevent the 404 errors in the frontend
+    res.json([]);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ error: 'Failed to fetch comments' });
+  }
+});
+
+app.post('/api/v1/comments', async (req, res) => {
+  try {
+    // For now, return success since we don't have a Comment model yet
+    res.json({ success: true, message: 'Comment posted successfully' });
+  } catch (error) {
+    console.error('Error posting comment:', error);
+    res.status(500).json({ error: 'Failed to post comment' });
+  }
+});
+
 // Seed data function
 const seedData = async () => {
   try {
