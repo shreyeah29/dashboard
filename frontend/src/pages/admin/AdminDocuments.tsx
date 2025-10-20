@@ -32,7 +32,9 @@ const AdminDocuments = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [companies, setCompanies] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [documentsLoading, setDocumentsLoading] = useState(true);
   const { toast } = useToast();
 
   // Load real data from API
