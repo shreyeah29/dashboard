@@ -81,7 +81,9 @@ const getFileType = (mimeType) => {
 const generateFileUrl = (filename) => {
   // Use the backend URL for serving files
   const baseUrl = process.env.BACKEND_URL || 'https://edicius-dashboard.onrender.com';
-  return `${baseUrl}/uploads/project-documents/${filename}`;
+  const url = `${baseUrl}/uploads/project-documents/${filename}`;
+  console.log('Generating file URL:', { baseUrl, filename, url });
+  return url;
 };
 
 // Helper function to delete local file

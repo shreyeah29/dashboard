@@ -153,12 +153,39 @@ const AdminDocuments = () => {
       const documentUrl = documentData.presignedUrl || document.s3Url;
       
       if (documentUrl) {
-        // Open in new tab
-        window.open(documentUrl, '_blank', 'noopener,noreferrer');
-        toast({
-          title: "Document Opened",
-          description: `Opening ${document.name} in new tab`,
-        });
+        // Check file type and handle accordingly
+        const fileExtension = document.name.split('.').pop()?.toLowerCase();
+        
+        if (['pdf'].includes(fileExtension)) {
+          // For PDFs, open directly
+          window.open(documentUrl, '_blank', 'noopener,noreferrer');
+          toast({
+            title: "Document Opened",
+            description: `Opening ${document.name} in new tab`,
+          });
+        } else if (['ppt', 'pptx', 'doc', 'docx'].includes(fileExtension)) {
+          // For Office documents, use Google Docs Viewer
+          const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(documentUrl)}&embedded=true`;
+          window.open(googleViewerUrl, '_blank', 'noopener,noreferrer');
+          toast({
+            title: "Document Opened",
+            description: `Opening ${document.name} with Google Docs Viewer`,
+          });
+        } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+          // For images, open directly
+          window.open(documentUrl, '_blank', 'noopener,noreferrer');
+          toast({
+            title: "Image Opened",
+            description: `Opening ${document.name} in new tab`,
+          });
+        } else {
+          // For other files, try to open directly
+          window.open(documentUrl, '_blank', 'noopener,noreferrer');
+          toast({
+            title: "File Opened",
+            description: `Opening ${document.name} in new tab`,
+          });
+        }
       } else {
         toast({
           title: "Error",
