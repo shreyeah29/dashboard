@@ -107,6 +107,11 @@ export const projectsApi = {
 
 // Documents API
 export const documentsApi = {
+  getAll: async (): Promise<Document[]> => {
+    const response = await api.get('/documents');
+    return response.data;
+  },
+  
   getByProject: async (projectId: string): Promise<Document[]> => {
     const response = await api.get(`/projects/${projectId}/documents`);
     return response.data;
