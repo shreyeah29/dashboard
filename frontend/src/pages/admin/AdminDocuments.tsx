@@ -21,7 +21,7 @@ import {
   Presentation
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { companiesApi, projectsApi } from '@/lib/api';
+import { companiesApi, projectsApi, documentsApi } from '@/lib/api';
 
 const AdminDocuments = () => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -40,21 +40,25 @@ const AdminDocuments = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [companiesData, projectsData] = await Promise.all([
+        setDocumentsLoading(true);
+        const [companiesData, projectsData, documentsData] = await Promise.all([
           companiesApi.getAll(),
-          projectsApi.getAll()
+          projectsApi.getAll(),
+          documentsApi.getAll()
         ]);
         setCompanies(companiesData);
         setProjects(projectsData);
+        setDocuments(documentsData);
       } catch (error) {
         console.error('Error loading data:', error);
         toast({
           title: "Error",
-          description: "Failed to load companies and projects data.",
+          description: "Failed to load data.",
           variant: "destructive",
         });
       } finally {
         setLoading(false);
+        setDocumentsLoading(false);
       }
     };
 
@@ -62,45 +66,6 @@ const AdminDocuments = () => {
   }, [toast]);
 
   const documentTags = ['Legal', 'Financial', 'Planning', 'Technical', 'Marketing', 'HR'];
-
-  const documents = [
-    {
-      id: '1',
-      name: 'Q4 Financial Report.pdf',
-      type: 'pdf',
-      size: '2.4 MB',
-      company: 'Edicius Innovations and Consulting Private Limited',
-      project: 'Digital Transformation Platform',
-      tags: ['Financial', 'Planning'],
-      uploadedBy: 'Admin User',
-      uploadedAt: '2024-01-15',
-      url: '#'
-    },
-    {
-      id: '2',
-      name: 'Project Proposal.pptx',
-      type: 'pptx',
-      size: '5.1 MB',
-      company: 'Edicius Infrastructure and Developers Private Limited',
-      project: 'Smart City Infrastructure',
-      tags: ['Planning', 'Technical'],
-      uploadedBy: 'Admin User',
-      uploadedAt: '2024-01-14',
-      url: '#'
-    },
-    {
-      id: '3',
-      name: 'Legal Contract.docx',
-      type: 'docx',
-      size: '1.2 MB',
-      company: 'Edicius Enterprises Private Limited',
-      project: 'B2B Partnership',
-      tags: ['Legal'],
-      uploadedBy: 'Admin User',
-      uploadedAt: '2024-01-13',
-      url: '#'
-    }
-  ];
 
   const getFileIcon = (type: string) => {
     switch (type) {
@@ -186,11 +151,29 @@ const AdminDocuments = () => {
     });
   };
 
-  const handleDelete = (documentId: string) => {
-    toast({
-      title: "Document Deleted",
-      description: "Document has been successfully deleted.",
-    });
+  const handleDelete = async (documentId: string, documentName: string) => {
+    if (!window.confirm(`Are you sure you want to delete "${documentName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await documentsApi.delete(documentId);
+      toast({
+        title: "Document Deleted",
+        description: `"${documentName}" has been deleted successfully.`,
+      });
+      
+      // Refresh the documents list
+      const documentsData = await documentsApi.getAll();
+      setDocuments(documentsData);
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete document. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -227,9 +210,21 @@ const AdminDocuments = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="grid grid-cols-1 gap-6"
         >
-          {documents.map((document, index) => (
+          {documentsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+              <span className="ml-3 text-gray-600">Loading documents...</span>
+            </div>
+          ) : documents.length === 0 ? (
+            <div className="text-center py-12">
+              <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-600 mb-2">No documents found</h3>
+              <p className="text-gray-500">Upload your first document to get started.</p>
+            </div>
+          ) : (
+            documents.map((document, index) => (
             <motion.div
-              key={document.id}
+              key={document._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
@@ -281,7 +276,7 @@ const AdminDocuments = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleDelete(document.id)}
+                        onClick={() => handleDelete(document._id, document.name)}
                         className="border-red-500/30 text-red-500 hover:bg-red-500/10"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -304,7 +299,8 @@ const AdminDocuments = () => {
                 </CardContent>
               </Card>
             </motion.div>
-          ))}
+            ))
+          )}
         </motion.div>
 
         {/* Upload Modal */}
