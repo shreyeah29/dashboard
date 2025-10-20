@@ -231,73 +231,44 @@ app.post('/api/v1/auth/admin/logout', (req, res) => {
 });
 
 // Documents endpoints
-app.get('/api/v1/documents', (req, res) => {
-  // Mock documents data
-  const documents = [
-    {
-      _id: '1',
-      name: 'Q4 Financial Report.pdf',
-      type: 'pdf',
-      size: '2.4 MB',
-      company: 'Edicius Innovations and Consulting Private Limited',
-      project: 'Digital Transformation Platform',
-      tags: ['Financial', 'Planning'],
-      uploadedBy: 'Admin User',
-      uploadedAt: '2024-01-15',
-      url: 'https://example.com/documents/q4-report.pdf'
-    },
-    {
-      _id: '2',
-      name: 'Project Proposal.pptx',
-      type: 'pptx',
-      size: '5.1 MB',
-      company: 'Edicius Infrastructure and Developers Private Limited',
-      project: 'Smart City Infrastructure',
-      tags: ['Planning', 'Technical'],
-      uploadedBy: 'Admin User',
-      uploadedAt: '2024-01-14',
-      url: 'https://example.com/documents/project-proposal.pptx'
-    }
-  ];
-  
-  res.json(documents);
+app.get('/api/v1/documents', async (req, res) => {
+  try {
+    // Get all documents from database
+    const documents = await Document.find()
+      .populate('projectId', 'name companyId')
+      .populate({
+        path: 'projectId',
+        populate: {
+          path: 'companyId',
+          select: 'name'
+        }
+      })
+      .sort({ uploadedAt: -1 });
+
+    // Transform documents to match frontend expectations
+    const transformedDocuments = documents.map(doc => ({
+      _id: doc._id,
+      name: doc.name,
+      type: doc.fileType,
+      size: `${(doc.fileSize / 1024 / 1024).toFixed(1)} MB`,
+      company: doc.projectId?.companyId?.name || 'Unknown Company',
+      project: doc.projectId?.name || 'Unknown Project',
+      tags: doc.tags || [],
+      uploadedBy: doc.uploadedBy || 'Admin User',
+      uploadedAt: new Date(doc.uploadedAt).toISOString().split('T')[0],
+      url: doc.s3Url
+    }));
+
+    res.json(transformedDocuments);
+  } catch (error) {
+    console.error('Error fetching documents:', error);
+    res.status(500).json({ error: 'Failed to fetch documents' });
+  }
 });
 
-app.post('/api/v1/documents/upload', (req, res) => {
-  // Mock upload response
-  const { company, project, tags, files } = req.body;
-  
-  // Simulate processing
-  setTimeout(() => {
-    res.json({
-      success: true,
-      message: 'Documents uploaded successfully',
-      documents: files.map((file, index) => ({
-        _id: `new_${Date.now()}_${index}`,
-        name: file.name,
-        type: file.name.split('.').pop(),
-        size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
-        company,
-        project,
-        tags,
-        uploadedBy: 'Admin User',
-        uploadedAt: new Date().toISOString().split('T')[0],
-        url: `https://example.com/documents/${file.name}`
-      }))
-    });
-  }, 1000);
-});
+// Real upload endpoint is handled by the project-specific upload endpoint below
 
-app.delete('/api/v1/documents/:id', (req, res) => {
-  const { id } = req.params;
-  
-  // Mock delete response
-  res.json({
-    success: true,
-    message: 'Document deleted successfully',
-    documentId: id
-  });
-});
+// Real delete endpoint is handled by the project-specific delete endpoint below
 
 // Projects endpoints
 app.get('/api/v1/projects', async (req, res) => {
