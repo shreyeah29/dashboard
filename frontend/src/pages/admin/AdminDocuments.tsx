@@ -35,6 +35,7 @@ const AdminDocuments = () => {
   const [documents, setDocuments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [documentsLoading, setDocumentsLoading] = useState(true);
+  const [documentAvailability, setDocumentAvailability] = useState<{[key: string]: boolean}>({});
   const { toast } = useToast();
 
   // Load real data from API
@@ -51,6 +52,24 @@ const AdminDocuments = () => {
         setCompanies(companiesData);
         setProjects(projectsData);
         setDocuments(documentsData);
+        
+        // Check availability of each document
+        const availability: {[key: string]: boolean} = {};
+        for (const doc of documentsData) {
+          try {
+            const docData = await documentsApi.getById(doc._id);
+            const docUrl = docData.presignedUrl || doc.s3Url;
+            if (docUrl) {
+              const response = await fetch(docUrl, { method: 'HEAD' });
+              availability[doc._id] = response.ok;
+            } else {
+              availability[doc._id] = false;
+            }
+          } catch (error) {
+            availability[doc._id] = false;
+          }
+        }
+        setDocumentAvailability(availability);
       } catch (error) {
         console.error('Error loading data:', error);
         toast({
@@ -153,9 +172,26 @@ const AdminDocuments = () => {
       const documentUrl = documentData.presignedUrl || document.s3Url;
       
       if (documentUrl) {
-        // Check file type and handle accordingly
+        // First, check if the file is accessible
         const fileExtension = document.name.split('.').pop()?.toLowerCase();
         
+        // Try to verify the file exists by making a HEAD request
+        try {
+          const response = await fetch(documentUrl, { method: 'HEAD' });
+          if (!response.ok) {
+            throw new Error('File not accessible');
+          }
+        } catch (fetchError) {
+          // File doesn't exist or isn't accessible
+          toast({
+            title: "File Not Available",
+            description: "This file is no longer available on the server. It may have been lost during a deployment. Please re-upload the file.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // File exists, proceed with viewing
         if (['pdf'].includes(fileExtension)) {
           // For PDFs, open directly
           window.open(documentUrl, '_blank', 'noopener,noreferrer');
@@ -164,12 +200,25 @@ const AdminDocuments = () => {
             description: `Opening ${document.name} in new tab`,
           });
         } else if (['ppt', 'pptx', 'doc', 'docx'].includes(fileExtension)) {
-          // For Office documents, use Google Docs Viewer
-          const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(documentUrl)}&embedded=true`;
+          // For Office documents, try multiple viewers
+          const viewers = [
+            {
+              name: "Google Docs Viewer",
+              url: `https://docs.google.com/gview?url=${encodeURIComponent(documentUrl)}&embedded=true`
+            },
+            {
+              name: "Microsoft Office Online",
+              url: `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(documentUrl)}`
+            }
+          ];
+          
+          // Try Google Docs Viewer first
+          const googleViewerUrl = viewers[0].url;
           window.open(googleViewerUrl, '_blank', 'noopener,noreferrer');
+          
           toast({
             title: "Document Opened",
-            description: `Opening ${document.name} with Google Docs Viewer`,
+            description: `Opening ${document.name} with Google Docs Viewer. If preview fails, try downloading the file.`,
           });
         } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
           // For images, open directly
@@ -197,7 +246,7 @@ const AdminDocuments = () => {
       console.error('Error opening document:', error);
       toast({
         title: "Error",
-        description: "Failed to open document. Please try again.",
+        description: "Failed to open document. The file may not be available on the server. Please try downloading or re-uploading the file.",
         variant: "destructive",
       });
     }
@@ -324,7 +373,25 @@ const AdminDocuments = () => {
                     <div className="flex items-center space-x-4">
                       {getFileIcon(document.type)}
                       <div>
-                        <h3 className="text-lg font-semibold text-black">{document.name}</h3>
+                        <div className="flex items-center space-x-2">
+                          <h3 className="text-lg font-semibold text-black">{document.name}</h3>
+                          {documentAvailability[document._id] === false && (
+                            <Badge 
+                              variant="outline" 
+                              className="text-xs border-red-500/30 text-red-500 bg-red-50"
+                            >
+                              File Missing
+                            </Badge>
+                          )}
+                          {documentAvailability[document._id] === true && (
+                            <Badge 
+                              variant="outline" 
+                              className="text-xs border-green-500/30 text-green-500 bg-green-50"
+                            >
+                              Available
+                            </Badge>
+                          )}
+                        </div>
                         <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
                           <span>{document.size}</span>
                           <span>•</span>
@@ -351,7 +418,9 @@ const AdminDocuments = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handlePreview(document)}
-                        className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                        disabled={documentAvailability[document._id] === false}
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        title={documentAvailability[document._id] === false ? "File not available" : "View document"}
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
@@ -359,7 +428,9 @@ const AdminDocuments = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleDownload(document)}
-                        className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                        disabled={documentAvailability[document._id] === false}
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        title={documentAvailability[document._id] === false ? "File not available" : "Download document"}
                       >
                         <Download className="w-4 h-4" />
                       </Button>
