@@ -259,3 +259,4 @@ This is an internal project for The Edicius Group. For questions or support, ple
 **Edicius Group Portal** - Innovating Across Industries
 # Vercel Deployment Trigger
 # Latest update Mon Oct 20 15:16:10 IST 2025
+# Force Vercel deployment - Mon Oct 20 15:53:14 IST 2025

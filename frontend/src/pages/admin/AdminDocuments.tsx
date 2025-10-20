@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +21,7 @@ import {
   Presentation
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { companiesApi, projectsApi } from '@/lib/api';
 
 const AdminDocuments = () => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -29,28 +30,36 @@ const AdminDocuments = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Mock data
-  const companies = [
-    { id: '1', name: 'Edicius Enterprises Private Limited' },
-    { id: '2', name: 'Edicius Innovations and Consulting Private Limited' },
-    { id: '3', name: 'Edicius Infrastructure and Developers Private Limited' },
-    { id: '4', name: 'Edicius Imports and Exports Private Limited' },
-    { id: '5', name: 'Edicius Productions and Entertainment Private Limited' },
-    { id: '6', name: 'Edicius Consumer Products Private Limited' },
-    { id: '7', name: 'Edicius Mining and Minerals Private Limited' },
-    { id: '8', name: 'Edicius Hotels and Hospitality Private Limited' },
-  ];
+  // Load real data from API
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [companiesData, projectsData] = await Promise.all([
+          companiesApi.getAll(),
+          projectsApi.getAll()
+        ]);
+        setCompanies(companiesData);
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load companies and projects data.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const projects = [
-    { id: '1', name: 'Digital Transformation Platform', companyId: '2' },
-    { id: '2', name: 'Smart City Infrastructure', companyId: '3' },
-    { id: '3', name: 'Consumer IoT Products', companyId: '6' },
-    { id: '4', name: 'Global Supply Chain Optimization', companyId: '4' },
-    { id: '5', name: 'AI Consulting Services', companyId: '2' },
-    { id: '6', name: 'Enterprise Solutions', companyId: '2' },
-  ];
+    loadData();
+  }, [toast]);
 
   const documentTags = ['Legal', 'Financial', 'Planning', 'Technical', 'Marketing', 'HR'];
 
@@ -335,7 +344,7 @@ const AdminDocuments = () => {
                     >
                       <option value="">Choose a company...</option>
                       {companies.map(company => (
-                        <option key={company.id} value={company.id}>{company.name}</option>
+                        <option key={company._id} value={company._id}>{company.name}</option>
                       ))}
                     </select>
                   </div>
@@ -351,9 +360,14 @@ const AdminDocuments = () => {
                     >
                       <option value="">Choose a project...</option>
                       {projects
-                        .filter(project => project.companyId === selectedCompany)
+                        .filter(project => {
+                          const companyId = typeof project.companyId === 'object' 
+                            ? project.companyId?._id 
+                            : project.companyId;
+                          return companyId === selectedCompany;
+                        })
                         .map(project => (
-                          <option key={project.id} value={project.id}>{project.name}</option>
+                          <option key={project._id} value={project._id}>{project.name}</option>
                         ))}
                     </select>
                   </div>
