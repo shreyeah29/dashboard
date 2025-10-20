@@ -146,11 +146,71 @@ const AdminDocuments = () => {
     }
   };
 
-  const handlePreview = (document: any) => {
-    toast({
-      title: "Preview Mode",
-      description: `Opening preview for ${document.name}`,
-    });
+  const handlePreview = async (document: any) => {
+    try {
+      // Get the document URL
+      const documentData = await documentsApi.getById(document._id);
+      const documentUrl = documentData.presignedUrl || document.s3Url;
+      
+      if (documentUrl) {
+        // Open in new tab
+        window.open(documentUrl, '_blank', 'noopener,noreferrer');
+        toast({
+          title: "Document Opened",
+          description: `Opening ${document.name} in new tab`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Document URL not available",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error opening document:', error);
+      toast({
+        title: "Error",
+        description: "Failed to open document. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownload = async (document: any) => {
+    try {
+      // Get the document URL
+      const documentData = await documentsApi.getById(document._id);
+      const documentUrl = documentData.presignedUrl || document.s3Url;
+      
+      if (documentUrl) {
+        // Create a temporary link and trigger download
+        const link = document.createElement('a');
+        link.href = documentUrl;
+        link.download = document.name;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        toast({
+          title: "Download Started",
+          description: `Downloading ${document.name}`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Document URL not available",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      toast({
+        title: "Error",
+        description: "Failed to download document. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async (documentId: string, documentName: string) => {
@@ -271,6 +331,7 @@ const AdminDocuments = () => {
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => handleDownload(document)}
                         className="border-gray-300 text-gray-700 hover:bg-gray-50"
                       >
                         <Download className="w-4 h-4" />
