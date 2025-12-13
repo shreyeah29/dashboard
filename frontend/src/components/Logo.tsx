@@ -40,20 +40,16 @@ const Logo: React.FC<LogoProps> = ({
   width = 600,
   height = 420,
 }) => {
-  // Scale up the logo by 1.3x
-  const scaledWidth = width * 1.3;
-  const scaledHeight = height * 1.3;
-  
   return (
     <div
       className={`flex flex-col items-center justify-center ${className}`}
-      style={{ width: scaledWidth, height: scaledHeight }}
+      style={{ width, height }}
     >
-      {/* SVG Bars - 3 red, 3 black */}
+      {/* SVG Bars - 3 red, 2 black */}
       <svg
-        width={scaledWidth}
-        height={scaledHeight * 0.7}
-        viewBox="0 0 120 70"
+        width={width}
+        height={height * 0.7}
+        viewBox="0 0 100 70"
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Red Bars */}
@@ -61,10 +57,9 @@ const Logo: React.FC<LogoProps> = ({
         <rect x="20" y="40" width="10" height="25" fill="#E53935" rx="1" />
         <rect x="35" y="30" width="10" height="35" fill="#C62828" rx="1" />
 
-        {/* Black Bars - 3 bars */}
+        {/* Black Bars - 2 bars */}
         <rect x="50" y="20" width="10" height="45" fill="#000000" rx="1" />
         <rect x="65" y="10" width="10" height="55" fill="#000000" rx="1" />
-        <rect x="80" y="5" width="10" height="60" fill="#000000" rx="1" />
       </svg>
 
       {/* EDICIUS Text */}
