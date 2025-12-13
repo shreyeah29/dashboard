@@ -141,13 +141,13 @@ const getContinentColor = (geo: any): string => {
     return '#ef4444';
   }
   
-  // Antarctica - Gray
+  // Antarctica - Light orange
   if (name.includes('antarctica')) {
-    return '#e5e7eb';
+    return '#fed7aa';
   }
   
-  // Default - return a light color so we can see it's working
-  return '#d1d5db';
+  // Default - return light orange for unclassified regions
+  return '#fed7aa';
 };
 
 const WorldMap = () => {
