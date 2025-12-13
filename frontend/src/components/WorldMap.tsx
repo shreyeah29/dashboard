@@ -31,6 +31,8 @@ const offices: OfficeLocation[] = [
     address: 'Prapti Complex, Hetauda Sub-Metropolitan city - 4',
     city: 'Bagmati Province',
     country: 'Nepal',
+    email: 'admin@1edicius.com',
+    phone: '+91 8341 029 691',
     lat: 27.4167,
     lng: 85.0333,
   },
@@ -73,113 +75,78 @@ const WorldMap = () => {
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          {/* Dense dot pattern like Tata example */}
-          <pattern id="worldMapDots" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
-            <circle cx="3" cy="3" r="0.6" fill="#9ca3af" opacity="0.5" />
+          {/* Subtle dot pattern for background */}
+          <pattern id="worldMapDots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="4" cy="4" r="0.5" fill="#e5e7eb" opacity="0.3" />
           </pattern>
         </defs>
         
-        {/* Background with dot pattern */}
+        {/* Background with subtle dot pattern */}
         <rect width="1000" height="500" fill="url(#worldMapDots)" />
         
-        {/* Detailed World Map - Continent Outlines */}
+        {/* Professional World Map - Clean Continent Outlines */}
         {/* North America */}
-        <path
-          d="M 100 50 L 140 45 L 180 55 L 210 75 L 230 105 L 240 145 L 235 185 L 220 215 L 195 230 L 165 235 L 135 225 L 110 200 L 95 160 L 90 120 L 92 80 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
-        <path
-          d="M 240 185 L 250 200 L 255 230 L 250 260 L 240 285 L 225 300 L 205 305 L 185 295 L 170 275 L 175 245 L 185 220 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
+        <g fill="#ffffff" stroke="#374151" strokeWidth="1.2" opacity="0.9">
+          {/* North America Main */}
+          <path d="M 85 45 L 120 40 L 160 50 L 195 70 L 220 100 L 235 140 L 230 180 L 210 215 L 180 235 L 145 240 L 115 230 L 90 200 L 75 160 L 70 120 L 72 80 Z" />
+          {/* Alaska */}
+          <path d="M 50 25 L 85 20 L 100 40 L 95 60 L 75 65 L 55 55 Z" />
+          {/* Central America */}
+          <path d="M 230 180 L 245 200 L 250 230 L 245 255 L 230 270 L 210 275 L 195 265 L 185 245 L 190 220 Z" />
+          {/* Greenland */}
+          <path d="M 280 15 L 320 12 L 340 25 L 335 50 L 315 60 L 290 55 L 275 40 Z" />
+        </g>
         
         {/* South America */}
-        <path
-          d="M 250 200 L 270 220 L 285 260 L 290 300 L 280 340 L 260 365 L 235 370 L 215 355 L 205 330 L 210 290 L 220 250 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
+        <g fill="#ffffff" stroke="#374151" strokeWidth="1.2" opacity="0.9">
+          <path d="M 250 200 L 275 220 L 290 260 L 295 300 L 285 340 L 265 370 L 240 380 L 215 375 L 200 350 L 195 320 L 200 280 L 210 240 Z" />
+        </g>
         
         {/* Europe */}
-        <path
-          d="M 470 40 L 510 35 L 535 55 L 545 85 L 540 115 L 525 140 L 505 150 L 485 145 L 470 125 L 465 95 L 468 65 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
+        <g fill="#ffffff" stroke="#374151" strokeWidth="1.2" opacity="0.9">
+          <path d="M 460 35 L 500 30 L 530 50 L 545 80 L 540 110 L 525 135 L 500 145 L 475 140 L 460 120 L 450 90 L 455 60 Z" />
+          {/* Scandinavia */}
+          <path d="M 520 20 L 560 15 L 580 35 L 575 60 L 550 70 L 525 65 L 510 50 Z" />
+          {/* UK */}
+          <path d="M 440 50 L 460 48 L 470 65 L 465 80 L 450 82 L 435 75 Z" />
+          {/* Iberian Peninsula */}
+          <path d="M 430 90 L 450 88 L 460 105 L 455 120 L 440 122 L 425 115 Z" />
+          {/* Italy */}
+          <path d="M 500 100 L 510 98 L 515 120 L 510 140 L 500 142 L 490 130 Z" />
+        </g>
         
         {/* Africa */}
-        <path
-          d="M 485 110 L 530 105 L 565 130 L 575 170 L 570 230 L 555 280 L 530 320 L 500 330 L 475 310 L 460 270 L 465 220 L 475 170 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
+        <g fill="#ffffff" stroke="#374151" strokeWidth="1.2" opacity="0.9">
+          <path d="M 480 105 L 525 100 L 560 125 L 570 165 L 565 225 L 550 275 L 525 315 L 495 325 L 470 305 L 455 265 L 460 215 L 470 165 Z" />
+          {/* Madagascar */}
+          <path d="M 600 280 L 620 275 L 630 295 L 625 315 L 610 320 L 595 310 Z" />
+        </g>
         
-        {/* Asia - Mainland */}
-        <path
-          d="M 535 20 L 640 15 L 710 35 L 770 65 L 810 105 L 840 165 L 835 225 L 795 265 L 745 285 L 695 275 L 645 255 L 600 225 L 565 175 L 550 125 L 545 75 L 540 45 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
-        
-        {/* India - More detailed shape */}
-        <path
-          d="M 675 170 L 710 165 L 730 180 L 735 200 L 730 220 L 710 230 L 685 225 L 665 210 L 660 190 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
-        
-        {/* Middle East */}
-        <path
-          d="M 600 120 L 640 115 L 660 130 L 665 150 L 655 170 L 635 175 L 615 165 L 600 145 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
+        {/* Asia */}
+        <g fill="#ffffff" stroke="#374151" strokeWidth="1.2" opacity="0.9">
+          {/* Main Asia */}
+          <path d="M 530 15 L 640 10 L 710 30 L 770 60 L 810 100 L 840 160 L 835 220 L 795 260 L 745 280 L 695 270 L 645 250 L 600 220 L 565 170 L 550 120 L 545 70 L 540 40 Z" />
+          {/* India - Detailed */}
+          <path d="M 670 165 L 705 160 L 725 175 L 730 195 L 725 215 L 705 225 L 680 220 L 660 205 L 655 185 Z" />
+          {/* Middle East */}
+          <path d="M 595 115 L 635 110 L 655 125 L 660 145 L 650 165 L 630 170 L 610 160 L 595 140 Z" />
+          {/* Arabian Peninsula */}
+          <path d="M 600 140 L 640 135 L 660 150 L 655 180 L 635 190 L 615 185 L 600 170 Z" />
+          {/* Southeast Asia */}
+          <path d="M 745 195 L 775 190 L 795 205 L 800 225 L 790 245 L 770 250 L 750 240 L 740 220 Z" />
+          {/* Japan */}
+          <path d="M 845 135 L 865 130 L 875 145 L 870 160 L 860 165 L 845 160 Z" />
+          {/* Korean Peninsula */}
+          <path d="M 820 140 L 835 138 L 840 155 L 835 170 L 820 172 L 810 160 Z" />
+        </g>
         
         {/* Australia */}
-        <path
-          d="M 740 285 L 810 280 L 840 305 L 850 335 L 840 365 L 810 375 L 780 370 L 750 355 L 735 325 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
+        <g fill="#ffffff" stroke="#374151" strokeWidth="1.2" opacity="0.9">
+          <path d="M 735 280 L 805 275 L 835 300 L 845 330 L 835 360 L 805 370 L 775 365 L 745 350 L 730 320 Z" />
+          {/* New Zealand */}
+          <path d="M 860 340 L 880 335 L 890 350 L 885 365 L 870 370 L 855 360 Z" />
+        </g>
         
-        {/* Japan */}
-        <path
-          d="M 850 140 L 870 135 L 880 150 L 875 165 L 865 170 L 850 165 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
-        
-        {/* Southeast Asia */}
-        <path
-          d="M 750 200 L 780 195 L 800 210 L 805 230 L 795 250 L 775 255 L 755 245 L 745 225 Z"
-          fill="#f9fafb"
-          stroke="#d1d5db"
-          strokeWidth="0.5"
-          opacity="0.8"
-        />
-
         {/* Office Location Pins */}
         {offices.map((office) => {
           const position = getPinPosition(office);
@@ -193,9 +160,9 @@ const WorldMap = () => {
               <circle
                 cx={pinX}
                 cy={pinY}
-                r={isHovered ? "14" : "10"}
+                r={isHovered ? "16" : "12"}
                 fill="#f97316"
-                opacity={isHovered ? 0.25 : 0.12}
+                opacity={isHovered ? 0.2 : 0.1}
               />
               
               {/* Pin */}
@@ -205,33 +172,33 @@ const WorldMap = () => {
                 onClick={() => setSelectedOffice(selectedOffice === office.id ? null : office.id)}
                 style={{ cursor: 'pointer' }}
                 animate={{
-                  scale: isHovered ? 1.4 : 1,
+                  scale: isHovered ? 1.5 : 1,
                 }}
                 transition={{ duration: 0.2 }}
               >
-                {/* Pin Teardrop Shape (like Tata example) */}
+                {/* Pin Teardrop Shape */}
                 <path
-                  d={`M ${pinX} ${pinY - 10} L ${pinX - 5} ${pinY + 3} L ${pinX + 5} ${pinY + 3} Z`}
+                  d={`M ${pinX} ${pinY - 12} L ${pinX - 6} ${pinY + 4} L ${pinX + 6} ${pinY + 4} Z`}
                   fill={isHovered ? "#f97316" : "#fb923c"}
                   stroke="white"
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                 />
                 
                 {/* Pin Circle */}
                 <circle
                   cx={pinX}
-                  cy={pinY - 5}
-                  r="5"
+                  cy={pinY - 6}
+                  r="6"
                   fill={isHovered ? "#f97316" : "#fb923c"}
                   stroke="white"
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                 />
                 
                 {/* Pin Center Dot */}
                 <circle
                   cx={pinX}
-                  cy={pinY - 5}
-                  r="2.5"
+                  cy={pinY - 6}
+                  r="3"
                   fill="white"
                 />
               </motion.g>
