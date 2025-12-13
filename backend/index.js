@@ -749,16 +749,30 @@ const seedData = async () => {
   }
 };
 
+// Track if we're already trying to connect
+let isConnecting = false;
+
 // Connect to MongoDB with automatic reconnection
 const connectDB = async () => {
+  // Prevent multiple simultaneous connection attempts
+  if (isConnecting) {
+    console.log('Connection attempt already in progress, waiting...');
+    return;
+  }
+
+  // If already connected, return
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
   try {
+    isConnecting = true;
+    
     if (process.env.MONGODB_URI) {
       // Connection options for better reliability
       const connectionOptions = {
-        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+        serverSelectionTimeoutMS: 10000, // Timeout after 10s
         socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-        bufferMaxEntries: 0, // Disable mongoose buffering
-        bufferCommands: false, // Disable mongoose buffering
         maxPoolSize: 10, // Maintain up to 10 socket connections
         minPoolSize: 2, // Maintain at least 2 socket connections
         maxIdleTimeMS: 30000, // Close connections after 30s of inactivity
@@ -768,41 +782,80 @@ const connectDB = async () => {
       await mongoose.connect(process.env.MONGODB_URI, connectionOptions);
       console.log('MongoDB connected successfully');
       
-      // Handle connection events
-      mongoose.connection.on('connected', () => {
-        console.log('MongoDB connection established');
-      });
+      // Handle connection events (only set once)
+      if (!mongoose.connection.listeners('connected').length) {
+        mongoose.connection.on('connected', () => {
+          console.log('MongoDB connection established');
+        });
 
-      mongoose.connection.on('error', (err) => {
-        console.error('MongoDB connection error:', err);
-      });
+        mongoose.connection.on('error', (err) => {
+          console.error('MongoDB connection error:', err);
+          isConnecting = false;
+        });
 
-      mongoose.connection.on('disconnected', () => {
-        console.log('MongoDB disconnected. Attempting to reconnect...');
-      });
+        mongoose.connection.on('disconnected', () => {
+          console.log('MongoDB disconnected. Attempting to reconnect...');
+          isConnecting = false;
+          // Auto-reconnect after 5 seconds
+          setTimeout(() => {
+            if (mongoose.connection.readyState !== 1) {
+              connectDB();
+            }
+          }, 5000);
+        });
+      }
 
-      // Seed database with initial data
+      // Seed database with initial data (only if not already seeded)
       await seedData();
     } else {
       console.log('MongoDB URI not provided, running without database');
     }
   } catch (error) {
     console.error('MongoDB connection error:', error);
+    isConnecting = false;
     // Retry connection after 5 seconds
     setTimeout(() => {
-      console.log('Retrying MongoDB connection...');
-      connectDB();
+      if (mongoose.connection.readyState !== 1) {
+        console.log('Retrying MongoDB connection...');
+        connectDB();
+      }
     }, 5000);
+  } finally {
+    isConnecting = false;
   }
 };
 
 // Helper function to check MongoDB connection before operations
 const ensureConnection = async () => {
-  if (mongoose.connection.readyState === 0) {
-    // 0 = disconnected, try to reconnect
+  // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+  if (mongoose.connection.readyState === 0 || mongoose.connection.readyState === 3) {
+    // Disconnected or disconnecting, try to reconnect
     console.log('MongoDB disconnected, attempting to reconnect...');
     await connectDB();
+    
+    // Wait for connection to be established (max 10 seconds)
+    let attempts = 0;
+    while (mongoose.connection.readyState !== 1 && attempts < 20) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      attempts++;
+    }
+    
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error('Failed to establish MongoDB connection after retries');
+    }
+  } else if (mongoose.connection.readyState === 2) {
+    // Connecting, just wait
+    let attempts = 0;
+    while (mongoose.connection.readyState !== 1 && attempts < 20) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      attempts++;
+    }
+    
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error('MongoDB connection timeout');
+    }
   }
+  // If readyState === 1, we're connected, proceed
 };
 
 // Start server
