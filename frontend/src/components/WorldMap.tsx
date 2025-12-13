@@ -48,6 +48,55 @@ const offices: OfficeLocation[] = [
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
+// Continent color mapping based on geographic regions
+const getContinentColor = (geo: any): string => {
+  const name = geo.properties?.NAME || geo.properties?.NAME_LONG || '';
+  const region = geo.properties?.REGION_UN || geo.properties?.SUBREGION || '';
+  
+  // North America - Light green
+  const northAmerica = ['United States', 'Canada', 'Mexico', 'Greenland', 'Cuba', 'Jamaica', 'Haiti', 'Dominican Republic', 'Guatemala', 'Honduras', 'El Salvador', 'Nicaragua', 'Costa Rica', 'Panama', 'Bahamas', 'Belize', 'Barbados', 'Trinidad', 'Jamaica'];
+  if (northAmerica.some(country => name.includes(country)) || region?.includes('Northern America')) {
+    return '#4ade80';
+  }
+  
+  // South America - Dark green
+  const southAmerica = ['Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia', 'Venezuela', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname', 'French Guiana'];
+  if (southAmerica.some(country => name.includes(country)) || region?.includes('South America') || region?.includes('Latin America')) {
+    return '#16a34a';
+  }
+  
+  // Europe - Light blue
+  const europe = ['United Kingdom', 'France', 'Germany', 'Italy', 'Spain', 'Poland', 'Netherlands', 'Belgium', 'Greece', 'Portugal', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Ireland', 'Switzerland', 'Austria', 'Czech', 'Romania', 'Hungary', 'Bulgaria', 'Croatia', 'Serbia', 'Slovakia', 'Slovenia', 'Lithuania', 'Latvia', 'Estonia', 'Luxembourg', 'Malta', 'Cyprus', 'Iceland'];
+  if (europe.some(country => name.includes(country)) || region?.includes('Europe')) {
+    return '#60a5fa';
+  }
+  
+  // Africa - Light orange/yellow
+  if (region?.includes('Africa')) {
+    return '#fb923c';
+  }
+  
+  // Asia - Orange
+  const asia = ['China', 'India', 'Japan', 'South Korea', 'North Korea', 'Thailand', 'Vietnam', 'Indonesia', 'Malaysia', 'Philippines', 'Singapore', 'Myanmar', 'Cambodia', 'Laos', 'Bangladesh', 'Pakistan', 'Afghanistan', 'Iran', 'Iraq', 'Saudi Arabia', 'Turkey', 'Israel', 'Jordan', 'Lebanon', 'Syria', 'Yemen', 'Oman', 'UAE', 'Kuwait', 'Qatar', 'Bahrain', 'Kazakhstan', 'Uzbekistan', 'Mongolia', 'Nepal', 'Bhutan', 'Sri Lanka', 'Maldives'];
+  if (asia.some(country => name.includes(country)) || region?.includes('Asia')) {
+    return '#f97316';
+  }
+  
+  // Oceania/Australia - Red
+  const oceania = ['Australia', 'New Zealand', 'Papua New Guinea', 'Fiji', 'Samoa', 'Tonga', 'Vanuatu', 'Solomon Islands', 'Micronesia', 'Palau', 'Marshall Islands'];
+  if (oceania.some(country => name.includes(country)) || region?.includes('Oceania')) {
+    return '#ef4444';
+  }
+  
+  // Antarctica - Gray
+  if (name.includes('Antarctica')) {
+    return '#e5e7eb';
+  }
+  
+  // Default - try to determine by coordinates if available
+  return '#e5e7eb';
+};
+
 const WorldMap = () => {
   const [hoveredOffice, setHoveredOffice] = useState<string | null>(null);
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
@@ -63,20 +112,33 @@ const WorldMap = () => {
       >
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
-            geographies.map((geo) => (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                fill="none"
-                stroke="#000000"
-                strokeWidth={1.2}
-                style={{
-                  default: { outline: 'none' },
-                  hover: { outline: 'none' },
-                  pressed: { outline: 'none' },
-                }}
-              />
-            ))
+            geographies.map((geo) => {
+              const fillColor = getContinentColor(geo);
+              
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={fillColor}
+                  stroke="#ffffff"
+                  strokeWidth={0.3}
+                  style={{
+                    default: { 
+                      outline: 'none',
+                      transition: 'all 0.2s ease',
+                    },
+                    hover: { 
+                      outline: 'none',
+                      fill: fillColor,
+                      opacity: 0.85,
+                    },
+                    pressed: { 
+                      outline: 'none',
+                    },
+                  }}
+                />
+              );
+            })
           }
         </Geographies>
         
