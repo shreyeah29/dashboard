@@ -48,52 +48,59 @@ const offices: OfficeLocation[] = [
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-// Continent color mapping based on geographic regions
+// Continent color mapping - more comprehensive and reliable
 const getContinentColor = (geo: any): string => {
-  const name = geo.properties?.NAME || geo.properties?.NAME_LONG || '';
-  const region = geo.properties?.REGION_UN || geo.properties?.SUBREGION || '';
+  const name = (geo.properties?.NAME || geo.properties?.NAME_LONG || '').toLowerCase();
+  const region = (geo.properties?.REGION_UN || geo.properties?.SUBREGION || geo.properties?.REGION_WB || '').toLowerCase();
   
-  // North America - Light green
-  const northAmerica = ['United States', 'Canada', 'Mexico', 'Greenland', 'Cuba', 'Jamaica', 'Haiti', 'Dominican Republic', 'Guatemala', 'Honduras', 'El Salvador', 'Nicaragua', 'Costa Rica', 'Panama', 'Bahamas', 'Belize', 'Barbados', 'Trinidad', 'Jamaica'];
-  if (northAmerica.some(country => name.includes(country)) || region?.includes('Northern America')) {
+  // North America - Light green (#4ade80)
+  const northAmerica = ['united states', 'canada', 'mexico', 'greenland', 'cuba', 'jamaica', 'haiti', 'dominican', 'guatemala', 'honduras', 'el salvador', 'nicaragua', 'costa rica', 'panama', 'bahamas', 'belize', 'barbados', 'trinidad', 'dominica', 'grenada', 'saint', 'antigua'];
+  if (northAmerica.some(country => name.includes(country)) || region?.includes('northern america') || region?.includes('caribbean')) {
     return '#4ade80';
   }
   
-  // South America - Dark green
-  const southAmerica = ['Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia', 'Venezuela', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname', 'French Guiana'];
-  if (southAmerica.some(country => name.includes(country)) || region?.includes('South America') || region?.includes('Latin America')) {
+  // South America - Dark green (#16a34a)
+  const southAmerica = ['brazil', 'argentina', 'chile', 'peru', 'colombia', 'venezuela', 'ecuador', 'bolivia', 'paraguay', 'uruguay', 'guyana', 'suriname', 'french guiana'];
+  if (southAmerica.some(country => name.includes(country)) || region?.includes('south america') || region?.includes('latin america')) {
     return '#16a34a';
   }
   
-  // Europe - Light blue
-  const europe = ['United Kingdom', 'France', 'Germany', 'Italy', 'Spain', 'Poland', 'Netherlands', 'Belgium', 'Greece', 'Portugal', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Ireland', 'Switzerland', 'Austria', 'Czech', 'Romania', 'Hungary', 'Bulgaria', 'Croatia', 'Serbia', 'Slovakia', 'Slovenia', 'Lithuania', 'Latvia', 'Estonia', 'Luxembourg', 'Malta', 'Cyprus', 'Iceland'];
-  if (europe.some(country => name.includes(country)) || region?.includes('Europe')) {
+  // Europe - Light blue (#60a5fa)
+  const europe = ['united kingdom', 'france', 'germany', 'italy', 'spain', 'poland', 'netherlands', 'belgium', 'greece', 'portugal', 'sweden', 'norway', 'denmark', 'finland', 'ireland', 'switzerland', 'austria', 'czech', 'romania', 'hungary', 'bulgaria', 'croatia', 'serbia', 'slovakia', 'slovenia', 'lithuania', 'latvia', 'estonia', 'luxembourg', 'malta', 'cyprus', 'iceland', 'russia', 'ukraine', 'belarus', 'moldova', 'albania', 'bosnia', 'macedonia', 'montenegro', 'kosovo'];
+  if (europe.some(country => name.includes(country)) || region?.includes('europe')) {
     return '#60a5fa';
   }
   
-  // Africa - Light orange/yellow
-  if (region?.includes('Africa')) {
+  // Africa - Light orange/yellow (#fb923c)
+  const africa = ['africa', 'south africa', 'egypt', 'nigeria', 'kenya', 'ethiopia', 'ghana', 'tanzania', 'uganda', 'morocco', 'algeria', 'sudan', 'angola', 'mozambique', 'madagascar', 'cameroon', 'ivory coast', 'niger', 'mali', 'burkina faso', 'malawi', 'zambia', 'senegal', 'chad', 'somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'tunisia', 'south sudan', 'togo', 'sierra leone', 'libya', 'liberia', 'central african', 'mauritania', 'eritrea', 'gambia', 'botswana', 'namibia', 'gabon', 'lesotho', 'guinea-bissau', 'equatorial guinea', 'mauritius', 'eswatini', 'djibouti', 'comoros', 'cape verde', 'sao tome'];
+  if (africa.some(country => name.includes(country)) || region?.includes('africa')) {
     return '#fb923c';
   }
   
-  // Asia - Orange
-  const asia = ['China', 'India', 'Japan', 'South Korea', 'North Korea', 'Thailand', 'Vietnam', 'Indonesia', 'Malaysia', 'Philippines', 'Singapore', 'Myanmar', 'Cambodia', 'Laos', 'Bangladesh', 'Pakistan', 'Afghanistan', 'Iran', 'Iraq', 'Saudi Arabia', 'Turkey', 'Israel', 'Jordan', 'Lebanon', 'Syria', 'Yemen', 'Oman', 'UAE', 'Kuwait', 'Qatar', 'Bahrain', 'Kazakhstan', 'Uzbekistan', 'Mongolia', 'Nepal', 'Bhutan', 'Sri Lanka', 'Maldives'];
-  if (asia.some(country => name.includes(country)) || region?.includes('Asia')) {
+  // Asia - Orange (#f97316)
+  const asia = ['china', 'india', 'japan', 'korea', 'thailand', 'vietnam', 'indonesia', 'malaysia', 'philippines', 'singapore', 'myanmar', 'cambodia', 'laos', 'bangladesh', 'pakistan', 'afghanistan', 'iran', 'iraq', 'saudi arabia', 'turkey', 'israel', 'jordan', 'lebanon', 'syria', 'yemen', 'oman', 'uae', 'united arab emirates', 'kuwait', 'qatar', 'bahrain', 'kazakhstan', 'uzbekistan', 'mongolia', 'nepal', 'bhutan', 'sri lanka', 'maldives', 'taiwan', 'hong kong', 'macau', 'brunei', 'east timor', 'azerbaijan', 'armenia', 'georgia', 'kyrgyzstan', 'tajikistan', 'turkmenistan', 'bangladesh'];
+  if (asia.some(country => name.includes(country)) || region?.includes('asia') || region?.includes('middle east')) {
     return '#f97316';
   }
   
-  // Oceania/Australia - Red
-  const oceania = ['Australia', 'New Zealand', 'Papua New Guinea', 'Fiji', 'Samoa', 'Tonga', 'Vanuatu', 'Solomon Islands', 'Micronesia', 'Palau', 'Marshall Islands'];
-  if (oceania.some(country => name.includes(country)) || region?.includes('Oceania')) {
+  // Oceania/Australia - Red (#ef4444)
+  const oceania = ['australia', 'new zealand', 'papua new guinea', 'fiji', 'samoa', 'tonga', 'vanuatu', 'solomon', 'micronesia', 'palau', 'marshall', 'kiribati', 'nauru', 'tuvalu'];
+  if (oceania.some(country => name.includes(country)) || region?.includes('oceania')) {
     return '#ef4444';
   }
   
   // Antarctica - Gray
-  if (name.includes('Antarctica')) {
+  if (name.includes('antarctica')) {
     return '#e5e7eb';
   }
   
-  // Default - try to determine by coordinates if available
+  // Default fallback - use a light gray but try to determine by region
+  if (region?.includes('americas')) return '#4ade80';
+  if (region?.includes('europe')) return '#60a5fa';
+  if (region?.includes('africa')) return '#fb923c';
+  if (region?.includes('asia')) return '#f97316';
+  if (region?.includes('oceania')) return '#ef4444';
+  
   return '#e5e7eb';
 };
 
@@ -121,19 +128,21 @@ const WorldMap = () => {
                   geography={geo}
                   fill={fillColor}
                   stroke="#ffffff"
-                  strokeWidth={0.3}
+                  strokeWidth={0.5}
                   style={{
                     default: { 
                       outline: 'none',
                       transition: 'all 0.2s ease',
+                      fill: fillColor,
                     },
                     hover: { 
                       outline: 'none',
                       fill: fillColor,
-                      opacity: 0.85,
+                      opacity: 0.9,
                     },
                     pressed: { 
                       outline: 'none',
+                      fill: fillColor,
                     },
                   }}
                 />
