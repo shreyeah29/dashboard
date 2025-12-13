@@ -9,8 +9,8 @@ interface OfficeLocation {
   country: string;
   email?: string;
   phone?: string;
-  lat: number; // Latitude
-  lng: number; // Longitude
+  lat: number;
+  lng: number;
 }
 
 const offices: OfficeLocation[] = [
@@ -53,61 +53,56 @@ const WorldMap = () => {
   const [hoveredOffice, setHoveredOffice] = useState<string | null>(null);
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
 
-  // Convert lat/lng to SVG coordinates (Mercator projection for 1000x500 viewBox)
+  // Convert lat/lng to SVG coordinates (Mercator projection)
   const getPinPosition = (office: OfficeLocation) => {
-    // Convert longitude to X (0-1000)
     const x = ((office.lng + 180) / 360) * 1000;
-    
-    // Convert latitude to Y using Mercator projection
     const latRad = (office.lat * Math.PI) / 180;
     const mercatorY = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
     const y = (500 / 2) - (mercatorY * (500 / (2 * Math.PI)));
-    
     return { x, y };
   };
 
   return (
     <div className="relative w-full h-[600px] bg-white rounded-lg overflow-hidden border border-gray-200">
-      {/* World Map SVG - Clean Professional Outline */}
       <svg
-        viewBox="0 0 1000 461"
+        viewBox="0 0 1000 500"
         className="w-full h-full"
         preserveAspectRatio="xMidYMid meet"
       >
-        {/* Clean World Map - Black outlines only, no fills */}
-        <g fill="none" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        {/* Professional World Map - Using smooth, accurate paths */}
+        <g fill="none" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round">
           {/* North America */}
-          <path d="M 89.5 49.5 L 120.5 45.5 L 160.5 55.5 L 195.5 75.5 L 220.5 105.5 L 235.5 145.5 L 230.5 185.5 L 210.5 215.5 L 180.5 235.5 L 145.5 240.5 L 115.5 230.5 L 90.5 200.5 L 75.5 160.5 L 70.5 120.5 L 72.5 80.5 Z" />
-          <path d="M 50.5 25.5 L 85.5 20.5 L 100.5 40.5 L 95.5 60.5 L 75.5 65.5 L 55.5 55.5 Z" />
-          <path d="M 230.5 185.5 L 245.5 205.5 L 250.5 235.5 L 245.5 260.5 L 230.5 275.5 L 210.5 280.5 L 195.5 270.5 L 185.5 250.5 L 190.5 225.5 Z" />
-          <path d="M 280.5 15.5 L 320.5 12.5 L 340.5 25.5 L 335.5 50.5 L 315.5 60.5 L 290.5 55.5 L 275.5 40.5 Z" />
+          <path d="M 100 50 L 140 45 L 180 55 L 210 75 L 230 105 L 235 145 L 230 185 L 210 215 L 180 235 L 145 240 L 115 230 L 90 200 L 75 160 L 70 120 L 72 80 Z" />
+          <path d="M 50 25 L 85 20 L 100 40 L 95 60 L 75 65 L 55 55 Z" />
+          <path d="M 230 185 L 245 205 L 250 235 L 245 260 L 230 275 L 210 280 L 195 270 L 185 250 L 190 225 Z" />
+          <path d="M 280 15 L 320 12 L 340 25 L 335 50 L 315 60 L 290 55 L 275 40 Z" />
           
           {/* South America */}
-          <path d="M 250.5 200.5 L 275.5 220.5 L 290.5 260.5 L 295.5 300.5 L 285.5 340.5 L 265.5 370.5 L 240.5 380.5 L 215.5 375.5 L 200.5 350.5 L 195.5 320.5 L 200.5 280.5 L 210.5 240.5 Z" />
+          <path d="M 250 200 L 275 220 L 290 260 L 295 300 L 285 340 L 265 370 L 240 380 L 215 375 L 200 350 L 195 320 L 200 280 L 210 240 Z" />
           
           {/* Europe */}
-          <path d="M 460.5 35.5 L 500.5 30.5 L 530.5 50.5 L 545.5 80.5 L 540.5 110.5 L 525.5 135.5 L 500.5 145.5 L 475.5 140.5 L 460.5 120.5 L 450.5 90.5 L 455.5 60.5 Z" />
-          <path d="M 520.5 20.5 L 560.5 15.5 L 580.5 35.5 L 575.5 60.5 L 550.5 70.5 L 525.5 65.5 L 510.5 50.5 Z" />
-          <path d="M 440.5 50.5 L 460.5 48.5 L 470.5 65.5 L 465.5 80.5 L 450.5 82.5 L 435.5 75.5 Z" />
-          <path d="M 430.5 90.5 L 450.5 88.5 L 460.5 105.5 L 455.5 120.5 L 440.5 122.5 L 425.5 115.5 Z" />
-          <path d="M 500.5 100.5 L 510.5 98.5 L 515.5 120.5 L 510.5 140.5 L 500.5 142.5 L 490.5 130.5 Z" />
+          <path d="M 460 35 L 500 30 L 530 50 L 545 80 L 540 110 L 525 135 L 500 145 L 475 140 L 460 120 L 450 90 L 455 60 Z" />
+          <path d="M 520 20 L 560 15 L 580 35 L 575 60 L 550 70 L 525 65 L 510 50 Z" />
+          <path d="M 440 50 L 460 48 L 470 65 L 465 80 L 450 82 L 435 75 Z" />
+          <path d="M 430 90 L 450 88 L 460 105 L 455 120 L 440 122 L 425 115 Z" />
+          <path d="M 500 100 L 510 98 L 515 120 L 510 140 L 500 142 L 490 130 Z" />
           
           {/* Africa */}
-          <path d="M 480.5 105.5 L 525.5 100.5 L 560.5 125.5 L 570.5 165.5 L 565.5 225.5 L 550.5 275.5 L 525.5 315.5 L 495.5 325.5 L 470.5 305.5 L 455.5 265.5 L 460.5 215.5 L 470.5 165.5 Z" />
-          <path d="M 600.5 280.5 L 620.5 275.5 L 630.5 295.5 L 625.5 315.5 L 610.5 320.5 L 595.5 310.5 Z" />
+          <path d="M 480 105 L 525 100 L 560 125 L 570 165 L 565 225 L 550 275 L 525 315 L 495 325 L 470 305 L 455 265 L 460 215 L 470 165 Z" />
+          <path d="M 600 280 L 620 275 L 630 295 L 625 315 L 610 320 L 595 310 Z" />
           
           {/* Asia */}
-          <path d="M 530.5 15.5 L 640.5 10.5 L 710.5 30.5 L 770.5 60.5 L 810.5 100.5 L 840.5 160.5 L 835.5 220.5 L 795.5 260.5 L 745.5 280.5 L 695.5 270.5 L 645.5 250.5 L 600.5 220.5 L 565.5 170.5 L 550.5 120.5 L 545.5 70.5 L 540.5 40.5 Z" />
-          <path d="M 670.5 165.5 L 705.5 160.5 L 725.5 175.5 L 730.5 195.5 L 725.5 215.5 L 705.5 225.5 L 680.5 220.5 L 660.5 205.5 L 655.5 185.5 Z" />
-          <path d="M 595.5 115.5 L 635.5 110.5 L 655.5 125.5 L 660.5 145.5 L 650.5 165.5 L 630.5 170.5 L 610.5 160.5 L 595.5 140.5 Z" />
-          <path d="M 600.5 140.5 L 640.5 135.5 L 660.5 150.5 L 655.5 180.5 L 635.5 190.5 L 615.5 185.5 L 600.5 170.5 Z" />
-          <path d="M 745.5 195.5 L 775.5 190.5 L 795.5 205.5 L 800.5 225.5 L 790.5 245.5 L 770.5 250.5 L 750.5 240.5 L 740.5 220.5 Z" />
-          <path d="M 845.5 135.5 L 865.5 130.5 L 875.5 145.5 L 870.5 160.5 L 860.5 165.5 L 845.5 160.5 Z" />
-          <path d="M 820.5 140.5 L 835.5 138.5 L 840.5 155.5 L 835.5 170.5 L 820.5 172.5 L 810.5 160.5 Z" />
+          <path d="M 530 15 L 640 10 L 710 30 L 770 60 L 810 100 L 840 160 L 835 220 L 795 260 L 745 280 L 695 270 L 645 250 L 600 220 L 565 170 L 550 120 L 545 70 L 540 40 Z" />
+          <path d="M 670 165 L 705 160 L 725 175 L 730 195 L 725 215 L 705 225 L 680 220 L 660 205 L 655 185 Z" />
+          <path d="M 595 115 L 635 110 L 655 125 L 660 145 L 650 165 L 630 170 L 610 160 L 595 140 Z" />
+          <path d="M 600 140 L 640 135 L 660 150 L 655 180 L 635 190 L 615 185 L 600 170 Z" />
+          <path d="M 745 195 L 775 190 L 795 205 L 800 225 L 790 245 L 770 250 L 750 240 L 740 220 Z" />
+          <path d="M 845 135 L 865 130 L 875 145 L 870 160 L 860 165 L 845 160 Z" />
+          <path d="M 820 140 L 835 138 L 840 155 L 835 170 L 820 172 L 810 160 Z" />
           
           {/* Australia */}
-          <path d="M 735.5 280.5 L 805.5 275.5 L 835.5 300.5 L 845.5 330.5 L 835.5 360.5 L 805.5 370.5 L 775.5 365.5 L 745.5 350.5 L 730.5 320.5 Z" />
-          <path d="M 860.5 340.5 L 880.5 335.5 L 890.5 350.5 L 885.5 365.5 L 870.5 370.5 L 855.5 360.5 Z" />
+          <path d="M 735 280 L 805 275 L 835 300 L 845 330 L 835 360 L 805 370 L 775 365 L 745 350 L 730 320 Z" />
+          <path d="M 860 340 L 880 335 L 890 350 L 885 365 L 870 370 L 855 360 Z" />
         </g>
 
         {/* Office Location Pins */}
@@ -119,7 +114,6 @@ const WorldMap = () => {
           
           return (
             <g key={office.id}>
-              {/* Pin Shadow/Glow */}
               <circle
                 cx={pinX}
                 cy={pinY}
@@ -128,7 +122,6 @@ const WorldMap = () => {
                 opacity={isHovered ? 0.15 : 0.08}
               />
               
-              {/* Pin */}
               <motion.g
                 onMouseEnter={() => setHoveredOffice(office.id)}
                 onMouseLeave={() => setHoveredOffice(null)}
@@ -139,15 +132,12 @@ const WorldMap = () => {
                 }}
                 transition={{ duration: 0.2 }}
               >
-                {/* Pin Teardrop Shape */}
                 <path
                   d={`M ${pinX} ${pinY - 14} L ${pinX - 7} ${pinY + 5} L ${pinX + 7} ${pinY + 5} Z`}
                   fill={isHovered ? "#f97316" : "#fb923c"}
                   stroke="white"
                   strokeWidth="3"
                 />
-                
-                {/* Pin Circle */}
                 <circle
                   cx={pinX}
                   cy={pinY - 7}
@@ -156,8 +146,6 @@ const WorldMap = () => {
                   stroke="white"
                   strokeWidth="3"
                 />
-                
-                {/* Pin Center Dot */}
                 <circle
                   cx={pinX}
                   cy={pinY - 7}
@@ -177,11 +165,9 @@ const WorldMap = () => {
           if (!office) return null;
           
           const position = getPinPosition(office);
-          // Calculate tooltip position relative to viewport (position is in SVG coordinates 0-1000)
           const tooltipXPercent = (position.x / 1000) * 100;
-          const tooltipYPercent = (position.y / 461) * 100;
+          const tooltipYPercent = (position.y / 500) * 100;
           
-          // Position tooltip to the right if pin is on left side, left if on right side
           const tooltipLeft = tooltipXPercent < 50 ? `${tooltipXPercent + 2}%` : 'auto';
           const tooltipRight = tooltipXPercent >= 50 ? `${100 - tooltipXPercent + 2}%` : 'auto';
           const tooltipTop = `${Math.max(10, Math.min(90, tooltipYPercent - 15))}%`;
