@@ -25,14 +25,14 @@ const Contact = () => {
       </section>
 
       {/* Global Presence Map */}
-      <section className="py-20 bg-white">
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
             <h2 className="text-4xl font-bold text-edicius-navy mb-4">Our Global Presence</h2>
             <p className="text-edicius-gray text-lg max-w-2xl mx-auto">
@@ -44,6 +44,7 @@ const Contact = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="w-full"
           >
             <WorldMap />
           </motion.div>
