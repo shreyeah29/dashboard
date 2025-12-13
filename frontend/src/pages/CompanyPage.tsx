@@ -22,11 +22,11 @@ const getCompanyHeroImage = (companyName: string) => {
   if (name.includes('innovations') || name.includes('consulting')) {
     return 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Technology/Consulting
   } else if (name.includes('mining') || name.includes('minerals')) {
-    return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
+    return 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Excavation
   } else if (name.includes('productions') || name.includes('entertainment')) {
     return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
   } else if (name.includes('enterprises')) {
-    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1926&q=80'; // Business/Corporate
+    return 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial (using old mining image)
   } else if (name.includes('infrastructure') || name.includes('developers')) {
     return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Construction/Infrastructure
   } else if (name.includes('imports') || name.includes('exports')) {
@@ -49,11 +49,11 @@ const getCompanyFeatureImage = (companyName: string) => {
   if (name.includes('innovations') || name.includes('consulting')) {
     return 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Technology/Consulting
   } else if (name.includes('mining') || name.includes('minerals')) {
-    return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial
+    return 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Excavation
   } else if (name.includes('productions') || name.includes('entertainment')) {
     return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
   } else if (name.includes('enterprises')) {
-    return 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Business/Partnerships
+    return 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial (using old mining image)
   } else if (name.includes('infrastructure') || name.includes('developers')) {
     return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Infrastructure/Construction
   } else if (name.includes('imports') || name.includes('exports')) {

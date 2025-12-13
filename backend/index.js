@@ -643,7 +643,7 @@ const seedData = async () => {
         name: 'Edicius Enterprises Private Limited',
         slug: 'edicius-enterprises-private-limited',
         overview: 'Multi-sector B2B venture arm focusing on industrial innovation and strategic business partnerships.',
-        heroImage: 'https://images.unsplash.com/photo-1565008576549-57569a49371d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        heroImage: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
         sector: 'Multi-sector'
       },
       {
@@ -685,7 +685,7 @@ const seedData = async () => {
         name: 'Edicius Mining and Minerals Private Limited',
         slug: 'edicius-mining-and-minerals-private-limited',
         overview: 'Ethical resource extraction and environmental stewardship with advanced mining technologies.',
-        heroImage: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
         sector: 'Mining & Minerals'
       },
       {
