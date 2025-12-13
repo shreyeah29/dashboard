@@ -76,7 +76,7 @@ const Logo: React.FC<LogoProps> = ({
         style={{ 
           letterSpacing: '0.15em',
           textAlign: 'center',
-          width: `${width * 0.9}px`,
+          width: `${width * 1.1}px`,
           margin: '0 auto'
         }}
       >
