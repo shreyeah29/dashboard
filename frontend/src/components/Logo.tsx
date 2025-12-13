@@ -37,35 +37,20 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({
   className = "",
-  width = 600,
-  height = 420,
+  width = 200,
+  height = 80,
 }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center ${className}`}
+      className={`flex items-center justify-center ${className}`}
       style={{ width, height }}
     >
-      {/* SVG Bars - 3 red, 2 black */}
-      <svg
-        width={width}
-        height={height * 0.7}
-        viewBox="0 0 100 70"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Red Bars */}
-        <rect x="5" y="50" width="10" height="15" fill="#D32F2F" rx="1" />
-        <rect x="20" y="40" width="10" height="25" fill="#E53935" rx="1" />
-        <rect x="35" y="30" width="10" height="35" fill="#C62828" rx="1" />
-
-        {/* Black Bars - 2 bars */}
-        <rect x="50" y="20" width="10" height="45" fill="#000000" rx="1" />
-        <rect x="65" y="10" width="10" height="55" fill="#000000" rx="1" />
-      </svg>
-
-      {/* EDICIUS Text */}
-      <div className="text-white font-bold tracking-wider text-lg">
-        EDICIUS
-      </div>
+      <img
+        src="/logo.png"
+        alt="EDICIUS Logo"
+        className="h-full w-auto object-contain"
+        style={{ maxHeight: height, maxWidth: width }}
+      />
     </div>
   );
 };
