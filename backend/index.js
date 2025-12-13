@@ -631,7 +631,21 @@ const seedData = async () => {
     // Check if companies already exist
     const existingCompanies = await Company.countDocuments();
     if (existingCompanies > 0) {
-      console.log('Companies already exist, skipping seed data');
+      console.log('Companies already exist, updating images...');
+      
+      // Update Enterprises image
+      await Company.findOneAndUpdate(
+        { name: /enterprises/i },
+        { heroImage: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' }
+      );
+      
+      // Update Mining image
+      await Company.findOneAndUpdate(
+        { name: /mining|minerals/i },
+        { heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' }
+      );
+      
+      console.log('Company images updated');
       return;
     }
 
