@@ -28,8 +28,8 @@ const offices: OfficeLocation[] = [
   {
     id: 'nepal',
     name: 'Edicius Imports and Exports Private Limited',
-    address: 'Makawanpurplex, Hetauda Sub-Metropolitan city-4',
-    city: 'Makawanpur, Bagmati Province',
+    address: 'Prapti Complex, Hetauda Sub-Metropolitan city - 4',
+    city: 'Bagmati Province',
     country: 'Nepal',
     lat: 27.4167,
     lng: 85.0333,
