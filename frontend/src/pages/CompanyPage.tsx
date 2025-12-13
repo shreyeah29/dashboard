@@ -332,6 +332,18 @@ const CompanyPage = () => {
     enabled: !!slug,
   });
 
+  // Check if company should show only "Coming Soon" (Mining, Hotels, Consumer Products, Productions)
+  const showComingSoonOnly = company && (
+    company.name.toLowerCase().includes('mining') || 
+    company.name.toLowerCase().includes('minerals') ||
+    company.name.toLowerCase().includes('hotels') ||
+    company.name.toLowerCase().includes('hospitality') ||
+    company.name.toLowerCase().includes('consumer') ||
+    company.name.toLowerCase().includes('products') ||
+    company.name.toLowerCase().includes('productions') ||
+    company.name.toLowerCase().includes('entertainment')
+  );
+
   if (companyLoading || projectsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -404,43 +416,126 @@ const CompanyPage = () => {
             <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white font-serif tracking-tight">
               {company.name}
             </h1>
-            <p className="text-xl text-white/90 max-w-4xl mx-auto font-medium leading-relaxed">
-              {company.overview}
-            </p>
-            
-            {/* Company Stats Overlay */}
-            {(company.name.toLowerCase().includes('enterprises')) ? (
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-2">3</div>
-                  <div className="text-white/80 font-medium">Active Brands</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-2">5+</div>
-                  <div className="text-white/80 font-medium">Years Experience</div>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
-                  <div className="text-white/80 font-medium">Active Projects</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-2">5+</div>
-                  <div className="text-white/80 font-medium">Years Experience</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-2">100+</div>
-                  <div className="text-white/80 font-medium">Happy Clients</div>
-                </div>
-              </div>
+            {!showComingSoonOnly && (
+              <>
+                <p className="text-xl text-white/90 max-w-4xl mx-auto font-medium leading-relaxed">
+                  {company.overview}
+                </p>
+                
+                {/* Company Stats Overlay */}
+                {(company.name.toLowerCase().includes('enterprises')) ? (
+                  <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-2">3</div>
+                      <div className="text-white/80 font-medium">Active Brands</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-2">5+</div>
+                      <div className="text-white/80 font-medium">Years Experience</div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
+                      <div className="text-white/80 font-medium">Active Projects</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-2">5+</div>
+                      <div className="text-white/80 font-medium">Years Experience</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-2">100+</div>
+                      <div className="text-white/80 font-medium">Happy Clients</div>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </motion.div>
         </div>
       </section>
 
-      {/* Company Overview */}
+      {/* Coming Soon Section for Mining, Hotels, Consumer Products, Productions */}
+      {showComingSoonOnly && (
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl p-12 md:p-16 border border-gray-200">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="mb-8"
+                >
+                  <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-orange-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <Clock className="w-12 h-12 text-white" />
+                  </div>
+                </motion.div>
+                
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ once: true }}
+                  className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 font-serif tracking-tight"
+                >
+                  Coming Soon
+                </motion.h2>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  viewport={{ once: true }}
+                  className="mb-8"
+                >
+                  <div className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-100 to-orange-50 rounded-full border-2 border-orange-200">
+                    <Calendar className="w-6 h-6 text-orange-600 mr-3" />
+                    <span className="text-2xl font-bold text-orange-700 tracking-wide">2027</span>
+                  </div>
+                </motion.div>
+                
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  viewport={{ once: true }}
+                  className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium"
+                >
+                  We're preparing something extraordinary. Our operations and projects will be launching in 2027. 
+                  Stay tuned for groundbreaking initiatives and innovative solutions.
+                </motion.p>
+                
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  viewport={{ once: true }}
+                  className="mt-12 pt-8 border-t border-gray-200"
+                >
+                  <p className="text-sm text-gray-500 font-medium">
+                    For inquiries about our upcoming operations, please contact us at{' '}
+                    <a href="mailto:admin@1edicius.com" className="text-orange-600 hover:text-orange-700 font-semibold underline">
+                      admin@1edicius.com
+                    </a>
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Company Overview - Only show for non-Coming Soon companies */}
+      {!showComingSoonOnly && (
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -563,8 +658,10 @@ const CompanyPage = () => {
           </div>
         </div>
       </section>
+      )}
 
-      {/* Company Services/Brands Section */}
+      {/* Company Services/Brands Section - Only show for non-Coming Soon companies */}
+      {!showComingSoonOnly && (
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -607,85 +704,10 @@ const CompanyPage = () => {
           </div>
         </div>
       </section>
+      )}
 
-      {/* Projects Section or Coming Soon for Mining, Hidden for Enterprises */}
-      {!company.name.toLowerCase().includes('enterprises') && (
-        company.name.toLowerCase().includes('mining') || company.name.toLowerCase().includes('minerals') ? (
-        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <div className="bg-white rounded-2xl shadow-2xl p-12 md:p-16 border border-gray-200">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="mb-8"
-                >
-                  <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-orange-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <Clock className="w-12 h-12 text-white" />
-                  </div>
-                </motion.div>
-                
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  viewport={{ once: true }}
-                  className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 font-serif tracking-tight"
-                >
-                  Coming Soon
-                </motion.h2>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  viewport={{ once: true }}
-                  className="mb-8"
-                >
-                  <div className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-100 to-orange-50 rounded-full border-2 border-orange-200">
-                    <Calendar className="w-6 h-6 text-orange-600 mr-3" />
-                    <span className="text-2xl font-bold text-orange-700 tracking-wide">2027</span>
-                  </div>
-                </motion.div>
-                
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  viewport={{ once: true }}
-                  className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium"
-                >
-                  We're preparing something extraordinary. Our mining operations and projects will be launching in 2027. 
-                  Stay tuned for groundbreaking initiatives in ethical resource extraction and sustainable mining technologies.
-                </motion.p>
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  viewport={{ once: true }}
-                  className="mt-12 pt-8 border-t border-gray-200"
-                >
-                  <p className="text-sm text-gray-500 font-medium">
-                    For inquiries about our upcoming operations, please contact us at{' '}
-                    <a href="mailto:admin@1edicius.com" className="text-orange-600 hover:text-orange-700 font-semibold underline">
-                      admin@1edicius.com
-                    </a>
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      ) : (
+      {/* Projects Section - Only show for non-Coming Soon companies and not Enterprises */}
+      {!showComingSoonOnly && !company.name.toLowerCase().includes('enterprises') && (
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
