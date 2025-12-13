@@ -6,11 +6,30 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Building2, ArrowRight, Star, Users, Globe } from 'lucide-react';
 
+// Company order mapping
+const getCompanyOrder = (companyName: string): number => {
+  const name = companyName.toLowerCase();
+  if (name.includes('enterprises')) return 1;
+  if (name.includes('import') || name.includes('export')) return 2;
+  if (name.includes('innovation') || name.includes('consulting')) return 3;
+  if (name.includes('infrastructure') || name.includes('developers')) return 4;
+  if (name.includes('production') || name.includes('entertainment')) return 5;
+  if (name.includes('consumer') || name.includes('products')) return 6;
+  if (name.includes('hotel') || name.includes('hospitality')) return 7;
+  if (name.includes('mining') || name.includes('minerals')) return 8;
+  return 999; // Unknown companies go to the end
+};
+
 const Companies = () => {
   const { data: companies, isLoading, error } = useQuery({
     queryKey: ['companies'],
     queryFn: companiesApi.getAll,
   });
+
+  // Sort companies by the specified order
+  const sortedCompanies = companies ? [...companies].sort((a, b) => {
+    return getCompanyOrder(a.name) - getCompanyOrder(b.name);
+  }) : [];
 
   // Debug logging
   console.log('Companies data:', companies);
@@ -75,7 +94,7 @@ const Companies = () => {
             <div className="text-center py-12">
               <p className="text-red-600 text-lg">Error loading companies: {error.message}</p>
             </div>
-          ) : companies && companies.length > 0 ? (
+          ) : sortedCompanies && sortedCompanies.length > 0 ? (
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -83,7 +102,7 @@ const Companies = () => {
               viewport={{ once: true }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
             >
-              {companies.map((company, index) => (
+              {sortedCompanies.map((company, index) => (
                 <motion.div key={company._id} variants={itemVariants}>
                   <Link to={`/company/${company.slug}`}>
                     <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group cursor-pointer">

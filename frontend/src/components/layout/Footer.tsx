@@ -63,13 +63,13 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Our Companies</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/company/edicius-consumer-products" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
-                  Consumer Products
+                <Link to="/company/edicius-enterprises" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
+                  Enterprises
                 </Link>
               </li>
               <li>
-                <Link to="/company/edicius-infrastructure-and-developers" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
-                  Infrastructure
+                <Link to="/company/edicius-imports-and-exports" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
+                  Imports & Exports
                 </Link>
               </li>
               <li>
@@ -78,8 +78,28 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/company/edicius-infrastructure-and-developers" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
+                  Infrastructure
+                </Link>
+              </li>
+              <li>
                 <Link to="/company/edicius-productions-and-entertainment" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
-                  Entertainment
+                  Productions & Entertainment
+                </Link>
+              </li>
+              <li>
+                <Link to="/company/edicius-consumer-products" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
+                  Consumer Products
+                </Link>
+              </li>
+              <li>
+                <Link to="/company/edicius-hotels-and-hospitality" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
+                  Hotels & Hospitality
+                </Link>
+              </li>
+              <li>
+                <Link to="/company/edicius-mining-and-minerals" className="text-gray-300 hover:text-edicius-gold transition-colors duration-200">
+                  Mining & Minerals
                 </Link>
               </li>
             </ul>
