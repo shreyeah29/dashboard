@@ -77,7 +77,8 @@ const Logo: React.FC<LogoProps> = ({
           letterSpacing: '0.08em',
           textAlign: 'center',
           width: `${width * 0.8}px`,
-          margin: '0 auto'
+          margin: '0 auto',
+          transform: 'translateX(-2%)'
         }}
       >
         EDICIUS
