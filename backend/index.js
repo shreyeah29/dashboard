@@ -642,7 +642,7 @@ const seedData = async () => {
       // Update Mining image
       await Company.findOneAndUpdate(
         { name: /mining|minerals/i },
-        { heroImage: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' }
+        { heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' }
       );
       
       // Update Enterprises overview
@@ -711,7 +711,7 @@ const seedData = async () => {
         name: 'Edicius Mining and Minerals Private Limited',
         slug: 'edicius-mining-and-minerals-private-limited',
         overview: 'Ethical resource extraction and environmental stewardship with advanced mining technologies.',
-        heroImage: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
         sector: 'Mining & Minerals'
       },
       {
