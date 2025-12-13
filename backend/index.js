@@ -137,11 +137,18 @@ app.get('/api/v1/health', (req, res) => {
 // Companies endpoints
 app.get('/api/v1/companies', async (req, res) => {
   try {
+    // Ensure MongoDB connection before querying
+    if (mongoose.connection.readyState !== 1) {
+      // 1 = connected, 0 = disconnected, 2 = connecting, 3 = disconnecting
+      console.log('MongoDB not connected, readyState:', mongoose.connection.readyState);
+      await ensureConnection();
+    }
+    
     const companies = await Company.find().sort({ name: 1 });
     res.json(companies);
   } catch (error) {
     console.error('Error fetching companies:', error);
-    res.status(500).json({ error: 'Failed to fetch companies' });
+    res.status(500).json({ error: 'Failed to fetch companies: ' + error.message });
   }
 });
 
@@ -742,13 +749,38 @@ const seedData = async () => {
   }
 };
 
-// Connect to MongoDB
+// Connect to MongoDB with automatic reconnection
 const connectDB = async () => {
   try {
     if (process.env.MONGODB_URI) {
-      await mongoose.connect(process.env.MONGODB_URI);
+      // Connection options for better reliability
+      const connectionOptions = {
+        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+        socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+        bufferMaxEntries: 0, // Disable mongoose buffering
+        bufferCommands: false, // Disable mongoose buffering
+        maxPoolSize: 10, // Maintain up to 10 socket connections
+        minPoolSize: 2, // Maintain at least 2 socket connections
+        maxIdleTimeMS: 30000, // Close connections after 30s of inactivity
+        retryWrites: true,
+      };
+
+      await mongoose.connect(process.env.MONGODB_URI, connectionOptions);
       console.log('MongoDB connected successfully');
       
+      // Handle connection events
+      mongoose.connection.on('connected', () => {
+        console.log('MongoDB connection established');
+      });
+
+      mongoose.connection.on('error', (err) => {
+        console.error('MongoDB connection error:', err);
+      });
+
+      mongoose.connection.on('disconnected', () => {
+        console.log('MongoDB disconnected. Attempting to reconnect...');
+      });
+
       // Seed database with initial data
       await seedData();
     } else {
@@ -756,7 +788,20 @@ const connectDB = async () => {
     }
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    // Don't exit process, continue without database
+    // Retry connection after 5 seconds
+    setTimeout(() => {
+      console.log('Retrying MongoDB connection...');
+      connectDB();
+    }, 5000);
+  }
+};
+
+// Helper function to check MongoDB connection before operations
+const ensureConnection = async () => {
+  if (mongoose.connection.readyState === 0) {
+    // 0 = disconnected, try to reconnect
+    console.log('MongoDB disconnected, attempting to reconnect...');
+    await connectDB();
   }
 };
 
