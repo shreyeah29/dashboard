@@ -74,9 +74,9 @@ const Logo: React.FC<LogoProps> = ({
       <div 
         className={`text-white font-bold ${textSize}`} 
         style={{ 
-          letterSpacing: '0.15em',
+          letterSpacing: '0.08em',
           textAlign: 'center',
-          width: `${width * 1.1}px`,
+          width: `${width * 0.8}px`,
           margin: '0 auto'
         }}
       >
