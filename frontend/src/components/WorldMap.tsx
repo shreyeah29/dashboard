@@ -117,6 +117,12 @@ const WorldMap = () => {
             geographies.map((geo) => {
               const fillColor = getContinentColor(geo);
               
+              // Debug: log first few countries to see what properties exist
+              if (geographies.indexOf(geo) < 5) {
+                console.log('Geo properties:', geo.properties);
+                console.log('Fill color:', fillColor);
+              }
+              
               return (
                 <Geography
                   key={geo.rsmKey}
@@ -127,13 +133,16 @@ const WorldMap = () => {
                   style={{
                     default: { 
                       outline: 'none',
+                      fill: fillColor,
                     },
                     hover: { 
                       outline: 'none',
+                      fill: fillColor,
                       opacity: 0.9,
                     },
                     pressed: { 
                       outline: 'none',
+                      fill: fillColor,
                     },
                   }}
                 />
