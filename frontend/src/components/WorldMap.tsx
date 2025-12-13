@@ -146,7 +146,7 @@ const getContinentColor = (geo: any): string => {
     return '#fed7aa';
   }
   
-  // Default - return light orange for unclassified regions
+  // Default - Light orange for any unclassified areas
   return '#fed7aa';
 };
 
@@ -212,26 +212,26 @@ const WorldMap = () => {
                 transition={{ duration: 0.2 }}
               >
                 <circle
-                  r={isHovered ? "18" : "14"}
-                  fill="#f97316"
-                  opacity={isHovered ? 0.15 : 0.08}
+                  r={isHovered ? "24" : "20"}
+                  fill="#000000"
+                  opacity={isHovered ? 0.2 : 0.1}
                 />
                 <path
-                  d={`M 0 -14 L -7 5 L 7 5 Z`}
-                  fill={isHovered ? "#f97316" : "#fb923c"}
+                  d={`M 0 -18 L -9 6 L 9 6 Z`}
+                  fill="#000000"
                   stroke="white"
-                  strokeWidth="3"
+                  strokeWidth="2"
                 />
                 <circle
-                  r="7"
-                  cy="-7"
-                  fill={isHovered ? "#f97316" : "#fb923c"}
+                  r="9"
+                  cy="-9"
+                  fill="#000000"
                   stroke="white"
-                  strokeWidth="3"
+                  strokeWidth="2"
                 />
                 <circle
-                  r="3.5"
-                  cy="-7"
+                  r="4.5"
+                  cy="-9"
                   fill="white"
                 />
               </motion.g>
