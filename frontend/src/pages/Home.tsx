@@ -105,13 +105,13 @@ const Home = () => {
               className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8"
             >
               <span className="block bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
-                Consulting Minds.
+                Consulting Minds
               </span>
               <span className="block bg-gradient-to-r from-edicius-red via-red-600 to-edicius-red bg-clip-text text-transparent">
-                Diverse Ventures.
+                Diverse Ventures
               </span>
               <span className="block bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
-                One Vision.
+                One Vision
               </span>
             </motion.h1>
 
