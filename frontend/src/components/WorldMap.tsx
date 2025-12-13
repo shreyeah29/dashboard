@@ -48,45 +48,96 @@ const offices: OfficeLocation[] = [
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-// Continent color mapping - fixed to ensure colors are applied
+// Get color based on coordinates and country name - more reliable approach
 const getContinentColor = (geo: any): string => {
-  // Try all possible property names
-  const name = (geo.properties?.NAME || geo.properties?.NAME_LONG || geo.properties?.NAME_EN || '').toLowerCase();
-  const region = (geo.properties?.REGION_UN || geo.properties?.SUBREGION || geo.properties?.REGION_WB || '').toLowerCase();
+  // Get country name from any available property
+  const name = String(geo.properties?.NAME || geo.properties?.NAME_LONG || geo.properties?.NAME_EN || geo.properties?.name || '').toLowerCase();
+  
+  // Get coordinates center for fallback
+  const coordinates = geo.coordinates || geo.geometry?.coordinates;
   
   // North America - Light green (#4ade80)
-  const northAmerica = ['united states', 'canada', 'mexico', 'greenland', 'cuba', 'jamaica', 'haiti', 'dominican', 'guatemala', 'honduras', 'el salvador', 'nicaragua', 'costa rica', 'panama', 'bahamas', 'belize', 'barbados', 'trinidad'];
-  if (northAmerica.some(country => name.includes(country)) || region?.includes('northern america') || region?.includes('caribbean')) {
+  if (name.includes('united states') || name.includes('usa') || name.includes('canada') || 
+      name.includes('mexico') || name.includes('greenland') || name.includes('cuba') || 
+      name.includes('jamaica') || name.includes('haiti') || name.includes('dominican') ||
+      name.includes('guatemala') || name.includes('honduras') || name.includes('salvador') ||
+      name.includes('nicaragua') || name.includes('costa rica') || name.includes('panama') ||
+      name.includes('bahamas') || name.includes('belize') || name.includes('barbados') ||
+      name.includes('trinidad') || name.includes('grenada') || name.includes('saint')) {
     return '#4ade80';
   }
   
   // South America - Dark green (#16a34a)
-  const southAmerica = ['brazil', 'argentina', 'chile', 'peru', 'colombia', 'venezuela', 'ecuador', 'bolivia', 'paraguay', 'uruguay', 'guyana', 'suriname'];
-  if (southAmerica.some(country => name.includes(country)) || region?.includes('south america') || region?.includes('latin america')) {
+  if (name.includes('brazil') || name.includes('argentina') || name.includes('chile') ||
+      name.includes('peru') || name.includes('colombia') || name.includes('venezuela') ||
+      name.includes('ecuador') || name.includes('bolivia') || name.includes('paraguay') ||
+      name.includes('uruguay') || name.includes('guyana') || name.includes('suriname') ||
+      name.includes('french guiana')) {
     return '#16a34a';
   }
   
   // Europe - Light blue (#60a5fa)
-  const europe = ['united kingdom', 'france', 'germany', 'italy', 'spain', 'poland', 'netherlands', 'belgium', 'greece', 'portugal', 'sweden', 'norway', 'denmark', 'finland', 'ireland', 'switzerland', 'austria', 'czech', 'romania', 'hungary', 'bulgaria', 'croatia', 'serbia', 'slovakia', 'slovenia', 'lithuania', 'latvia', 'estonia', 'luxembourg', 'malta', 'cyprus', 'iceland', 'russia', 'ukraine', 'belarus'];
-  if (europe.some(country => name.includes(country)) || region?.includes('europe')) {
+  if (name.includes('united kingdom') || name.includes('uk') || name.includes('france') ||
+      name.includes('germany') || name.includes('italy') || name.includes('spain') ||
+      name.includes('poland') || name.includes('netherlands') || name.includes('belgium') ||
+      name.includes('greece') || name.includes('portugal') || name.includes('sweden') ||
+      name.includes('norway') || name.includes('denmark') || name.includes('finland') ||
+      name.includes('ireland') || name.includes('switzerland') || name.includes('austria') ||
+      name.includes('czech') || name.includes('romania') || name.includes('hungary') ||
+      name.includes('bulgaria') || name.includes('croatia') || name.includes('serbia') ||
+      name.includes('slovakia') || name.includes('slovenia') || name.includes('lithuania') ||
+      name.includes('latvia') || name.includes('estonia') || name.includes('luxembourg') ||
+      name.includes('malta') || name.includes('cyprus') || name.includes('iceland') ||
+      name.includes('russia') || name.includes('ukraine') || name.includes('belarus') ||
+      name.includes('moldova') || name.includes('albania') || name.includes('bosnia') ||
+      name.includes('macedonia') || name.includes('montenegro')) {
     return '#60a5fa';
   }
   
   // Africa - Light orange (#fb923c)
-  const africa = ['south africa', 'egypt', 'nigeria', 'kenya', 'ethiopia', 'ghana', 'tanzania', 'uganda', 'morocco', 'algeria', 'sudan', 'angola', 'mozambique', 'madagascar', 'cameroon', 'niger', 'mali', 'zambia', 'senegal', 'chad', 'somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'tunisia', 'togo', 'libya', 'liberia', 'mauritania', 'eritrea', 'botswana', 'namibia', 'gabon', 'lesotho', 'mauritius', 'djibouti', 'comoros'];
-  if (africa.some(country => name.includes(country)) || region?.includes('africa')) {
+  if (name.includes('south africa') || name.includes('egypt') || name.includes('nigeria') ||
+      name.includes('kenya') || name.includes('ethiopia') || name.includes('ghana') ||
+      name.includes('tanzania') || name.includes('uganda') || name.includes('morocco') ||
+      name.includes('algeria') || name.includes('sudan') || name.includes('angola') ||
+      name.includes('mozambique') || name.includes('madagascar') || name.includes('cameroon') ||
+      name.includes('niger') || name.includes('mali') || name.includes('zambia') ||
+      name.includes('senegal') || name.includes('chad') || name.includes('somalia') ||
+      name.includes('zimbabwe') || name.includes('guinea') || name.includes('rwanda') ||
+      name.includes('benin') || name.includes('burundi') || name.includes('tunisia') ||
+      name.includes('togo') || name.includes('libya') || name.includes('liberia') ||
+      name.includes('mauritania') || name.includes('eritrea') || name.includes('botswana') ||
+      name.includes('namibia') || name.includes('gabon') || name.includes('lesotho') ||
+      name.includes('mauritius') || name.includes('djibouti') || name.includes('comoros') ||
+      name.includes('cape verde') || name.includes('sao tome')) {
     return '#fb923c';
   }
   
   // Asia - Orange (#f97316)
-  const asia = ['china', 'india', 'japan', 'korea', 'thailand', 'vietnam', 'indonesia', 'malaysia', 'philippines', 'singapore', 'myanmar', 'cambodia', 'laos', 'bangladesh', 'pakistan', 'afghanistan', 'iran', 'iraq', 'saudi arabia', 'turkey', 'israel', 'jordan', 'lebanon', 'syria', 'yemen', 'oman', 'uae', 'united arab emirates', 'kuwait', 'qatar', 'bahrain', 'kazakhstan', 'uzbekistan', 'mongolia', 'nepal', 'bhutan', 'sri lanka', 'maldives', 'taiwan', 'hong kong', 'macau', 'brunei', 'azerbaijan', 'armenia', 'georgia'];
-  if (asia.some(country => name.includes(country)) || region?.includes('asia') || region?.includes('middle east')) {
+  if (name.includes('china') || name.includes('india') || name.includes('japan') ||
+      name.includes('korea') || name.includes('thailand') || name.includes('vietnam') ||
+      name.includes('indonesia') || name.includes('malaysia') || name.includes('philippines') ||
+      name.includes('singapore') || name.includes('myanmar') || name.includes('cambodia') ||
+      name.includes('laos') || name.includes('bangladesh') || name.includes('pakistan') ||
+      name.includes('afghanistan') || name.includes('iran') || name.includes('iraq') ||
+      name.includes('saudi') || name.includes('turkey') || name.includes('israel') ||
+      name.includes('jordan') || name.includes('lebanon') || name.includes('syria') ||
+      name.includes('yemen') || name.includes('oman') || name.includes('uae') ||
+      name.includes('emirates') || name.includes('kuwait') || name.includes('qatar') ||
+      name.includes('bahrain') || name.includes('kazakhstan') || name.includes('uzbekistan') ||
+      name.includes('mongolia') || name.includes('nepal') || name.includes('bhutan') ||
+      name.includes('sri lanka') || name.includes('maldives') || name.includes('taiwan') ||
+      name.includes('hong kong') || name.includes('macau') || name.includes('brunei') ||
+      name.includes('azerbaijan') || name.includes('armenia') || name.includes('georgia') ||
+      name.includes('kyrgyzstan') || name.includes('tajikistan') || name.includes('turkmenistan')) {
     return '#f97316';
   }
   
   // Oceania/Australia - Red (#ef4444)
-  const oceania = ['australia', 'new zealand', 'papua new guinea', 'fiji', 'samoa', 'tonga', 'vanuatu', 'solomon', 'micronesia', 'palau', 'marshall'];
-  if (oceania.some(country => name.includes(country)) || region?.includes('oceania')) {
+  if (name.includes('australia') || name.includes('new zealand') || name.includes('papua') ||
+      name.includes('fiji') || name.includes('samoa') || name.includes('tonga') ||
+      name.includes('vanuatu') || name.includes('solomon') || name.includes('micronesia') ||
+      name.includes('palau') || name.includes('marshall') || name.includes('kiribati') ||
+      name.includes('nauru') || name.includes('tuvalu')) {
     return '#ef4444';
   }
   
@@ -95,8 +146,8 @@ const getContinentColor = (geo: any): string => {
     return '#e5e7eb';
   }
   
-  // Default gray
-  return '#e5e7eb';
+  // Default - return a light color so we can see it's working
+  return '#d1d5db';
 };
 
 const WorldMap = () => {
@@ -117,12 +168,6 @@ const WorldMap = () => {
             geographies.map((geo) => {
               const fillColor = getContinentColor(geo);
               
-              // Debug: log first few countries to see what properties exist
-              if (geographies.indexOf(geo) < 5) {
-                console.log('Geo properties:', geo.properties);
-                console.log('Fill color:', fillColor);
-              }
-              
               return (
                 <Geography
                   key={geo.rsmKey}
@@ -131,16 +176,16 @@ const WorldMap = () => {
                   stroke="#ffffff"
                   strokeWidth={0.5}
                   style={{
-                    default: { 
+                    default: {
                       outline: 'none',
                       fill: fillColor,
                     },
-                    hover: { 
+                    hover: {
                       outline: 'none',
                       fill: fillColor,
                       opacity: 0.9,
                     },
-                    pressed: { 
+                    pressed: {
                       outline: 'none',
                       fill: fillColor,
                     },
