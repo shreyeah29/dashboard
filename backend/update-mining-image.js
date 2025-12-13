@@ -9,11 +9,11 @@ const updateMiningImage = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
 
-    // Update Mining image to large mining truck scene
+    // Update Mining image to large mining operations scene
     const miningResult = await Company.findOneAndUpdate(
       { name: /mining|minerals/i },
       { 
-        heroImage: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+        heroImage: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
       },
       { new: true }
     );
