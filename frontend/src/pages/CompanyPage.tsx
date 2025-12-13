@@ -409,62 +409,25 @@ const CompanyPage = () => {
             className="text-white"
           >
             {showComingSoonOnly ? (
-              // Coming Soon content overlaid on hero image
+              // Coming Soon content overlaid on hero image - minimal design
               <div className="max-w-4xl mx-auto">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="mb-8"
+                  className="text-5xl md:text-7xl font-bold text-white mb-8 font-serif tracking-tight"
                 >
-                  <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-orange-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <Clock className="w-12 h-12 text-white" />
-                  </div>
-                </motion.div>
+                  {company.name}
+                </motion.h1>
                 
-                <motion.h2
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
-                  className="text-5xl md:text-6xl font-bold text-white mb-6 font-serif tracking-tight"
                 >
-                  Coming Soon
-                </motion.h2>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="mb-8"
-                >
-                  <div className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-100/90 to-orange-50/90 rounded-full border-2 border-orange-200/90 backdrop-blur-sm">
-                    <Calendar className="w-6 h-6 text-orange-700 mr-3" />
-                    <span className="text-2xl font-bold text-orange-800 tracking-wide">2027</span>
+                  <div className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-100/90 to-orange-50/90 rounded-full border-2 border-orange-200/90 backdrop-blur-sm">
+                    <span className="text-3xl font-bold text-orange-800 tracking-wide">Coming Soon 2027</span>
                   </div>
-                </motion.div>
-                
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-medium mb-8"
-                >
-                  We're preparing something extraordinary. Our operations and projects will be launching in 2027. 
-                  Stay tuned for groundbreaking initiatives and innovative solutions.
-                </motion.p>
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="pt-8 border-t border-white/20"
-                >
-                  <p className="text-sm text-white/80 font-medium">
-                    For inquiries about our upcoming operations, please contact us at{' '}
-                    <a href="mailto:admin@1edicius.com" className="text-orange-300 hover:text-orange-200 font-semibold underline">
-                      admin@1edicius.com
-                    </a>
-                  </p>
                 </motion.div>
               </div>
             ) : (
