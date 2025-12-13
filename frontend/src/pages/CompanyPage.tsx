@@ -806,7 +806,6 @@ const CompanyPage = () => {
             )}
           </div>
         </section>
-      )
       )}
     </div>
   );
