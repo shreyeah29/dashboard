@@ -157,19 +157,19 @@ const getCompanyContent = (companyName: string) => {
       mission: "Multi-sector business ventures driving innovation across diverse industries with strategic partnerships.",
       services: [
         {
-          title: "Business Development",
-          description: "Strategic business development and partnership opportunities across multiple sectors.",
-          icon: Users2
+          title: "HappyCabs",
+          description: "Leading transportation solutions with a focus on customer service and reliability.",
+          icon: Truck
         },
         {
-          title: "Investment Management",
-          description: "Comprehensive investment strategies and portfolio management services.",
-          icon: TrendingUp
+          title: "L.A.D.S",
+          description: "Innovative business solutions and strategic partnerships for growth.",
+          icon: Briefcase
         },
         {
-          title: "Strategic Consulting",
-          description: "Expert business consulting and strategic planning for growth and expansion.",
-          icon: Target
+          title: "Flyaway Consultancy",
+          description: "Expert consulting services for business expansion and strategic planning.",
+          icon: Rocket
         }
       ],
       highlights: [
@@ -453,11 +453,19 @@ const CompanyPage = () => {
             <h2 className="text-4xl font-bold text-black mb-8 font-serif tracking-wide">
               About {company.name}
             </h2>
-            <div className="max-w-5xl mx-auto">
-              <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
-                {company.overview}
-              </p>
-            </div>
+            {(company.name.toLowerCase().includes('enterprises')) ? (
+              <div className="max-w-5xl mx-auto">
+                <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
+                  Edicius Enterprises was started in 2020 and the business has grown into multiple sub brands focusing on customer service through strategic business planning. Enterprises focuses on customer requirements through small investments into public sector.
+                </p>
+              </div>
+            ) : (
+              <div className="max-w-5xl mx-auto">
+                <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
+                  {company.overview}
+                </p>
+              </div>
+            )}
           </motion.div>
 
           {/* Visual Content Section */}
@@ -482,32 +490,73 @@ const CompanyPage = () => {
               viewport={{ once: true }}
               className="space-y-6"
             >
-              <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
-                {getCompanyContent(company.name).mission}
-              </h3>
-              <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                {company.overview}
-              </p>
-              
-              {/* Company Highlights */}
-              <div className="space-y-4">
-                {getCompanyContent(company.name).highlights.map((highlight, index) => (
-                  <div key={index} className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-4 h-4 text-white" />
+              {(company.name.toLowerCase().includes('enterprises')) ? (
+                <>
+                  <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
+                    Our Brands
+                  </h3>
+                  <p className="text-lg text-gray-600 leading-relaxed font-medium">
+                    Edicius Enterprises has successfully developed and nurtured multiple sub brands, each focusing on delivering exceptional customer service through strategic business planning and small investments into the public sector.
+                  </p>
+                  
+                  {/* Company Brands */}
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-medium"><span className="font-bold text-black">HappyCabs</span> - Leading transportation solutions</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-gray-600 font-medium">{highlight}</p>
+                    <div className="flex items-start space-x-4">
+                      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-medium"><span className="font-bold text-black">L.A.D.S</span> - Innovative business solutions</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-medium"><span className="font-bold text-black">Flyaway Consultancy</span> - Expert consulting services</p>
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
+                    {getCompanyContent(company.name).mission}
+                  </h3>
+                  <p className="text-lg text-gray-600 leading-relaxed font-medium">
+                    {company.overview}
+                  </p>
+                  
+                  {/* Company Highlights */}
+                  <div className="space-y-4">
+                    {getCompanyContent(company.name).highlights.map((highlight, index) => (
+                      <div key={index} className="flex items-start space-x-4">
+                        <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <CheckCircle className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-gray-600 font-medium">{highlight}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Company Services Section */}
+      {/* Company Services/Brands Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -517,7 +566,9 @@ const CompanyPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">Our Services</h2>
+            <h2 className="text-4xl font-bold text-black mb-6 font-serif tracking-wide">
+              {(company.name.toLowerCase().includes('enterprises')) ? 'Our Brands' : 'Our Services'}
+            </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
               {getCompanyContent(company.name).mission}
             </p>
@@ -549,8 +600,9 @@ const CompanyPage = () => {
         </div>
       </section>
 
-      {/* Projects Section or Coming Soon for Mining */}
-      {company.name.toLowerCase().includes('mining') || company.name.toLowerCase().includes('minerals') ? (
+      {/* Projects Section or Coming Soon for Mining, Hidden for Enterprises */}
+      {!company.name.toLowerCase().includes('enterprises') && (
+        company.name.toLowerCase().includes('mining') || company.name.toLowerCase().includes('minerals') ? (
         <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -724,6 +776,7 @@ const CompanyPage = () => {
             )}
           </div>
         </section>
+      )
       )}
     </div>
   );
