@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import WorldMap from '@/components/WorldMap';
 
 const Contact = () => {
   return (
@@ -19,6 +20,32 @@ const Contact = () => {
             <p className="text-xl text-gray-200 max-w-3xl mx-auto">
               Get in touch with Edicius Group for consulting services, partnerships, and business inquiries.
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Global Presence Map */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold text-edicius-navy mb-4">Our Global Presence</h2>
+            <p className="text-edicius-gray text-lg max-w-2xl mx-auto">
+              With offices across India, Nepal, and the United Kingdom, we're committed to serving our clients worldwide.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <WorldMap />
           </motion.div>
         </div>
       </section>
@@ -51,9 +78,9 @@ const Contact = () => {
                   <div>
                     <h3 className="font-bold text-edicius-navy mb-2">Registered Office</h3>
                     <p className="text-edicius-gray">
-                      Flat. No.105 Lake Melody Apartment,<br />
-                      Rajbhavan Road, Somajiguda,<br />
-                      Hyderabad. Pin: 500082.
+                      Flat no 406, G B Apartments,<br />
+                      Raj Bhavan Rd, Somajiguda,<br />
+                      Hyderabad 500082, Telangana
                     </p>
                   </div>
                 </div>
@@ -74,7 +101,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-edicius-navy mb-2">Email</h3>
-                    <p className="text-edicius-gray">info@gmail.com</p>
+                    <p className="text-edicius-gray">admin@1edicius.com</p>
                   </div>
                 </div>
 

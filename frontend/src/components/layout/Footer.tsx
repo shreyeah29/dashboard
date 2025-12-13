@@ -20,14 +20,14 @@ const Footer = () => {
               <div className="flex items-start space-x-2 text-gray-300">
                 <MapPin className="w-4 h-4 mt-0.5" />
                 <div className="text-sm">
-                  <p>Flat. No.105 Lake Melody Apartment,</p>
-                  <p>Rajbhavan Road, Somajiguda,</p>
-                  <p>Hyderabad. Pin: 500082.</p>
+                  <p>Flat no 406, G B Apartments,</p>
+                  <p>Raj Bhavan Rd, Somajiguda,</p>
+                  <p>Hyderabad 500082, Telangana</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="w-4 h-4" />
-                <span>info@gmail.com</span>
+                <span>admin@1edicius.com</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Phone className="w-4 h-4" />
