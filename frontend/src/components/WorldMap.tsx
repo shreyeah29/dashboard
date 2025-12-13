@@ -11,8 +11,6 @@ interface OfficeLocation {
   phone?: string;
   lat: number; // Latitude
   lng: number; // Longitude
-  x: number; // SVG X position (0-100)
-  y: number; // SVG Y position (0-100)
 }
 
 const offices: OfficeLocation[] = [
@@ -26,19 +24,15 @@ const offices: OfficeLocation[] = [
     phone: '+91 8341 029 691',
     lat: 17.3850,
     lng: 78.4867,
-    x: 75, // Approximate position on world map
-    y: 35,
   },
   {
     id: 'nepal',
     name: 'Edicius Imports and Exports Private Limited',
-    address: 'Hetauda Sub-Metropolitan city - 4',
+    address: 'Makawanpurplex, Hetauda Sub-Metropolitan city-4',
     city: 'Makawanpur, Bagmati Province',
     country: 'Nepal',
     lat: 27.4167,
     lng: 85.0333,
-    x: 78,
-    y: 28,
   },
   {
     id: 'london',
@@ -50,8 +44,6 @@ const offices: OfficeLocation[] = [
     phone: '+44-7426480105',
     lat: 51.5074,
     lng: -0.1278,
-    x: 48,
-    y: 20,
   },
 ];
 
@@ -82,69 +74,110 @@ const WorldMap = () => {
       >
         <defs>
           {/* Dense dot pattern like Tata example */}
-          <pattern id="worldMapDots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-            <circle cx="4" cy="4" r="0.8" fill="#9ca3af" opacity="0.4" />
+          <pattern id="worldMapDots" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+            <circle cx="3" cy="3" r="0.6" fill="#9ca3af" opacity="0.5" />
           </pattern>
         </defs>
         
         {/* Background with dot pattern */}
         <rect width="1000" height="500" fill="url(#worldMapDots)" />
         
-        {/* More detailed continent shapes */}
+        {/* Detailed World Map - Continent Outlines */}
         {/* North America */}
         <path
-          d="M 120 60 L 180 50 L 220 70 L 240 100 L 250 140 L 240 180 L 220 200 L 180 210 L 140 200 L 110 170 L 100 130 L 105 90 Z"
-          fill="none"
+          d="M 100 50 L 140 45 L 180 55 L 210 75 L 230 105 L 240 145 L 235 185 L 220 215 L 195 230 L 165 235 L 135 225 L 110 200 L 95 160 L 90 120 L 92 80 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
+        />
+        <path
+          d="M 240 185 L 250 200 L 255 230 L 250 260 L 240 285 L 225 300 L 205 305 L 185 295 L 170 275 L 175 245 L 185 220 Z"
+          fill="#f9fafb"
+          stroke="#d1d5db"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
         
         {/* South America */}
         <path
-          d="M 240 180 L 260 200 L 280 240 L 290 280 L 285 320 L 270 350 L 250 360 L 230 350 L 220 320 L 225 280 L 230 240 Z"
-          fill="none"
+          d="M 250 200 L 270 220 L 285 260 L 290 300 L 280 340 L 260 365 L 235 370 L 215 355 L 205 330 L 210 290 L 220 250 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
         
         {/* Europe */}
         <path
-          d="M 480 50 L 520 45 L 540 70 L 550 100 L 545 130 L 530 150 L 510 155 L 490 145 L 475 120 L 470 90 L 475 65 Z"
-          fill="none"
+          d="M 470 40 L 510 35 L 535 55 L 545 85 L 540 115 L 525 140 L 505 150 L 485 145 L 470 125 L 465 95 L 468 65 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
         
         {/* Africa */}
         <path
-          d="M 490 120 L 540 115 L 570 140 L 580 180 L 575 240 L 560 290 L 540 320 L 510 330 L 485 310 L 470 270 L 475 220 L 480 170 Z"
-          fill="none"
+          d="M 485 110 L 530 105 L 565 130 L 575 170 L 570 230 L 555 280 L 530 320 L 500 330 L 475 310 L 460 270 L 465 220 L 475 170 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
         
-        {/* Asia */}
+        {/* Asia - Mainland */}
         <path
-          d="M 540 30 L 650 25 L 720 50 L 780 80 L 820 120 L 850 180 L 840 240 L 800 280 L 750 300 L 700 290 L 650 270 L 600 240 L 570 200 L 550 150 L 545 100 L 540 60 Z"
-          fill="none"
+          d="M 535 20 L 640 15 L 710 35 L 770 65 L 810 105 L 840 165 L 835 225 L 795 265 L 745 285 L 695 275 L 645 255 L 600 225 L 565 175 L 550 125 L 545 75 L 540 45 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
+        />
+        
+        {/* India - More detailed shape */}
+        <path
+          d="M 675 170 L 710 165 L 730 180 L 735 200 L 730 220 L 710 230 L 685 225 L 665 210 L 660 190 Z"
+          fill="#f9fafb"
+          stroke="#d1d5db"
+          strokeWidth="0.5"
+          opacity="0.8"
+        />
+        
+        {/* Middle East */}
+        <path
+          d="M 600 120 L 640 115 L 660 130 L 665 150 L 655 170 L 635 175 L 615 165 L 600 145 Z"
+          fill="#f9fafb"
+          stroke="#d1d5db"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
         
         {/* Australia */}
         <path
-          d="M 750 300 L 820 295 L 850 320 L 860 350 L 850 380 L 820 390 L 790 385 L 760 370 L 745 340 Z"
-          fill="none"
+          d="M 740 285 L 810 280 L 840 305 L 850 335 L 840 365 L 810 375 L 780 370 L 750 355 L 735 325 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
         
-        {/* India (more detailed) */}
+        {/* Japan */}
         <path
-          d="M 680 180 L 720 175 L 740 190 L 745 210 L 740 230 L 720 240 L 695 235 L 675 220 L 670 200 Z"
-          fill="none"
+          d="M 850 140 L 870 135 L 880 150 L 875 165 L 865 170 L 850 165 Z"
+          fill="#f9fafb"
           stroke="#d1d5db"
-          strokeWidth="0.3"
+          strokeWidth="0.5"
+          opacity="0.8"
+        />
+        
+        {/* Southeast Asia */}
+        <path
+          d="M 750 200 L 780 195 L 800 210 L 805 230 L 795 250 L 775 255 L 755 245 L 745 225 Z"
+          fill="#f9fafb"
+          stroke="#d1d5db"
+          strokeWidth="0.5"
+          opacity="0.8"
         />
 
         {/* Office Location Pins */}
@@ -160,9 +193,9 @@ const WorldMap = () => {
               <circle
                 cx={pinX}
                 cy={pinY}
-                r={isHovered ? "12" : "8"}
-                fill={isHovered ? "#f97316" : "#fb923c"}
-                opacity={isHovered ? 0.3 : 0.15}
+                r={isHovered ? "14" : "10"}
+                fill="#f97316"
+                opacity={isHovered ? 0.25 : 0.12}
               />
               
               {/* Pin */}
@@ -172,33 +205,33 @@ const WorldMap = () => {
                 onClick={() => setSelectedOffice(selectedOffice === office.id ? null : office.id)}
                 style={{ cursor: 'pointer' }}
                 animate={{
-                  scale: isHovered ? 1.3 : 1,
+                  scale: isHovered ? 1.4 : 1,
                 }}
                 transition={{ duration: 0.2 }}
               >
                 {/* Pin Teardrop Shape (like Tata example) */}
                 <path
-                  d={`M ${pinX} ${pinY - 8} L ${pinX - 4} ${pinY + 2} L ${pinX + 4} ${pinY + 2} Z`}
+                  d={`M ${pinX} ${pinY - 10} L ${pinX - 5} ${pinY + 3} L ${pinX + 5} ${pinY + 3} Z`}
                   fill={isHovered ? "#f97316" : "#fb923c"}
                   stroke="white"
-                  strokeWidth="2"
+                  strokeWidth="2.5"
                 />
                 
                 {/* Pin Circle */}
                 <circle
                   cx={pinX}
-                  cy={pinY - 4}
-                  r="4"
+                  cy={pinY - 5}
+                  r="5"
                   fill={isHovered ? "#f97316" : "#fb923c"}
                   stroke="white"
-                  strokeWidth="2"
+                  strokeWidth="2.5"
                 />
                 
                 {/* Pin Center Dot */}
                 <circle
                   cx={pinX}
-                  cy={pinY - 4}
-                  r="2"
+                  cy={pinY - 5}
+                  r="2.5"
                   fill="white"
                 />
               </motion.g>
@@ -269,4 +302,3 @@ const WorldMap = () => {
 };
 
 export default WorldMap;
-
