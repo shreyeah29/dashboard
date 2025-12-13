@@ -456,7 +456,7 @@ const CompanyPage = () => {
             {(company.name.toLowerCase().includes('enterprises')) ? (
               <div className="max-w-5xl mx-auto">
                 <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
-                  Edicius Enterprises was started in 2020 and the business has grown into multiple sub brands focusing on customer service through strategic business planning. Enterprises focuses on customer requirements through small investments into public sector.
+                  Edicius Enterprises was started in 2020 and the business has developed multiple brands focusing on customer service through strategic business planning. Enterprises focuses on customer requirements through small investments into public sector.
                 </p>
               </div>
             ) : (
@@ -493,20 +493,20 @@ const CompanyPage = () => {
               {(company.name.toLowerCase().includes('enterprises')) ? (
                 <>
                   <h3 className="text-3xl font-bold text-black font-serif tracking-wide">
-                    Our Brands
+                    Strategic Business Excellence
                   </h3>
                   <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                    Edicius Enterprises has successfully developed and nurtured multiple sub brands, each focusing on delivering exceptional customer service through strategic business planning and small investments into the public sector.
+                    Edicius Enterprises is a multi-sector B2B venture arm that drives innovation across diverse industries through strategic partnerships and customer-centric approaches. We specialize in identifying growth opportunities and making strategic investments that create value for both our partners and the public sector.
                   </p>
                   
-                  {/* Company Brands */}
+                  {/* Company Highlights */}
                   <div className="space-y-4">
                     <div className="flex items-start space-x-4">
                       <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                         <CheckCircle className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-gray-600 font-medium"><span className="font-bold text-black">HappyCabs</span> - Leading transportation solutions</p>
+                        <p className="text-gray-600 font-medium">Diversified portfolio across 8+ industry sectors</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-4">
@@ -514,7 +514,7 @@ const CompanyPage = () => {
                         <CheckCircle className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-gray-600 font-medium"><span className="font-bold text-black">L.A.D.S</span> - Innovative business solutions</p>
+                        <p className="text-gray-600 font-medium">Strategic partnerships with leading global companies</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-4">
@@ -522,7 +522,15 @@ const CompanyPage = () => {
                         <CheckCircle className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-gray-600 font-medium"><span className="font-bold text-black">Flyaway Consultancy</span> - Expert consulting services</p>
+                        <p className="text-gray-600 font-medium">Proven track record of successful business ventures</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-medium">Expert team of business strategists and analysts</p>
                       </div>
                     </div>
                   </div>
