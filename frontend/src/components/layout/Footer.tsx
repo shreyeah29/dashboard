@@ -13,8 +13,8 @@ const Footer = () => {
               <Logo width={120} height={40} />
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
-              Where power of Consulting meets Precision. With over five years of relentless dedication, 
-              we've been shaping industries, setting standards.
+              Where power of Consulting meets Precision. With over five years of relentless R&D and dedication, 
+              we have been shaping solutions based on industry and market standards.
             </p>
             <div className="space-y-2">
               <div className="flex items-start space-x-2 text-gray-300">
