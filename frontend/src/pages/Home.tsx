@@ -92,7 +92,7 @@ const Home = () => {
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
                 >
-                  <Logo width={200} height={80} />
+                  <Logo width={2000} height={800} />
                 </motion.div>
               </div>
             </motion.div>
