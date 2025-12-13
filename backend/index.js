@@ -651,6 +651,12 @@ const seedData = async () => {
         { overview: 'Multi-sector B2B venture arm focusing on customer service and Excellence' }
       );
       
+      // Update Productions image
+      await Company.findOneAndUpdate(
+        { name: /productions|entertainment/i },
+        { heroImage: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' }
+      );
+      
       console.log('Company images and overview updated');
       return;
     }
@@ -691,7 +697,7 @@ const seedData = async () => {
         name: 'Edicius Productions and Entertainment Private Limited',
         slug: 'edicius-productions-and-entertainment-private-limited',
         overview: 'Compelling digital content, film productions, and immersive brand experiences.',
-        heroImage: 'https://images.unsplash.com/photo-1574267432644-f02b5ab7e2a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+        heroImage: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
         sector: 'Entertainment & Media'
       },
       {

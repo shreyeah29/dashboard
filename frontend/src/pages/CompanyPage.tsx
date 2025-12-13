@@ -24,7 +24,7 @@ const getCompanyHeroImage = (companyName: string) => {
   } else if (name.includes('mining') || name.includes('minerals')) {
     return 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Excavation
   } else if (name.includes('productions') || name.includes('entertainment')) {
-    return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
+    return 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Film Production/Cinema
   } else if (name.includes('enterprises')) {
     return 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial (using old mining image)
   } else if (name.includes('infrastructure') || name.includes('developers')) {
@@ -51,7 +51,7 @@ const getCompanyFeatureImage = (companyName: string) => {
   } else if (name.includes('mining') || name.includes('minerals')) {
     return 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Excavation
   } else if (name.includes('productions') || name.includes('entertainment')) {
-    return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Entertainment/Media
+    return 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Film Production/Cinema
   } else if (name.includes('enterprises')) {
     return 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'; // Mining/Industrial (using old mining image)
   } else if (name.includes('infrastructure') || name.includes('developers')) {
