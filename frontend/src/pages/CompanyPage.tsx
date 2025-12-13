@@ -409,20 +409,33 @@ const CompanyPage = () => {
             </p>
             
             {/* Company Stats Overlay */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
-                <div className="text-white/80 font-medium">Active Projects</div>
+            {(company.name.toLowerCase().includes('enterprises')) ? (
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                  <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
+                  <div className="text-white/80 font-medium">Active Brands</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                  <div className="text-3xl font-bold text-white mb-2">5+</div>
+                  <div className="text-white/80 font-medium">Years Experience</div>
+                </div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <div className="text-3xl font-bold text-white mb-2">5+</div>
-                <div className="text-white/80 font-medium">Years Experience</div>
+            ) : (
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                  <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
+                  <div className="text-white/80 font-medium">Active Projects</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                  <div className="text-3xl font-bold text-white mb-2">5+</div>
+                  <div className="text-white/80 font-medium">Years Experience</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                  <div className="text-3xl font-bold text-white mb-2">100+</div>
+                  <div className="text-white/80 font-medium">Happy Clients</div>
+                </div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <div className="text-3xl font-bold text-white mb-2">100+</div>
-                <div className="text-white/80 font-medium">Happy Clients</div>
-              </div>
-            </div>
+            )}
           </motion.div>
         </div>
       </section>

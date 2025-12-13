@@ -645,7 +645,13 @@ const seedData = async () => {
         { heroImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' }
       );
       
-      console.log('Company images updated');
+      // Update Enterprises overview
+      await Company.findOneAndUpdate(
+        { name: /enterprises/i },
+        { overview: 'Multi-sector B2B venture arm focusing on customer service and Excellence' }
+      );
+      
+      console.log('Company images and overview updated');
       return;
     }
 
@@ -656,7 +662,7 @@ const seedData = async () => {
       {
         name: 'Edicius Enterprises Private Limited',
         slug: 'edicius-enterprises-private-limited',
-        overview: 'Multi-sector B2B venture arm focusing on industrial innovation and strategic business partnerships.',
+        overview: 'Multi-sector B2B venture arm focusing on customer service and Excellence',
         heroImage: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
         sector: 'Multi-sector'
       },
