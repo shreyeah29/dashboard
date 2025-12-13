@@ -412,7 +412,7 @@ const CompanyPage = () => {
             {(company.name.toLowerCase().includes('enterprises')) ? (
               <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-2">{projects?.length || 0}</div>
+                  <div className="text-3xl font-bold text-white mb-2">3</div>
                   <div className="text-white/80 font-medium">Active Brands</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
