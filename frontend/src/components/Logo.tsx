@@ -58,6 +58,7 @@ const Logo: React.FC<LogoProps> = ({
         viewBox="0 0 100 70"
         xmlns="http://www.w3.org/2000/svg"
         className="mb-3"
+        style={{ display: 'block' }}
       >
         {/* Red Bars */}
         <rect x="5" y="50" width="10" height="15" fill="#D32F2F" rx="1" />
@@ -69,8 +70,16 @@ const Logo: React.FC<LogoProps> = ({
         <rect x="65" y="10" width="10" height="55" fill="#000000" rx="1" />
       </svg>
 
-      {/* EDICIUS Text - scales with logo size */}
-      <div className={`text-white font-bold tracking-wider ${textSize}`} style={{ letterSpacing: '0.15em' }}>
+      {/* EDICIUS Text - perfectly aligned with logo bars */}
+      <div 
+        className={`text-white font-bold ${textSize}`} 
+        style={{ 
+          letterSpacing: '0.15em',
+          textAlign: 'center',
+          width: `${width * 0.7}px`,
+          margin: '0 auto'
+        }}
+      >
         EDICIUS
       </div>
     </div>
