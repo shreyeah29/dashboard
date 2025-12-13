@@ -61,13 +61,13 @@ const Logo: React.FC<LogoProps> = ({
         style={{ display: 'block' }}
       >
         {/* Red Bars */}
-        <rect x="5" y="50" width="10" height="15" fill="#D32F2F" rx="1" />
-        <rect x="20" y="40" width="10" height="25" fill="#E53935" rx="1" />
-        <rect x="35" y="30" width="10" height="35" fill="#C62828" rx="1" />
+        <rect x="5" y="50" width="10" height="45" fill="#D32F2F" rx="1" />
+        <rect x="20" y="40" width="10" height="55" fill="#E53935" rx="1" />
+        <rect x="35" y="30" width="10" height="65" fill="#C62828" rx="1" />
 
         {/* Black Bars - 2 bars */}
-        <rect x="50" y="20" width="10" height="45" fill="#000000" rx="1" />
-        <rect x="65" y="10" width="10" height="55" fill="#000000" rx="1" />
+        <rect x="50" y="20" width="10" height="75" fill="#000000" rx="1" />
+        <rect x="65" y="10" width="10" height="85" fill="#000000" rx="1" />
       </svg>
 
       {/* EDICIUS Text - perfectly aligned with logo bars */}
