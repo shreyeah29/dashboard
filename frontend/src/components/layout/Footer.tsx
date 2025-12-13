@@ -13,7 +13,7 @@ const Footer = () => {
               <Logo width={120} height={40} />
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
-              where innovation meets precision. With over 7 years of relentless dedication, 
+              Where power of Consulting meets Precision. With over five years of relentless dedication, 
               we've been shaping industries, setting standards.
             </p>
             <div className="space-y-2">
