@@ -57,7 +57,7 @@ const Logo: React.FC<LogoProps> = ({
         height={height * 0.6}
         viewBox="0 0 100 70"
         xmlns="http://www.w3.org/2000/svg"
-        className="mb-3"
+        className="mb-1"
         style={{ display: 'block' }}
       >
         {/* Red Bars */}
