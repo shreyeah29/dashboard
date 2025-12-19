@@ -61,7 +61,7 @@ const Logo: React.FC<LogoProps> = ({
         height={height * 0.6}
         viewBox="0 0 100 70"
         xmlns="http://www.w3.org/2000/svg"
-        className="mb-1"
+        className="mb-0.5"
         style={{ display: 'block' }}
       >
         {/* Red Bars */}
@@ -81,8 +81,10 @@ const Logo: React.FC<LogoProps> = ({
           letterSpacing: align === 'left' ? '0.05em' : '0.08em',
           textAlign: align === 'left' ? 'left' : 'center',
           width: align === 'left' ? 'fit-content' : `${width * 0.8}px`,
+          marginTop: '4px',
           ...(align === 'center' ? { 
-            margin: '0 auto',
+            marginLeft: 'auto',
+            marginRight: 'auto',
             transform: 'translateX(-4%)'
           } : {})
         }}
