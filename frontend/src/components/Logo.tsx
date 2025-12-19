@@ -40,6 +40,7 @@ const Logo: React.FC<LogoProps> = ({
   className = "",
   width = 200,
   height = 80,
+  align = 'center',
 }) => {
   // Calculate text size based on logo size
   const textSize = width > 1000 ? 'text-4xl md:text-5xl lg:text-6xl' : 
@@ -47,9 +48,11 @@ const Logo: React.FC<LogoProps> = ({
                    width > 200 ? 'text-lg md:text-xl lg:text-2xl' :
                    'text-sm md:text-base';
   
+  const alignment = align === 'left' ? 'items-start justify-start' : 'items-center justify-center';
+  
   return (
     <div
-    className={`flex flex-col items-start justify-start ${className}`}
+      className={`flex flex-col ${alignment} ${className}`}
       style={{ width, height }}
     >
       {/* SVG Bars - 3 red, 2 black */}
