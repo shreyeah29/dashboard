@@ -25,8 +25,8 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <Logo width={240} height={90} />
+            <Link to="/" className="flex items-center" style={{ marginLeft: 0 }}>
+            <Logo width={160} height={60} align="left" />
             </Link>
 
             {/* Desktop Navigation */}

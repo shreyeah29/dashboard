@@ -33,6 +33,7 @@ interface LogoProps {
   className?: string;
   width?: number;
   height?: number;
+  align?: 'left' | 'center';
 }
 
 const Logo: React.FC<LogoProps> = ({
@@ -48,7 +49,7 @@ const Logo: React.FC<LogoProps> = ({
   
   return (
     <div
-      className={`flex flex-col items-center justify-center ${className}`}
+    className={`flex flex-col items-start justify-start ${className}`}
       style={{ width, height }}
     >
       {/* SVG Bars - 3 red, 2 black */}
@@ -74,11 +75,13 @@ const Logo: React.FC<LogoProps> = ({
       <div 
         className={`text-white font-bold ${textSize}`} 
         style={{ 
-          letterSpacing: '0.08em',
-          textAlign: 'center',
-          width: `${width * 0.8}px`,
-          margin: '0 auto',
-          transform: 'translateX(-4%)'
+          letterSpacing: align === 'left' ? '0.05em' : '0.08em',
+          textAlign: align === 'left' ? 'left' : 'center',
+          width: align === 'left' ? 'fit-content' : `${width * 0.8}px`,
+          ...(align === 'center' ? { 
+            margin: '0 auto',
+            transform: 'translateX(-4%)'
+          } : {})
         }}
       >
         EDICIUS
