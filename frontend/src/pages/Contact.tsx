@@ -76,7 +76,7 @@ const Contact = () => {
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-edicius-navy mb-2">Registered Office</h3>
+                    <h3 className="font-bold text-edicius-navy mb-2">Registered Address</h3>
                     <p className="text-edicius-gray">
                       Flat no 105, Lake Melody Apartments,<br />
                       Raj Bhavan Road, Behind Park Hotel, Somajiguda,<br />

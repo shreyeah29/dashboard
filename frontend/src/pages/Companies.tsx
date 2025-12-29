@@ -92,7 +92,10 @@ const Companies = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {error ? (
             <div className="text-center py-12">
-              <p className="text-red-600 text-lg">Error loading companies: {error.message}</p>
+              <p className="text-red-600 text-lg mb-2">Error loading companies</p>
+              <p className="text-gray-600 text-sm">
+                {error instanceof Error ? error.message : 'Network error. Please try again later.'}
+              </p>
             </div>
           ) : sortedCompanies && sortedCompanies.length > 0 ? (
             <motion.div

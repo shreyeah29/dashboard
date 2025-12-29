@@ -262,6 +262,7 @@ const WorldMap = () => {
             >
               <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
               <div className="space-y-2 text-sm text-gray-700">
+                <p className="font-semibold text-edicius-navy mb-1">Registered Address</p>
                 <p className="font-medium">{office.address}</p>
                 <p>{office.city}</p>
                 <p className="text-gray-600">{office.country}</p>
