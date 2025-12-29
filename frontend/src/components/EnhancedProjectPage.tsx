@@ -9,7 +9,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatDate } from '@/lib/utils';
 import { enhanceProjectContent, EnhancedProjectContent } from '@/utils/contentEnhancer';
 
 // Function to get appropriate hero image based on project name
