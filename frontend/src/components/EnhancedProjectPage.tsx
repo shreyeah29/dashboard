@@ -136,26 +136,6 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             <p className="text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed font-medium">
               {enhancedContent.hero.subtitle}
             </p>
-            
-            {/* Project Stats Overlay */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="text-2xl font-bold text-white mb-1">{project.teamSize || 0}</div>
-                <div className="text-white/80 text-sm font-medium">Team Members</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="text-2xl font-bold text-white mb-1">{project.documents?.length || 0}</div>
-                <div className="text-white/80 text-sm font-medium">Documents</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="text-2xl font-bold text-white mb-1">{project.milestones?.length || 0}</div>
-                <div className="text-white/80 text-sm font-medium">Milestones</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <div className="text-2xl font-bold text-white mb-1">{formatDate(project.createdAt)}</div>
-                <div className="text-white/80 text-sm font-medium">Started</div>
-              </div>
-            </div>
           </motion.div>
         </div>
       </section>

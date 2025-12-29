@@ -702,17 +702,6 @@ const CompanyPage = () => {
                           <p className="text-gray-600 text-base mb-6 line-clamp-3 leading-relaxed font-medium">
                             {project.description}
                           </p>
-                          
-                          <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                            <div className="flex items-center bg-gray-100 px-3 py-2 rounded-full">
-                              <Users className="w-4 h-4 mr-2 text-black" />
-                              <span className="font-medium">{project.teamSize || 0} members</span>
-                            </div>
-                            <div className="flex items-center bg-gray-100 px-3 py-2 rounded-full">
-                              <Calendar className="w-4 h-4 mr-2 text-black" />
-                              <span className="font-medium">{formatDate(project.createdAt)}</span>
-                            </div>
-                          </div>
 
                           <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                             <span className="text-lg font-semibold text-black group-hover:text-gray-600 transition-colors duration-200 tracking-wide">
