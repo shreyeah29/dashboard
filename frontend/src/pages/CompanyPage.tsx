@@ -693,11 +693,6 @@ const CompanyPage = () => {
                               <Building2 className="w-20 h-20 text-white group-hover:scale-110 transition-transform duration-300" />
                             </div>
                           )}
-                          <div className="absolute top-4 right-4">
-                            <Badge className={`${getStatusColor(project.status)} text-sm font-semibold px-3 py-1`}>
-                              {project.status}
-                            </Badge>
-                          </div>
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                         <CardContent className="p-8">
