@@ -20,8 +20,9 @@ const Footer = () => {
               <div className="flex items-start space-x-2 text-gray-300">
                 <MapPin className="w-4 h-4 mt-0.5" />
                 <div className="text-sm">
-                  <p>Flat no 406, G B Apartments,</p>
-                  <p>Raj Bhavan Rd, Somajiguda,</p>
+                  <p className="font-semibold text-white mb-1">Registered Address</p>
+                  <p>Flat no 105, Lake Melody Apartments,</p>
+                  <p>Raj Bhavan Road, Behind Park Hotel, Somajiguda,</p>
                   <p>Hyderabad 500082, Telangana</p>
                 </div>
               </div>
