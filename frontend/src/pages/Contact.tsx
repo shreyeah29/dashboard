@@ -78,8 +78,8 @@ const Contact = () => {
                   <div>
                     <h3 className="font-bold text-edicius-navy mb-2">Registered Office</h3>
                     <p className="text-edicius-gray">
-                      Flat no 406, G B Apartments,<br />
-                      Raj Bhavan Rd, Somajiguda,<br />
+                      Flat no 105, Lake Melody Apartments,<br />
+                      Raj Bhavan Road, Behind Park Hotel, Somajiguda,<br />
                       Hyderabad 500082, Telangana
                     </p>
                   </div>

@@ -17,7 +17,7 @@ const offices: OfficeLocation[] = [
   {
     id: 'hyderabad',
     name: 'Edicius Group',
-    address: 'Flat no 406, G B Apartments',
+    address: 'Flat no 105, Lake Melody Apartments, Raj Bhavan Road, Behind Park Hotel, Somajiguda Pincode: 500082',
     city: 'Hyderabad, Telangana',
     country: 'India',
     email: 'admin@1edicius.com',

@@ -44,7 +44,9 @@ const corsOptions = {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://dashboard-frontend-six-nu.vercel.app',
-      'https://dashboard-frontend-fe95ng0cq-legal-links-projects-bc18cb27.vercel.app'
+      'https://dashboard-frontend-fe95ng0cq-legal-links-projects-bc18cb27.vercel.app',
+      'https://onedicius.com',
+      'https://www.onedicius.com'
     ];
     
     console.log('CORS request from origin:', origin);
@@ -57,6 +59,11 @@ const corsOptions = {
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } 
+    // Allow onedicius.com domain (with or without www)
+    else if (origin.includes('onedicius.com')) {
+      console.log('Allowing onedicius.com domain:', origin);
+      callback(null, true);
+    }
     // Allow any Vercel deployment URL for this project
     else if (origin.includes('dashboard-frontend') && origin.includes('vercel.app')) {
       console.log('Allowing Vercel deployment URL:', origin);
