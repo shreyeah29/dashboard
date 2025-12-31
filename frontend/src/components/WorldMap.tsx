@@ -40,7 +40,7 @@ const offices: OfficeLocation[] = [
     address: 'Prapti Complex, Second Floor, Hetauda Sub-Metropolitan city - 4',
     city: 'Bagmati Province',
     country: 'Nepal',
-    email: 'admin@1edicius.com',
+    email: 'askflyaway@1edicius.com',
     phone: '+91 8341 029 691',
     coordinates: [85.0333, 27.4167],
   },
