@@ -35,6 +35,16 @@ const offices: OfficeLocation[] = [
     coordinates: [85.0333, 27.4167],
   },
   {
+    id: 'nepal-flyaway',
+    name: 'Flyaway Consultancy Unit Of Edicius Enterprises Pvt Ltd',
+    address: 'Prapti Complex, Second Floor, Hetauda Sub-Metropolitan city - 4',
+    city: 'Bagmati Province',
+    country: 'Nepal',
+    email: 'admin@1edicius.com',
+    phone: '+91 8341 029 691',
+    coordinates: [85.0333, 27.4167],
+  },
+  {
     id: 'london',
     name: 'One Edicius Pvt Ltd',
     address: '3rd Floor Suite, 207 Regent Street',
@@ -161,8 +171,25 @@ const getContinentColor = (geo: any): string => {
 };
 
 const WorldMap = () => {
-  const [hoveredOffice, setHoveredOffice] = useState<string | null>(null);
-  const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
+  const [hoveredLocation, setHoveredLocation] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+
+  // Group offices by coordinates to handle multiple offices at same location
+  const locationGroups = offices.reduce((acc, office) => {
+    const key = `${office.coordinates[0]},${office.coordinates[1]}`;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(office);
+    return acc;
+  }, {} as Record<string, OfficeLocation[]>);
+
+  // Get unique locations for markers
+  const uniqueLocations = Object.entries(locationGroups).map(([key, offices]) => ({
+    coordinates: offices[0].coordinates,
+    key,
+    offices,
+  }));
 
   return (
     <div className="relative w-full h-[600px] bg-white rounded-lg overflow-hidden border border-gray-200">
@@ -206,15 +233,15 @@ const WorldMap = () => {
           }
         </Geographies>
         
-        {offices.map((office) => {
-          const isHovered = hoveredOffice === office.id || selectedOffice === office.id;
+        {uniqueLocations.map((location) => {
+          const isHovered = hoveredLocation === location.key || selectedLocation === location.key;
           
           return (
-            <Marker key={office.id} coordinates={office.coordinates}>
+            <Marker key={location.key} coordinates={location.coordinates}>
               <motion.g
-                onMouseEnter={() => setHoveredOffice(office.id)}
-                onMouseLeave={() => setHoveredOffice(null)}
-                onClick={() => setSelectedOffice(selectedOffice === office.id ? null : office.id)}
+                onMouseEnter={() => setHoveredLocation(location.key)}
+                onMouseLeave={() => setHoveredLocation(null)}
+                onClick={() => setSelectedLocation(selectedLocation === location.key ? null : location.key)}
                 style={{ cursor: 'pointer' }}
                 animate={{
                   scale: isHovered ? 1.5 : 1,
@@ -252,49 +279,57 @@ const WorldMap = () => {
 
       {/* Office Info Tooltips */}
       <AnimatePresence>
-        {(hoveredOffice || selectedOffice) && (() => {
-          const office = offices.find(o => o.id === (hoveredOffice || selectedOffice));
-          if (!office) return null;
+        {(hoveredLocation || selectedLocation) && (() => {
+          const locationKey = hoveredLocation || selectedLocation;
+          const locationOffices = locationGroups[locationKey!];
+          if (!locationOffices || locationOffices.length === 0) return null;
           
           return (
             <motion.div
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute bg-white rounded-lg shadow-2xl p-6 min-w-[280px] max-w-[320px] border border-gray-200 z-10"
+              className="absolute bg-white rounded-lg shadow-2xl p-6 min-w-[320px] max-w-[400px] border border-gray-200 z-10"
               style={{
                 left: '50%',
                 top: '20%',
                 transform: 'translateX(-50%)',
               }}
-              onMouseEnter={() => setHoveredOffice(office.id)}
-              onMouseLeave={() => setHoveredOffice(null)}
+              onMouseEnter={() => setHoveredLocation(locationKey!)}
+              onMouseLeave={() => setHoveredLocation(null)}
             >
-              <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
-              <div className="space-y-2 text-sm text-gray-700">
-                {office.id === 'hyderabad' && (
-                  <p className="font-semibold text-edicius-navy mb-1">Corporate Address</p>
-                )}
-                <p className="font-medium">{office.address}</p>
-                <p>{office.city}</p>
-                <p className="text-gray-600">{office.country}</p>
-                {office.email && (
-                  <p className="mt-3">
-                    <span className="font-medium">Email: </span>
-                    <a href={`mailto:${office.email}`} className="text-edicius-red hover:underline">
-                      {office.email}
-                    </a>
-                  </p>
-                )}
-                {office.phone && (
-                  <p>
-                    <span className="font-medium">Phone: </span>
-                    <a href={`tel:${office.phone}`} className="text-edicius-red hover:underline">
-                      {office.phone}
-                    </a>
-                  </p>
-                )}
-              </div>
+              {locationOffices.map((office, index) => (
+                <div key={office.id}>
+                  <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
+                  <div className="space-y-2 text-sm text-gray-700 mb-4">
+                    {office.id === 'hyderabad' && (
+                      <p className="font-semibold text-edicius-navy mb-1">Corporate Address</p>
+                    )}
+                    <p className="font-medium">{office.address}</p>
+                    <p>{office.city}</p>
+                    <p className="text-gray-600">{office.country}</p>
+                    {office.email && (
+                      <p className="mt-3">
+                        <span className="font-medium">Email: </span>
+                        <a href={`mailto:${office.email}`} className="text-edicius-red hover:underline">
+                          {office.email}
+                        </a>
+                      </p>
+                    )}
+                    {office.phone && (
+                      <p>
+                        <span className="font-medium">Phone: </span>
+                        <a href={`tel:${office.phone}`} className="text-edicius-red hover:underline">
+                          {office.phone}
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                  {index < locationOffices.length - 1 && (
+                    <div className="border-t border-gray-200 my-4"></div>
+                  )}
+                </div>
+              ))}
             </motion.div>
           );
         })()}
