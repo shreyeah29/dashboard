@@ -169,7 +169,8 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Flyaway Consultancy",
           description: "One Stop shop for Student and Workforce Career Guidance.",
-          icon: Rocket
+          icon: Rocket,
+          image: "/flyaway-consultancy-logo.jpg"
         }
       ],
       highlights: [
@@ -634,9 +635,19 @@ const CompanyPage = () => {
               >
                 <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                   <CardContent className="p-8 text-center">
-                    <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mx-auto mb-6">
-                      <service.icon className="w-10 h-10 text-white" />
-                    </div>
+                    {service.image ? (
+                      <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                        <img 
+                          src={service.image} 
+                          alt={service.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <service.icon className="w-10 h-10 text-white" />
+                      </div>
+                    )}
                     <h3 className="text-xl font-bold text-black mb-4 font-serif tracking-wide">{service.title}</h3>
                     <p className="text-gray-600 leading-relaxed font-medium">
                       {service.description}
