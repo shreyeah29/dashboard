@@ -163,7 +163,7 @@ const getCompanyContent = (companyName: string) => {
         },
         {
           title: "L.A.D.S",
-          description: "Innovative business solutions and strategic partnerships for growth.",
+          description: "Empowering Security services though technology",
           icon: Briefcase
         },
         {
