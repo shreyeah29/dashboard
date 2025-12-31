@@ -71,6 +71,7 @@ jspm_packages/
 # Gatsby files
 .cache/
 public
+!frontend/public/flyaway-consultancy-logo.jpg
 
 # Storybook build outputs
 .out
