@@ -44,6 +44,16 @@ const offices: OfficeLocation[] = [
     phone: '+44-7426480105',
     coordinates: [-0.1278, 51.5074],
   },
+  {
+    id: 'cochin',
+    name: 'Edicius Nursing and Health Care Staffing Consultant (ENHSC)',
+    address: 'Anjiparambil Business Center, Door No. 63/2502B (Second Floor) Manorama Junction',
+    city: 'Cochin, Kerala',
+    country: 'India',
+    email: 'admin@1edicius.com',
+    phone: '+91 8341 029 691',
+    coordinates: [76.2673, 9.9312],
+  },
 ];
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
