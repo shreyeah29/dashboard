@@ -636,7 +636,7 @@ const CompanyPage = () => {
                 <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
                   <CardContent className="p-8 text-center">
                     {service.image ? (
-                      <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                      <div className="w-32 h-32 mx-auto mb-6 flex items-center justify-center">
                         <img 
                           src={service.image} 
                           alt={service.title}
