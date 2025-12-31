@@ -289,7 +289,11 @@ const WorldMap = () => {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute bg-white rounded-lg shadow-2xl p-6 min-w-[320px] max-w-[400px] border border-gray-200 z-10"
+              className={`absolute bg-white rounded-lg shadow-2xl p-6 border border-gray-200 z-10 ${
+                locationOffices.length > 1 
+                  ? 'min-w-[640px] max-w-[800px]' 
+                  : 'min-w-[320px] max-w-[400px]'
+              }`}
               style={{
                 left: '50%',
                 top: '20%',
@@ -298,38 +302,37 @@ const WorldMap = () => {
               onMouseEnter={() => setHoveredLocation(locationKey!)}
               onMouseLeave={() => setHoveredLocation(null)}
             >
-              {locationOffices.map((office, index) => (
-                <div key={office.id}>
-                  <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
-                  <div className="space-y-2 text-sm text-gray-700 mb-4">
-                    {office.id === 'hyderabad' && (
-                      <p className="font-semibold text-edicius-navy mb-1">Corporate Address</p>
-                    )}
-                    <p className="font-medium">{office.address}</p>
-                    <p>{office.city}</p>
-                    <p className="text-gray-600">{office.country}</p>
-                    {office.email && (
-                      <p className="mt-3">
-                        <span className="font-medium">Email: </span>
-                        <a href={`mailto:${office.email}`} className="text-edicius-red hover:underline">
-                          {office.email}
-                        </a>
-                      </p>
-                    )}
-                    {office.phone && (
-                      <p>
-                        <span className="font-medium">Phone: </span>
-                        <a href={`tel:${office.phone}`} className="text-edicius-red hover:underline">
-                          {office.phone}
-                        </a>
-                      </p>
-                    )}
+              <div className={locationOffices.length > 1 ? 'grid grid-cols-2 gap-6' : ''}>
+                {locationOffices.map((office, index) => (
+                  <div key={office.id} className={locationOffices.length > 1 ? 'border-r border-gray-200 pr-6 last:border-r-0 last:pr-0' : ''}>
+                    <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
+                    <div className="space-y-2 text-sm text-gray-700">
+                      {office.id === 'hyderabad' && (
+                        <p className="font-semibold text-edicius-navy mb-1">Corporate Address</p>
+                      )}
+                      <p className="font-medium">{office.address}</p>
+                      <p>{office.city}</p>
+                      <p className="text-gray-600">{office.country}</p>
+                      {office.email && (
+                        <p className="mt-3">
+                          <span className="font-medium">Email: </span>
+                          <a href={`mailto:${office.email}`} className="text-edicius-red hover:underline">
+                            {office.email}
+                          </a>
+                        </p>
+                      )}
+                      {office.phone && (
+                        <p>
+                          <span className="font-medium">Phone: </span>
+                          <a href={`tel:${office.phone}`} className="text-edicius-red hover:underline">
+                            {office.phone}
+                          </a>
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  {index < locationOffices.length - 1 && (
-                    <div className="border-t border-gray-200 my-4"></div>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </motion.div>
           );
         })()}
