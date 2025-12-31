@@ -170,7 +170,7 @@ const getCompanyContent = (companyName: string) => {
           title: "Flyaway Consultancy",
           description: "One Stop shop for Student and Workforce Career Guidance.",
           icon: Rocket,
-          image: "/flyaway-consultancy-logo.jpg"
+          image: "/flyaway-consultancy-logo.jpeg"
         }
       ],
       highlights: [
