@@ -157,7 +157,7 @@ const getCompanyContent = (companyName: string) => {
       mission: "Multi-sector business ventures driving innovation across diverse industries with strategic partnerships.",
       services: [
         {
-          title: "HappyCabs",
+          title: "hapycabs",
           description: "Leading transportation solutions with a focus on customer service and reliability.",
           icon: Truck
         },
