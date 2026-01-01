@@ -310,6 +310,15 @@ const WorldMap = () => {
                       {office.id === 'hyderabad' && (
                         <p className="font-semibold text-edicius-navy mb-1">Corporate Address</p>
                       )}
+                      {office.id === 'cochin' && (
+                        <p className="font-semibold text-edicius-navy mb-1">Head Office</p>
+                      )}
+                      {(office.id === 'nepal' || office.id === 'nepal-flyaway') && (
+                        <p className="font-semibold text-edicius-navy mb-1">Branch Office</p>
+                      )}
+                      {office.id === 'london' && (
+                        <p className="font-semibold text-edicius-navy mb-1">Registered Address</p>
+                      )}
                       <p className="font-medium">{office.address}</p>
                       <p>{office.city}</p>
                       <p className="text-gray-600">{office.country}</p>
