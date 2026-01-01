@@ -248,29 +248,23 @@ const WorldMap = () => {
                 }}
                 transition={{ duration: 0.2 }}
               >
+                {/* Background circle for hover effect */}
                 <circle
                   r={isHovered ? "24" : "20"}
                   fill="#000000"
                   opacity={isHovered ? 0.2 : 0.1}
                 />
-                <path
-                  d={`M 0 -18 L -9 6 L 9 6 Z`}
-                  fill="#000000"
-                  stroke="white"
-                  strokeWidth="2"
-                />
-                <circle
-                  r="9"
-                  cy="-9"
-                  fill="#000000"
-                  stroke="white"
-                  strokeWidth="2"
-                />
-                <circle
-                  r="4.5"
-                  cy="-9"
-                  fill="white"
-                />
+                {/* Letter E shape */}
+                <g transform="translate(0, -9)">
+                  {/* Vertical line of E */}
+                  <rect x="-8" y="-12" width="4" height="24" fill="#000000" />
+                  {/* Top horizontal line of E */}
+                  <rect x="-8" y="-12" width="16" height="4" fill="#000000" />
+                  {/* Middle horizontal line of E */}
+                  <rect x="-8" y="-2" width="12" height="4" fill="#000000" />
+                  {/* Bottom horizontal line of E */}
+                  <rect x="-8" y="8" width="16" height="4" fill="#000000" />
+                </g>
               </motion.g>
             </Marker>
           );
