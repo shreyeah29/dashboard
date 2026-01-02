@@ -72,7 +72,7 @@ jspm_packages/
 .cache/
 public
 !frontend/public/flyaway-consultancy-logo.jpeg
-!frontend/public/hapycabs-logo.JPG
+!frontend/public/hapcabs-logo.jpg
 !frontend/public/lads-logo.jpg
 
 # Storybook build outputs
