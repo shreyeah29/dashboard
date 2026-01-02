@@ -159,12 +159,14 @@ const getCompanyContent = (companyName: string) => {
         {
           title: "Hapycabs",
           description: "Leading transportation solutions with a focus on customer service and reliability.",
-          icon: Truck
+          icon: Truck,
+          image: "/hapycabs-logo.JPG"
         },
         {
           title: "L.A.D.S",
           description: "Empowering Security services though technology",
-          icon: Briefcase
+          icon: Briefcase,
+          image: "/lads-logo.jpg"
         },
         {
           title: "Flyaway Consultancy",
