@@ -250,20 +250,27 @@ const WorldMap = () => {
               >
                 {/* Background circle for hover effect */}
                 <circle
-                  r={isHovered ? "24" : "20"}
+                  r={isHovered ? "18" : "15"}
                   fill="#000000"
-                  opacity={isHovered ? 0.2 : 0.1}
+                  opacity={isHovered ? 0.15 : 0.1}
                 />
-                {/* Letter E shape */}
-                <g transform="translate(0, -9)">
+                {/* Teardrop shape in red */}
+                <path
+                  d="M 0 -12 C -6 -12, -8 -6, -8 0 C -8 4, -4 8, 0 12 C 4 8, 8 4, 8 0 C 8 -6, 6 -12, 0 -12 Z"
+                  fill="#DC2626"
+                  stroke="#B91C1C"
+                  strokeWidth="1"
+                />
+                {/* Small black E inside teardrop */}
+                <g transform="translate(0, 0)">
                   {/* Vertical line of E */}
-                  <rect x="-8" y="-12" width="4" height="24" fill="#000000" />
+                  <rect x="-4" y="-5" width="1.5" height="10" fill="#000000" />
                   {/* Top horizontal line of E */}
-                  <rect x="-8" y="-12" width="16" height="4" fill="#000000" />
+                  <rect x="-4" y="-5" width="6" height="1.5" fill="#000000" />
                   {/* Middle horizontal line of E */}
-                  <rect x="-8" y="-2" width="12" height="4" fill="#000000" />
+                  <rect x="-4" y="-0.75" width="4" height="1.5" fill="#000000" />
                   {/* Bottom horizontal line of E */}
-                  <rect x="-8" y="8" width="16" height="4" fill="#000000" />
+                  <rect x="-4" y="3.5" width="6" height="1.5" fill="#000000" />
                 </g>
               </motion.g>
             </Marker>
