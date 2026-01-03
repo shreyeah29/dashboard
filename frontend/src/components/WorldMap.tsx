@@ -254,23 +254,21 @@ const WorldMap = () => {
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Red teardrop pin shape */}
+                {/* Softened coral/dusty red teardrop pin shape */}
                 <path
                   d="M 0 -10 C -5 -10, -7 -5, -7 0 C -7 3, -3.5 6.5, 0 10 C 3.5 6.5, 7 3, 7 0 C 7 -5, 5 -10, 0 -10 Z"
-                  fill="#DC2626"
-                  stroke="#B91C1C"
+                  fill="#C85A5A"
+                  stroke="#B84A4A"
                   strokeWidth="0.5"
                 />
-                {/* Abstract E-inspired symbol: three horizontal bars of varying lengths */}
+                {/* Abstract geometric symbol: asymmetric offset elements */}
                 <g transform="translate(0, 0)">
-                  {/* Top bar - full width (suggesting top of E) */}
-                  <rect x="-5" y="-4" width="10" height="1.2" fill="#000000" rx="0.6" />
-                  {/* Middle bar - medium width (suggesting middle of E) */}
-                  <rect x="-5" y="-0.4" width="7" height="1.2" fill="#000000" rx="0.6" />
-                  {/* Bottom bar - full width (suggesting bottom of E) */}
-                  <rect x="-5" y="3.2" width="10" height="1.2" fill="#000000" rx="0.6" />
-                  {/* Subtle vertical element on left (suggesting the vertical stem) */}
-                  <rect x="-5" y="-4" width="1.2" height="8.4" fill="#000000" rx="0.6" />
+                  {/* Three offset circular dots in asymmetric arrangement */}
+                  <circle cx="-3" cy="-3" r="1.8" fill="#000000" />
+                  <circle cx="2" cy="0" r="1.8" fill="#000000" />
+                  <circle cx="-2" cy="3" r="1.8" fill="#000000" />
+                  {/* Subtle connecting element - offset diagonal stroke */}
+                  <line x1="-3" y1="-3" x2="1" y2="1" stroke="#000000" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
                 </g>
               </motion.g>
             </Marker>
@@ -306,8 +304,8 @@ const WorldMap = () => {
               <div className={locationOffices.length > 1 ? 'grid grid-cols-2 gap-6' : ''}>
                 {locationOffices.map((office, index) => (
                   <div key={office.id} className={locationOffices.length > 1 ? 'border-r border-gray-200 pr-6 last:border-r-0 last:pr-0' : ''}>
-                    <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
-                    <div className="space-y-2 text-sm text-gray-700">
+              <h3 className="font-bold text-lg text-edicius-navy mb-3">{office.name}</h3>
+              <div className="space-y-2 text-sm text-gray-700">
                       {office.id === 'hyderabad' && (
                         <p className="font-semibold text-edicius-navy mb-1">Corporate Address</p>
                       )}
@@ -320,25 +318,25 @@ const WorldMap = () => {
                       {office.id === 'london' && (
                         <p className="font-semibold text-edicius-navy mb-1">Registered Address</p>
                       )}
-                      <p className="font-medium">{office.address}</p>
-                      <p>{office.city}</p>
-                      <p className="text-gray-600">{office.country}</p>
-                      {office.email && (
-                        <p className="mt-3">
-                          <span className="font-medium">Email: </span>
-                          <a href={`mailto:${office.email}`} className="text-edicius-red hover:underline">
-                            {office.email}
-                          </a>
-                        </p>
-                      )}
-                      {office.phone && (
-                        <p>
-                          <span className="font-medium">Phone: </span>
-                          <a href={`tel:${office.phone}`} className="text-edicius-red hover:underline">
-                            {office.phone}
-                          </a>
-                        </p>
-                      )}
+                <p className="font-medium">{office.address}</p>
+                <p>{office.city}</p>
+                <p className="text-gray-600">{office.country}</p>
+                {office.email && (
+                  <p className="mt-3">
+                    <span className="font-medium">Email: </span>
+                    <a href={`mailto:${office.email}`} className="text-edicius-red hover:underline">
+                      {office.email}
+                    </a>
+                  </p>
+                )}
+                {office.phone && (
+                  <p>
+                    <span className="font-medium">Phone: </span>
+                    <a href={`tel:${office.phone}`} className="text-edicius-red hover:underline">
+                      {office.phone}
+                    </a>
+                  </p>
+                )}
                     </div>
                   </div>
                 ))}
