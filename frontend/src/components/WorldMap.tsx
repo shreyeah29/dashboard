@@ -254,16 +254,18 @@ const WorldMap = () => {
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Solid black teardrop pin shape */}
+                {/* White teardrop pin shape */}
                 <path
                   d="M 0 -13 C -6.5 -13, -9 -6.5, -9 0 C -9 4, -4.5 8.5, 0 13 C 4.5 8.5, 9 4, 9 0 C 9 -6.5, 6.5 -13, 0 -13 Z"
-                  fill="#000000"
+                  fill="#FFFFFF"
+                  stroke="#E5E5E5"
+                  strokeWidth="0.5"
                 />
-                {/* White capital letter E - clean sans-serif */}
+                {/* Red capital letter E - clean sans-serif */}
                 <text
                   x="0"
                   y="2.5"
-                  fill="#FFFFFF"
+                  fill="#DC2626"
                   fontSize="13"
                   fontFamily="Arial, sans-serif"
                   fontWeight="bold"
