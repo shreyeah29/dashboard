@@ -264,13 +264,13 @@ const WorldMap = () => {
                 {/* Black capital letter E - professional font, centered in teardrop */}
                 <text
                   x="0"
-                  y="-1"
+                  y="0"
                   fill="#000000"
                   fontSize="16"
                   fontFamily="'Inter', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', 'Roboto', sans-serif"
                   fontWeight="700"
                   textAnchor="middle"
-                  dominantBaseline="middle"
+                  dominantBaseline="central"
                   letterSpacing="-0.5"
                 >
                   E
