@@ -250,27 +250,27 @@ const WorldMap = () => {
               >
                 {/* Background circle for hover effect */}
                 <circle
-                  r={isHovered ? "18" : "15"}
+                  r={isHovered ? "16" : "14"}
                   fill="#000000"
-                  opacity={isHovered ? 0.15 : 0.1}
+                  opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Teardrop shape in red */}
+                {/* Red teardrop pin shape */}
                 <path
-                  d="M 0 -12 C -6 -12, -8 -6, -8 0 C -8 4, -4 8, 0 12 C 4 8, 8 4, 8 0 C 8 -6, 6 -12, 0 -12 Z"
+                  d="M 0 -10 C -5 -10, -7 -5, -7 0 C -7 3, -3.5 6.5, 0 10 C 3.5 6.5, 7 3, 7 0 C 7 -5, 5 -10, 0 -10 Z"
                   fill="#DC2626"
                   stroke="#B91C1C"
-                  strokeWidth="1"
+                  strokeWidth="0.5"
                 />
-                {/* Small black E inside teardrop */}
+                {/* Abstract E-inspired symbol: three horizontal bars of varying lengths */}
                 <g transform="translate(0, 0)">
-                  {/* Vertical line of E */}
-                  <rect x="-4" y="-5" width="1.5" height="10" fill="#000000" />
-                  {/* Top horizontal line of E */}
-                  <rect x="-4" y="-5" width="6" height="1.5" fill="#000000" />
-                  {/* Middle horizontal line of E */}
-                  <rect x="-4" y="-0.75" width="4" height="1.5" fill="#000000" />
-                  {/* Bottom horizontal line of E */}
-                  <rect x="-4" y="3.5" width="6" height="1.5" fill="#000000" />
+                  {/* Top bar - full width (suggesting top of E) */}
+                  <rect x="-5" y="-4" width="10" height="1.2" fill="#000000" rx="0.6" />
+                  {/* Middle bar - medium width (suggesting middle of E) */}
+                  <rect x="-5" y="-0.4" width="7" height="1.2" fill="#000000" rx="0.6" />
+                  {/* Bottom bar - full width (suggesting bottom of E) */}
+                  <rect x="-5" y="3.2" width="10" height="1.2" fill="#000000" rx="0.6" />
+                  {/* Subtle vertical element on left (suggesting the vertical stem) */}
+                  <rect x="-5" y="-4" width="1.2" height="8.4" fill="#000000" rx="0.6" />
                 </g>
               </motion.g>
             </Marker>
