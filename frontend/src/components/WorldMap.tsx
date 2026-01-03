@@ -250,21 +250,21 @@ const WorldMap = () => {
               >
                 {/* Background circle for hover effect */}
                 <circle
-                  r={isHovered ? "16" : "14"}
+                  r={isHovered ? "20" : "18"}
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
                 {/* Solid black teardrop pin shape */}
                 <path
-                  d="M 0 -10 C -5 -10, -7 -5, -7 0 C -7 3, -3.5 6.5, 0 10 C 3.5 6.5, 7 3, 7 0 C 7 -5, 5 -10, 0 -10 Z"
+                  d="M 0 -13 C -6.5 -13, -9 -6.5, -9 0 C -9 4, -4.5 8.5, 0 13 C 4.5 8.5, 9 4, 9 0 C 9 -6.5, 6.5 -13, 0 -13 Z"
                   fill="#000000"
                 />
                 {/* White capital letter E - clean sans-serif */}
                 <text
                   x="0"
-                  y="2"
+                  y="2.5"
                   fill="#FFFFFF"
-                  fontSize="10"
+                  fontSize="13"
                   fontFamily="Arial, sans-serif"
                   fontWeight="bold"
                   textAnchor="middle"
