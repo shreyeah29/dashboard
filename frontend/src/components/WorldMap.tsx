@@ -254,9 +254,9 @@ const WorldMap = () => {
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Black teardrop pin shape */}
+                {/* Black teardrop pin shape - normal teardrop pointing down */}
                 <path
-                  d="M 0 13 C 7 13, 9 6, 9 0 C 9 -4, 5 -8, 0 -12 C -5 -8, -9 -4, -9 0 C -9 6, -7 13, 0 13 Z"
+                  d="M 0 -12 C -7 -12, -9 -6, -9 0 C -9 4, -5 8, 0 13 C 5 8, 9 4, 9 0 C 9 -6, 7 -12, 0 -12 Z"
                   fill="#000000"
                 />
                 {/* White capital letter E - professional font, centered in teardrop */}
