@@ -254,22 +254,24 @@ const WorldMap = () => {
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Softened coral/dusty red teardrop pin shape */}
+                {/* Solid black teardrop pin shape */}
                 <path
                   d="M 0 -10 C -5 -10, -7 -5, -7 0 C -7 3, -3.5 6.5, 0 10 C 3.5 6.5, 7 3, 7 0 C 7 -5, 5 -10, 0 -10 Z"
-                  fill="#C85A5A"
-                  stroke="#B84A4A"
-                  strokeWidth="0.5"
+                  fill="#000000"
                 />
-                {/* Abstract geometric symbol: asymmetric offset elements */}
-                <g transform="translate(0, 0)">
-                  {/* Three offset circular dots in asymmetric arrangement */}
-                  <circle cx="-3" cy="-3" r="1.8" fill="#000000" />
-                  <circle cx="2" cy="0" r="1.8" fill="#000000" />
-                  <circle cx="-2" cy="3" r="1.8" fill="#000000" />
-                  {/* Subtle connecting element - offset diagonal stroke */}
-                  <line x1="-3" y1="-3" x2="1" y2="1" stroke="#000000" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
-                </g>
+                {/* White capital letter E - clean sans-serif */}
+                <text
+                  x="0"
+                  y="2"
+                  fill="#FFFFFF"
+                  fontSize="10"
+                  fontFamily="Arial, sans-serif"
+                  fontWeight="bold"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                >
+                  E
+                </text>
               </motion.g>
             </Marker>
           );
