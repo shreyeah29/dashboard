@@ -262,8 +262,10 @@ const WorldMap = () => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'contain',
-                      display: 'block'
+                      objectFit: 'cover',
+                      display: 'block',
+                      borderRadius: '50%',
+                      overflow: 'hidden'
                     }}
                   />
                 </foreignObject>
