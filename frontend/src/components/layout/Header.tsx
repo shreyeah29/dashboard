@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Building2, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import Logo from '@/components/Logo';
 import HiddenAdminTrigger from '@/components/admin/HiddenAdminTrigger';
 
 const Header = () => {
@@ -26,7 +25,7 @@ const Header = () => {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center" style={{ marginLeft: 0 }}>
-            <Logo width={250} height={90} align="left" />
+              <span className="text-white text-xl font-bold tracking-wide">EDICIUS GROUP OF COMPANIES</span>
             </Link>
 
             {/* Desktop Navigation */}

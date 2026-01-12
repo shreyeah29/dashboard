@@ -347,6 +347,12 @@ const CompanyPage = () => {
     company.name.toLowerCase().includes('entertainment')
   );
 
+  // Check if it's specifically a mining company
+  const isMiningCompany = company && (
+    company.name.toLowerCase().includes('mining') || 
+    company.name.toLowerCase().includes('minerals')
+  );
+
   if (companyLoading || projectsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -428,9 +434,20 @@ const CompanyPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                 >
-                  <div className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-100/90 to-orange-50/90 rounded-full border-2 border-orange-200/90 backdrop-blur-sm">
-                    <span className="text-3xl font-bold text-orange-800 tracking-wide">Coming Soon 2027</span>
-                  </div>
+                  {isMiningCompany ? (
+                    <div className="flex flex-col items-center justify-center space-y-3">
+                      <div className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-100/90 to-orange-50/90 rounded-full border-2 border-orange-200/90 backdrop-blur-sm">
+                        <span className="text-3xl font-bold text-orange-800 tracking-wide">Stage : Research and Development</span>
+                      </div>
+                      <div className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-100/90 to-orange-50/90 rounded-full border-2 border-orange-200/90 backdrop-blur-sm">
+                        <span className="text-3xl font-bold text-orange-800 tracking-wide">Coming 2027</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-100/90 to-orange-50/90 rounded-full border-2 border-orange-200/90 backdrop-blur-sm">
+                      <span className="text-3xl font-bold text-orange-800 tracking-wide">Coming Soon 2027</span>
+                    </div>
+                  )}
                 </motion.div>
               </div>
             ) : (
@@ -646,9 +663,9 @@ const CompanyPage = () => {
                         />
                       </div>
                     ) : (
-                      <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <service.icon className="w-10 h-10 text-white" />
-                      </div>
+                    <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <service.icon className="w-10 h-10 text-white" />
+                    </div>
                     )}
                     <h3 className="text-xl font-bold text-black mb-4 font-serif tracking-wide">{service.title}</h3>
                     <p className="text-gray-600 leading-relaxed font-medium">

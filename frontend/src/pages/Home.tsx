@@ -139,12 +139,12 @@ const Home = () => {
                 <div className="text-gray-300 font-semibold">Companies</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-edicius-red mb-2">7+</div>
-                <div className="text-gray-300 font-semibold">Years Experience</div>
+                <div className="text-4xl md:text-5xl font-bold text-edicius-red mb-2">4</div>
+                <div className="text-gray-300 font-semibold">Years of R&D</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl md:text-5xl font-bold text-edicius-red mb-2">100%</div>
-                <div className="text-gray-300 font-semibold">Innovation Focus</div>
+                <div className="text-gray-300 font-semibold">Growth</div>
               </div>
             </motion.div>
 
