@@ -254,25 +254,28 @@ const WorldMap = () => {
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Black teardrop pin shape - normal teardrop pointing down */}
+                {/* Map pin shape - thick circular outline with gap on right side (incomplete ring like a C) */}
                 <path
-                  d="M 0 -12 C -7 -12, -9 -6, -9 0 C -9 4, -5 8, 0 13 C 5 8, 9 4, 9 0 C 9 -6, 7 -12, 0 -12 Z"
+                  d="M 0 -12 A 12 12 0 0 1 10 0 A 12 12 0 0 1 0 12 A 12 12 0 0 1 -10 0 A 12 12 0 0 1 0 -12"
+                  fill="none"
+                  stroke="#000000"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeDasharray="32 10"
+                  strokeDashoffset="6"
+                />
+                {/* Stylized lowercase "e" inside the circle - bold, rounded design */}
+                <path
+                  d="M -3.5 -2.5 Q -4.5 -4.5, -2 -4.5 Q 0 -4.5, 0 -2.5 Q 0 -0.5, 2.5 -0.5 Q 4 -0.5, 4 1.5 Q 4 3.5, 2.5 3.5 L -2 3.5"
                   fill="#000000"
                 />
-                {/* White capital letter E - professional font, centered in teardrop */}
-                <text
-                  x="0"
-                  y="0"
-                  fill="#FFFFFF"
-                  fontSize="16"
-                  fontFamily="'Inter', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', 'Roboto', sans-serif"
-                  fontWeight="700"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  letterSpacing="-0.5"
-                >
-                  E
-                </text>
+                <path
+                  d="M 0 -2.5 Q -2 -2.5, -2 0 Q -2 2.5, 0 2.5"
+                  fill="none"
+                  stroke="#FFFFFF"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </motion.g>
             </Marker>
           );

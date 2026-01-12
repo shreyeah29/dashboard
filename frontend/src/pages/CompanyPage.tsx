@@ -653,13 +653,13 @@ const CompanyPage = () => {
                 viewport={{ once: true }}
               >
                 <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border border-gray-200">
-                  <CardContent className="p-8 text-center">
+                  <CardContent className="p-8 text-center flex flex-col">
                     {service.image ? (
-                      <div className={`${service.title === 'Hapycabs' ? 'w-80 h-80' : 'w-64 h-64'} mx-auto mb-6 flex items-center justify-center`}>
+                      <div className="h-64 mx-auto mb-6 flex items-center justify-center">
                         <img 
                           src={service.image} 
                           alt={service.title}
-                          className="w-full h-full object-contain"
+                          className="max-w-full max-h-full object-contain"
                         />
                       </div>
                     ) : (
