@@ -244,7 +244,7 @@ const WorldMap = () => {
                 onClick={() => setSelectedLocation(selectedLocation === location.key ? null : location.key)}
                 style={{ cursor: 'pointer' }}
                 animate={{
-                  scale: isHovered ? 1.5 : 1,
+                  scale: isHovered ? 1.3 : 1,
                 }}
                 transition={{ duration: 0.2 }}
               >
@@ -254,27 +254,14 @@ const WorldMap = () => {
                   fill="#000000"
                   opacity={isHovered ? 0.12 : 0.08}
                 />
-                {/* Map pin shape - thick circular outline with gap on right side (incomplete ring like a C) */}
-                <path
-                  d="M 0 -12 A 12 12 0 0 1 10 0 A 12 12 0 0 1 0 12 A 12 12 0 0 1 -10 0 A 12 12 0 0 1 0 -12"
-                  fill="none"
-                  stroke="#000000"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeDasharray="32 10"
-                  strokeDashoffset="6"
-                />
-                {/* Stylized lowercase "e" inside the circle - bold, rounded design */}
-                <path
-                  d="M -3.5 -2.5 Q -4.5 -4.5, -2 -4.5 Q 0 -4.5, 0 -2.5 Q 0 -0.5, 2.5 -0.5 Q 4 -0.5, 4 1.5 Q 4 3.5, 2.5 3.5 L -2 3.5"
-                  fill="#000000"
-                />
-                <path
-                  d="M 0 -2.5 Q -2 -2.5, -2 0 Q -2 2.5, 0 2.5"
-                  fill="none"
-                  stroke="#FFFFFF"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
+                {/* Map pin image - using the exact image provided */}
+                <image
+                  href="/map-pin-e.JPEG"
+                  x="-12"
+                  y="-12"
+                  width="24"
+                  height="24"
+                  preserveAspectRatio="xMidYMid meet"
                 />
               </motion.g>
             </Marker>
