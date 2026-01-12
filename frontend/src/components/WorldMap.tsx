@@ -255,14 +255,18 @@ const WorldMap = () => {
                   opacity={isHovered ? 0.12 : 0.08}
                 />
                 {/* Map pin image - using the exact image provided */}
-                <image
-                  href="/map-pin-e.JPEG"
-                  x="-12"
-                  y="-12"
-                  width="24"
-                  height="24"
-                  preserveAspectRatio="xMidYMid meet"
-                />
+                <foreignObject x="-12" y="-12" width="24" height="24">
+                  <img
+                    src="/map-pin-e.JPEG"
+                    alt="Map pin"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      display: 'block'
+                    }}
+                  />
+                </foreignObject>
               </motion.g>
             </Marker>
           );
