@@ -122,12 +122,12 @@ const EnhancedProjectPage: React.FC<EnhancedProjectPageProps> = ({
             </Link>
             
             {company && (
-              <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="flex items-center justify-center space-x-3 mb-6">
                 <Badge variant="outline" className="text-white border-white px-4 py-2">
                   {company.name}
                 </Badge>
               </div>
-            )}
+              )}
             
             <h1 className="text-6xl md:text-7xl font-bold mb-6 text-white font-serif tracking-tight">
               {enhancedContent.hero.title}

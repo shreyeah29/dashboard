@@ -63,7 +63,7 @@ const corsOptions = {
     else if (origin.includes('onedicius.com')) {
       console.log('Allowing onedicius.com domain:', origin);
       callback(null, true);
-    }
+    } 
     // Allow any Vercel deployment URL for this project
     else if (origin.includes('dashboard-frontend') && origin.includes('vercel.app')) {
       console.log('Allowing Vercel deployment URL:', origin);
