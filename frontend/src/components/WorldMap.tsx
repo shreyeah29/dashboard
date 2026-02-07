@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 
 interface OfficeLocation {
@@ -173,7 +174,6 @@ const getContinentColor = (geo: any): string => {
 const WorldMap = () => {
   const [hoveredLocation, setHoveredLocation] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-
   // Group offices by coordinates to handle multiple offices at same location
   const locationGroups = offices.reduce((acc, office) => {
     const key = `${office.coordinates[0]},${office.coordinates[1]}`;
@@ -192,7 +192,10 @@ const WorldMap = () => {
   }));
 
   return (
-    <div className="relative w-full h-[600px] bg-white rounded-lg overflow-hidden border border-gray-200">
+    <div
+      className="relative w-full h-[600px] bg-white rounded-lg overflow-hidden border border-gray-200"
+      onClick={() => selectedLocation && setSelectedLocation(null)}
+    >
       <ComposableMap
         projectionConfig={{
           scale: 200,
@@ -241,7 +244,10 @@ const WorldMap = () => {
               <motion.g
                 onMouseEnter={() => setHoveredLocation(location.key)}
                 onMouseLeave={() => setHoveredLocation(null)}
-                onClick={() => setSelectedLocation(selectedLocation === location.key ? null : location.key)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedLocation(selectedLocation === location.key ? null : location.key);
+                }}
                 style={{ cursor: 'pointer' }}
                 animate={{
                   scale: isHovered ? 1.3 : 1,
@@ -287,7 +293,7 @@ const WorldMap = () => {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className={`absolute bg-white rounded-lg shadow-2xl p-6 border border-gray-200 z-10 ${
+              className={`absolute bg-white rounded-lg shadow-2xl p-6 pr-12 border border-gray-200 z-10 ${
                 locationOffices.length > 1 
                   ? 'min-w-[640px] max-w-[800px]' 
                   : 'min-w-[320px] max-w-[400px]'
@@ -299,7 +305,16 @@ const WorldMap = () => {
               }}
               onMouseEnter={() => setHoveredLocation(locationKey!)}
               onMouseLeave={() => setHoveredLocation(null)}
+              onClick={(e) => e.stopPropagation()}
             >
+              <button
+                type="button"
+                onClick={() => setSelectedLocation(null)}
+                className="absolute top-4 right-4 p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
               <div className={locationOffices.length > 1 ? 'grid grid-cols-2 gap-6' : ''}>
                 {locationOffices.map((office, index) => (
                   <div key={office.id} className={locationOffices.length > 1 ? 'border-r border-gray-200 pr-6 last:border-r-0 last:pr-0' : ''}>
