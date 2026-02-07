@@ -49,7 +49,7 @@ const projectSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['unit', 'project'],
+    enum: ['unit', 'project', 'company_docs'],
     default: 'project'
   },
   documents: [{

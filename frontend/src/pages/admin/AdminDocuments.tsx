@@ -21,17 +21,15 @@ import {
   Presentation
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { companiesApi, projectsApi, documentsApi } from '@/lib/api';
+import { companiesApi, documentsApi } from '@/lib/api';
 
 const AdminDocuments = () => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState('');
-  const [selectedProject, setSelectedProject] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [companies, setCompanies] = useState<any[]>([]);
-  const [projects, setProjects] = useState<any[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [documentsLoading, setDocumentsLoading] = useState(true);
@@ -44,13 +42,11 @@ const AdminDocuments = () => {
       try {
         setLoading(true);
         setDocumentsLoading(true);
-        const [companiesData, projectsData, documentsData] = await Promise.all([
+        const [companiesData, documentsData] = await Promise.all([
           companiesApi.getAll(),
-          projectsApi.getAll(),
           documentsApi.getAll()
         ]);
         setCompanies(companiesData);
-        setProjects(projectsData);
         setDocuments(documentsData);
         
         // Check availability of each document
@@ -128,10 +124,10 @@ const AdminDocuments = () => {
   };
 
   const handleUpload = async () => {
-    if (!selectedCompany || !selectedProject || uploadedFiles.length === 0) {
+    if (!selectedCompany || uploadedFiles.length === 0) {
       toast({
         title: "Missing Information",
-        description: "Please select a company, project, and upload at least one file.",
+        description: "Please select a company and upload at least one file.",
         variant: "destructive",
       });
       return;
@@ -140,17 +136,21 @@ const AdminDocuments = () => {
     setIsUploading(true);
     
     try {
-      // Simulate upload process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      for (const file of uploadedFiles) {
+        await companiesApi.uploadDocument(selectedCompany, file, selectedTags.join(','));
+      }
       
       toast({
         title: "Upload Successful",
         description: `${uploadedFiles.length} file(s) uploaded successfully.`,
       });
       
+      // Refresh documents list
+      const documentsData = await documentsApi.getAll();
+      setDocuments(documentsData);
+      
       // Reset form
       setSelectedCompany('');
-      setSelectedProject('');
       setSelectedTags([]);
       setUploadedFiles([]);
       setIsUploadModalOpen(false);
@@ -327,7 +327,7 @@ const AdminDocuments = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Documents Management</h1>
-              <p className="text-gray-600 text-lg font-medium">Upload and manage documents for all projects</p>
+              <p className="text-gray-600 text-lg font-medium">Company presentation documents only — projects and units manage their own docs separately</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -396,11 +396,9 @@ const AdminDocuments = () => {
                           <span>{document.size}</span>
                           <span>•</span>
                           <span>{document.company}</span>
-                          <span>•</span>
-                          <span>{document.project}</span>
                         </div>
                         <div className="flex items-center space-x-2 mt-2">
-                          {document.tags.map((tag, tagIndex) => (
+                          {(document.tags || []).map((tag, tagIndex) => (
                             <Badge 
                               key={tagIndex}
                               variant="outline" 
@@ -506,29 +504,6 @@ const AdminDocuments = () => {
                     </select>
                   </div>
 
-                  {/* Project Selection */}
-                  <div>
-                    <label className="block text-sm font-medium text-black mb-2">Select Project</label>
-                    <select
-                      value={selectedProject}
-                      onChange={(e) => setSelectedProject(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:border-black"
-                      disabled={!selectedCompany}
-                    >
-                      <option value="">Choose a project...</option>
-                      {projects
-                        .filter(project => {
-                          const companyId = typeof project.companyId === 'object' 
-                            ? project.companyId?._id 
-                            : project.companyId;
-                          return companyId === selectedCompany;
-                        })
-                        .map(project => (
-                          <option key={project._id} value={project._id}>{project.name}</option>
-                        ))}
-                    </select>
-                  </div>
-
                   {/* Tags Selection */}
                   <div>
                     <label className="block text-sm font-medium text-black mb-2">Document Tags</label>
@@ -601,7 +576,7 @@ const AdminDocuments = () => {
                     </Button>
                     <Button
                       onClick={handleUpload}
-                      disabled={isUploading || !selectedCompany || !selectedProject || uploadedFiles.length === 0}
+                      disabled={isUploading || !selectedCompany || uploadedFiles.length === 0}
                       className="bg-black text-white hover:bg-gray-800 disabled:opacity-50"
                     >
                       {isUploading ? (

@@ -69,6 +69,20 @@ export const companiesApi = {
   delete: async (id: string) => {
     const response = await api.delete(`/companies/${id}`);
     return response.data;
+  },
+
+  uploadDocument: async (companyId: string, file: File, tags?: string): Promise<Document> => {
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('name', file.name);
+    if (tags) formData.append('tags', tags);
+
+    const response = await api.post(`/companies/${companyId}/documents`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data.document;
   }
 };
 

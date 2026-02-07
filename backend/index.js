@@ -244,11 +244,14 @@ app.post('/api/v1/auth/admin/logout', (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
-// Documents endpoints
+// Documents endpoints - returns only company-level documents (not project/unit docs)
 app.get('/api/v1/documents', async (req, res) => {
   try {
-    // Get all documents from database
-    const documents = await Document.find()
+    // Get "Company Documents" projects only (type: company_docs)
+    const companyDocsProjects = await Project.find({ type: 'company_docs' }).select('_id');
+    const projectIds = companyDocsProjects.map(p => p._id);
+
+    const documents = await Document.find({ projectId: { $in: projectIds } })
       .populate('projectId', 'name companyId')
       .populate({
         path: 'projectId',
@@ -478,7 +481,64 @@ app.delete('/api/v1/projects/:id', async (req, res) => {
   }
 });
 
-// Document upload endpoints
+// Company document upload (Documents page - company presentation docs only)
+app.post('/api/v1/companies/:companyId/documents', upload.single('document'), async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const { tags } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const company = await Company.findById(companyId);
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+
+    // Find or create "Company Documents" project for this company
+    let project = await Project.findOne({ companyId, type: 'company_docs' });
+    if (!project) {
+      project = new Project({
+        name: 'Company Documents',
+        slug: `${company.slug}-company-documents`,
+        companyId,
+        description: 'Company presentation and general documents',
+        type: 'company_docs',
+        documents: []
+      });
+      await project.save();
+    }
+
+    const document = new Document({
+      name: req.body.name || req.file.originalname,
+      originalName: req.file.originalname,
+      projectId: project._id,
+      fileType: getFileType(req.file.mimetype),
+      mimeType: req.file.mimetype,
+      fileSize: req.file.size,
+      s3Key: req.file.filename,
+      s3Url: generateFileUrl(req.file.filename),
+      tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+      uploadedBy: 'admin'
+    });
+    const savedDocument = await document.save();
+
+    project.documents.push(savedDocument._id);
+    await project.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Document uploaded successfully',
+      document: savedDocument
+    });
+  } catch (error) {
+    console.error('Error uploading company document:', error);
+    res.status(500).json({ error: 'Failed to upload document', details: error.message });
+  }
+});
+
+// Document upload endpoints (for projects/units - Manage Files)
 app.post('/api/v1/projects/:projectId/documents', upload.single('document'), async (req, res) => {
   try {
     console.log('Document upload request:', req.params, req.body, req.file);
