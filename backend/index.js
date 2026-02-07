@@ -380,8 +380,11 @@ app.get('/api/v1/projects/companies/:slug/projects', async (req, res) => {
       return res.status(404).json({ error: 'Company not found' });
     }
     
-    // Find units for this company (type: 'unit' only)
-    const projects = await Project.find({ companyId: company._id, type: 'unit' })
+    // Find projects for this company (both 'unit' and 'project' types, exclude 'company_docs')
+    const projects = await Project.find({
+      companyId: company._id,
+      type: { $in: ['unit', 'project'] }
+    })
       .populate('documents')
       .sort({ createdAt: -1 });
     
