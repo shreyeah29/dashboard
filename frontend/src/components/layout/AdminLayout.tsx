@@ -61,7 +61,7 @@ const AdminLayout = () => {
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Edicius Data', href: '/admin/companies', icon: Building2 },
+    { name: 'Companies', href: '/admin/companies', icon: Building2 },
     { name: 'Projects', href: '/admin/projects', icon: FileText },
     { name: 'Documents', href: '/admin/documents', icon: FileText },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
