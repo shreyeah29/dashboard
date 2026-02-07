@@ -12,7 +12,6 @@ import {
   User,
   Bell,
   Bot,
-  BarChart3,
   Search
 } from 'lucide-react';
 import Logo from '@/components/Logo';
@@ -64,7 +63,6 @@ const AdminLayout = () => {
     { name: 'Companies', href: '/admin/companies', icon: Building2 },
     { name: 'Projects', href: '/admin/projects', icon: FileText },
     { name: 'Documents', href: '/admin/documents', icon: FileText },
-    { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
@@ -92,7 +90,7 @@ const AdminLayout = () => {
     // Simulate AI response
     const responses = [
       "To upload a document, go to Projects > Manage Files.",
-      "You can view analytics in the Analytics section.",
+      "View company analytics by clicking Profile on any company card.",
       "Project management is available in the Projects tab.",
       "Settings can be configured in the Settings page.",
     ];
