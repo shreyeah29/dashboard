@@ -62,6 +62,7 @@ function App() {
                     <Route path="projects" element={<AdminProjects />} />
                     <Route path="projects/:id" element={<AdminProjectDetail />} />
                     <Route path="documents" element={<AdminDocuments />} />
+                    <Route path="documents/company/:companyId" element={<AdminDocuments />} />
                   </Route>
             </Routes>
             <Toaster />

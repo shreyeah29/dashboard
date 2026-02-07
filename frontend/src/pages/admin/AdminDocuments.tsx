@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,9 +24,11 @@ import { useToast } from '@/hooks/use-toast';
 import { companiesApi, documentsApi } from '@/lib/api';
 
 const AdminDocuments = () => {
+  const { companyId: urlCompanyId } = useParams<{ companyId?: string }>();
+  const navigate = useNavigate();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState('');
-  const [viewingCompanyId, setViewingCompanyId] = useState<string | null>(null);
+  const viewingCompanyId = urlCompanyId || null;
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -348,24 +351,23 @@ const AdminDocuments = () => {
           </div>
         </motion.div>
 
-        {/* Companies Grid */}
+        {/* Companies Grid - only show when not viewing a specific company */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="space-y-8"
         >
-          {loading ? (
+          {!viewingCompanyId && loading ? (
             <div className="flex items-center justify-center py-16">
               <div className="w-10 h-10 border-2 border-slate-200 border-t-[#0B1F3A] rounded-full animate-spin"></div>
             </div>
-          ) : (
+          ) : !viewingCompanyId ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {companies.map((company, index) => {
                 const companyDocCount = documents.filter(
                   (d) => d.companyId === company._id || d.company === company.name
                 ).length;
-                const isSelected = viewingCompanyId === company._id;
                 return (
                   <motion.div
                     key={company._id}
@@ -374,10 +376,8 @@ const AdminDocuments = () => {
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                   >
                     <Card
-                      onClick={() => setViewingCompanyId(isSelected ? null : company._id)}
-                      className={`cursor-pointer hover:shadow-lg transition-all duration-300 group overflow-hidden ${
-                        isSelected ? 'ring-2 ring-[#0B1F3A] shadow-lg' : ''
-                      }`}
+                      onClick={() => navigate(`/admin/documents/company/${company._id}`)}
+                      className="cursor-pointer hover:shadow-lg transition-all duration-300 group overflow-hidden"
                     >
                       <div className="relative">
                         <img
@@ -404,10 +404,10 @@ const AdminDocuments = () => {
                           className="w-full border-[#0B1F3A]/30 text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setViewingCompanyId(isSelected ? null : company._id);
+                            navigate(`/admin/documents/company/${company._id}`);
                           }}
                         >
-                          {isSelected ? 'Viewing documents' : 'View KYC Documents'}
+                          View KYC Documents
                         </Button>
                       </CardContent>
                     </Card>
@@ -415,7 +415,7 @@ const AdminDocuments = () => {
                 );
               })}
             </div>
-          )}
+          ) : null}
 
           {/* Documents Panel (when company selected) */}
           {viewingCompanyId && (
@@ -446,7 +446,7 @@ const AdminDocuments = () => {
                       <FileText className="w-12 h-12 text-amber-500" />
                     </div>
                     <h3 className="text-xl font-semibold text-slate-700 mb-2">No documents yet</h3>
-                    <p className="text-slate-500 mb-6 max-w-md mx-auto">Upload KYC documents for {viewingCompany?.name} to get started. Keep your compliance records organized and professional.</p>
+                    <p className="text-slate-500 mb-6 max-w-md mx-auto">Upload KYC documents for {viewingCompany?.name || 'this company'} to get started. Keep your compliance records organized and professional.</p>
                     <Button
                       onClick={() => setIsUploadModalOpen(true)}
                       className="bg-gradient-to-r from-[#0B1F3A] to-[#1e3a5f] text-white hover:opacity-90 shadow-lg px-6 py-3 rounded-xl"
@@ -469,12 +469,12 @@ const AdminDocuments = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setViewingCompanyId(null)}
+                        onClick={() => navigate('/admin/documents')}
                         className="text-slate-500 hover:text-slate-700 -ml-2 mb-2"
                       >
                         ← Back to companies
                       </Button>
-                      <h2 className="text-2xl font-bold text-slate-900">{viewingCompany?.name}</h2>
+                      <h2 className="text-2xl font-bold text-slate-900">{viewingCompany?.name || 'Company Documents'}</h2>
                     </div>
                   </div>
                   {documentTags.map((tag) => {
