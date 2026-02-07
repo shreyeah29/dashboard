@@ -92,8 +92,15 @@ const AdminCompanyProjects = () => {
     name: '',
     description: '',
     startDate: '',
-    priority: 'Medium'
+    endDate: '',
+    teamSize: 0,
+    priority: 'Medium',
+    milestones: [] as { name: string; description: string; completed: boolean; dueDate: string }[]
   });
+  const [viewingUnit, setViewingUnit] = useState<any>(null);
+  const [viewUnitDocuments, setViewUnitDocuments] = useState<any[]>([]);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isLoadingViewDocs, setIsLoadingViewDocs] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -227,11 +234,20 @@ const AdminCompanyProjects = () => {
 
   const handleEditUnit = (project: any) => {
     setEditingUnit(project);
+    const milestones = (project.milestones || []).map((m: any) => ({
+      name: m.name || '',
+      description: m.description || '',
+      completed: m.completed ?? false,
+      dueDate: m.dueDate ? new Date(m.dueDate).toISOString().split('T')[0] : ''
+    }));
     setEditFormData({
       name: project.name || '',
       description: project.description || '',
       startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
-      priority: project.priority || 'Medium'
+      endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
+      teamSize: project.teamSize ?? 0,
+      priority: project.priority || 'Medium',
+      milestones
     });
     setIsEditModalOpen(true);
   };
@@ -240,11 +256,22 @@ const AdminCompanyProjects = () => {
     if (!editingUnit) return;
     setIsLoading(true);
     try {
+      const milestones = editFormData.milestones
+        .filter(m => m.name.trim())
+        .map(m => ({
+          name: m.name,
+          description: m.description || undefined,
+          completed: m.completed,
+          dueDate: m.dueDate ? new Date(m.dueDate) : undefined
+        }));
       await projectsApi.update(editingUnit._id, {
         name: editFormData.name,
         description: editFormData.description,
         startDate: editFormData.startDate || undefined,
+        endDate: editFormData.endDate || undefined,
+        teamSize: editFormData.teamSize || 0,
         priority: editFormData.priority,
+        milestones,
         type: 'unit'
       });
       toast({
@@ -285,16 +312,26 @@ const AdminCompanyProjects = () => {
     }
   };
 
-  const handleViewUnit = (project: any) => {
-    if (project.slug) {
-      navigate(`/project/${project.slug}`);
-    } else {
-      toast({
-        title: "View Unavailable",
-        description: "This unit does not have a viewable page yet.",
-        variant: "destructive",
-      });
+  const handleViewUnit = async (project: any) => {
+    setViewingUnit(project);
+    setIsViewModalOpen(true);
+    setIsLoadingViewDocs(true);
+    try {
+      const docs = await documentsApi.getByProject(project._id);
+      setViewUnitDocuments(docs);
+    } catch (error) {
+      setViewUnitDocuments([]);
+    } finally {
+      setIsLoadingViewDocs(false);
     }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   const getStatusIcon = (status: string) => {
@@ -608,15 +645,17 @@ const AdminCompanyProjects = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <FileText className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{project.documents || 0} docs</span>
+                        <span className="text-sm text-gray-600">{Array.isArray(project.documents) ? project.documents.length : (project.documents || 0)} docs</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <TrendingUp className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{project.completedMilestones || 0}/{project.milestones || 0} milestones</span>
+                        <span className="text-sm text-gray-600">{(project.milestones || []).filter((m: any) => m.completed).length}/{project.milestones?.length || 0} milestones</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{project.startDate ? new Date(project.startDate).toLocaleDateString() : 'No date'}</span>
+                        <span className="text-sm text-gray-600" title="Start / End">
+                          {project.startDate ? new Date(project.startDate).toLocaleDateString() : '—'} / {project.endDate ? new Date(project.endDate).toLocaleDateString() : '—'}
+                        </span>
                       </div>
                     </div>
 
@@ -776,6 +815,151 @@ const AdminCompanyProjects = () => {
           </motion.div>
         )}
 
+        {/* Unit Details View Modal */}
+        {isViewModalOpen && viewingUnit && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => {
+                setIsViewModalOpen(false);
+                setViewingUnit(null);
+              }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border border-gray-200"
+            >
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+                <h2 className="text-2xl font-bold text-gray-900">Unit Details</h2>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setIsViewModalOpen(false);
+                      setViewingUnit(null);
+                      setSelectedUnit(viewingUnit);
+                      setIsUploadModalOpen(true);
+                    }}
+                    className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                  >
+                    <Upload className="w-4 h-4 mr-1" />
+                    Manage Files
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setIsViewModalOpen(false);
+                      setViewingUnit(null);
+                    }}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+              <div className="p-6 space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{viewingUnit.name}</h3>
+                  <p className="text-gray-600">{viewingUnit.description}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2">
+                    <Badge className={getStatusColor(viewingUnit.status)}>{viewingUnit.status}</Badge>
+                    <Badge className={getPriorityColor(viewingUnit.priority)}>{viewingUnit.priority}</Badge>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Users className="w-4 h-4" />
+                    <span>{viewingUnit.teamSize || 0} team members</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4" />
+                    <span>Start: {viewingUnit.startDate ? new Date(viewingUnit.startDate).toLocaleDateString() : '—'}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4" />
+                    <span>End: {viewingUnit.endDate ? new Date(viewingUnit.endDate).toLocaleDateString() : '—'}</span>
+                  </div>
+                </div>
+                {(viewingUnit.milestones || []).length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-2">Milestones</h4>
+                    <ul className="space-y-2">
+                      {viewingUnit.milestones.map((m: any, i: number) => (
+                        <li key={i} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                          {m.completed ? <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" /> : <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />}
+                          <span className={m.completed ? 'line-through text-gray-600' : ''}>{m.name}</span>
+                          {m.dueDate && <span className="text-xs text-gray-500">Due: {new Date(m.dueDate).toLocaleDateString()}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-3">Documents</h4>
+                  {isLoadingViewDocs ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="w-6 h-6 border-2 border-edicius-gold/30 border-t-edicius-gold rounded-full animate-spin" />
+                    </div>
+                  ) : viewUnitDocuments.length > 0 ? (
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {viewUnitDocuments.map((doc) => (
+                        <div key={doc._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <FileText className="w-5 h-5 text-gray-500" />
+                            <div>
+                              <p className="font-medium text-gray-900">{doc.name || doc.originalName}</p>
+                              <p className="text-sm text-gray-500">
+                                {doc.fileType} • {formatFileSize(doc.fileSize || 0)} • {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString() : ''}
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => doc.s3Url && window.open(doc.s3Url, '_blank')}
+                            className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                            title="View Document"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg">
+                      <FileText className="w-10 h-10 mx-auto mb-2 text-gray-400" />
+                      <p>No documents uploaded yet</p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                        onClick={() => {
+                          setIsViewModalOpen(false);
+                          setViewingUnit(null);
+                          setSelectedUnit(viewingUnit);
+                          setIsUploadModalOpen(true);
+                        }}
+                      >
+                        Upload Documents
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
         {/* File Upload Modal */}
         {isUploadModalOpen && selectedUnit && (
           <FileUploadModal
@@ -838,13 +1022,35 @@ const AdminCompanyProjects = () => {
                     placeholder="Enter unit description"
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                    <input
+                      type="date"
+                      value={editFormData.startDate}
+                      onChange={(e) => setEditFormData({ ...editFormData, startDate: e.target.value })}
+                      className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-gray-900 focus:outline-none focus:border-edicius-gold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                    <input
+                      type="date"
+                      value={editFormData.endDate}
+                      onChange={(e) => setEditFormData({ ...editFormData, endDate: e.target.value })}
+                      className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-gray-900 focus:outline-none focus:border-edicius-gold"
+                    />
+                  </div>
+                </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Team Size</label>
                   <input
-                    type="date"
-                    value={editFormData.startDate}
-                    onChange={(e) => setEditFormData({ ...editFormData, startDate: e.target.value })}
+                    type="number"
+                    min={0}
+                    value={editFormData.teamSize}
+                    onChange={(e) => setEditFormData({ ...editFormData, teamSize: parseInt(e.target.value) || 0 })}
                     className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-gray-900 focus:outline-none focus:border-edicius-gold"
+                    placeholder="Number of team members"
                   />
                 </div>
                 <div>
@@ -858,6 +1064,93 @@ const AdminCompanyProjects = () => {
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                   </select>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700">Milestones</label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditFormData({
+                        ...editFormData,
+                        milestones: [...editFormData.milestones, { name: '', description: '', completed: false, dueDate: '' }]
+                      })}
+                      className="border-edicius-gold/30 text-edicius-gold hover:bg-edicius-gold/10"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add Milestone
+                    </Button>
+                  </div>
+                  <div className="space-y-3 max-h-48 overflow-y-auto">
+                    {editFormData.milestones.map((m, i) => (
+                      <div key={i} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <input
+                            type="text"
+                            value={m.name}
+                            onChange={(e) => {
+                              const next = [...editFormData.milestones];
+                              next[i] = { ...next[i], name: e.target.value };
+                              setEditFormData({ ...editFormData, milestones: next });
+                            }}
+                            placeholder="Milestone name"
+                            className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded mr-2"
+                          />
+                          <label className="flex items-center gap-1 text-sm">
+                            <input
+                              type="checkbox"
+                              checked={m.completed}
+                              onChange={(e) => {
+                                const next = [...editFormData.milestones];
+                                next[i] = { ...next[i], completed: e.target.checked };
+                                setEditFormData({ ...editFormData, milestones: next });
+                              }}
+                            />
+                            Done
+                          </label>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => setEditFormData({
+                              ...editFormData,
+                              milestones: editFormData.milestones.filter((_, j) => j !== i)
+                            })}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <p className="text-xs text-gray-500 mb-1">Description</p>
+                        <input
+                          type="text"
+                          value={m.description}
+                          onChange={(e) => {
+                            const next = [...editFormData.milestones];
+                            next[i] = { ...next[i], description: e.target.value };
+                            setEditFormData({ ...editFormData, milestones: next });
+                          }}
+                          placeholder="Optional description"
+                          className="w-full px-2 py-1 text-sm border border-gray-200 rounded mr-2"
+                        />
+                        <p className="text-xs text-gray-500 mt-1 mb-1">Due Date</p>
+                        <input
+                          type="date"
+                          value={m.dueDate}
+                          onChange={(e) => {
+                            const next = [...editFormData.milestones];
+                            next[i] = { ...next[i], dueDate: e.target.value };
+                            setEditFormData({ ...editFormData, milestones: next });
+                          }}
+                          className="px-2 py-1 text-sm border border-gray-200 rounded"
+                        />
+                      </div>
+                    ))}
+                    {editFormData.milestones.length === 0 && (
+                      <p className="text-sm text-gray-500 py-2">No milestones. Click &quot;Add Milestone&quot; to add one.</p>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="p-6 border-t border-gray-200 flex items-center justify-end space-x-3">

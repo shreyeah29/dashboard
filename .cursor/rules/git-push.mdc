@@ -1,0 +1,14 @@
+---
+description: Git push command should always use origin main
+alwaysApply: true
+---
+
+# Git Push
+
+When the user asks to push, push, or deploy changes, always use:
+
+```
+git push origin main
+```
+
+Never use `git push` without specifying `origin main`.
