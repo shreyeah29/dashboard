@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2, Users, FileText, Plus, Upload, Eye } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Building2, Users, FileText } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +41,7 @@ const AdminDashboard = () => {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Edicius Dashboard</h1>
-          <p className="text-gray-600 text-lg font-medium">business and statistic information</p>
+          <p className="text-gray-600 text-lg font-medium">Business and Statistic Information</p>
         </motion.div>
 
         {/* Stats Grid */}
@@ -74,59 +74,6 @@ const AdminDashboard = () => {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-md"
-        >
-            <Card className="bg-white border border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-black">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <Plus className="w-5 h-5 text-black" />
-                    <span className="text-sm font-medium text-black">Add New Company</span>
-                  </motion.button>
-                  
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <FileText className="w-5 h-5 text-black" />
-                    <span className="text-sm font-medium text-black">Create Project</span>
-                  </motion.button>
-                  
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <Upload className="w-5 h-5 text-black" />
-                    <span className="text-sm font-medium text-black">Upload Document</span>
-                  </motion.button>
-                  
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <Eye className="w-5 h-5 text-black" />
-                    <span className="text-sm font-medium text-black">View Analytics</span>
-                  </motion.button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
       </div>
     </div>
   );

@@ -62,8 +62,7 @@ const AdminCompanies = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Companies Management</h1>
-              <p className="text-gray-600">Manage all Edicius Group companies and their details</p>
+              <h1 className="text-3xl font-bold text-gray-900">Edicius Data</h1>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -146,7 +145,7 @@ const AdminCompanies = () => {
                       className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
                     >
                       <ArrowRight className="w-4 h-4 mr-2" />
-                      View Projects
+                      Profile
                     </Button>
                     <Button
                       variant="outline"
