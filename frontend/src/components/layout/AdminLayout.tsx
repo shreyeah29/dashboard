@@ -62,7 +62,7 @@ const AdminLayout = () => {
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Companies', href: '/admin/companies', icon: Building2 },
     { name: 'Projects', href: '/admin/projects', icon: FileText },
-    { name: 'Documents', href: '/admin/documents', icon: FileText },
+    { name: 'Company KYC', href: '/admin/documents', icon: FileText },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 

@@ -263,18 +263,22 @@ app.get('/api/v1/documents', async (req, res) => {
       .sort({ uploadedAt: -1 });
 
     // Transform documents to match frontend expectations
-    const transformedDocuments = documents.map(doc => ({
+    const transformedDocuments = documents.map(doc => {
+      const companyId = doc.projectId?.companyId?._id || doc.projectId?.companyId;
+      return {
       _id: doc._id,
       name: doc.name,
       type: doc.fileType,
       size: `${(doc.fileSize / 1024 / 1024).toFixed(1)} MB`,
       company: doc.projectId?.companyId?.name || 'Unknown Company',
+      companyId: companyId ? companyId.toString() : null,
       project: doc.projectId?.name || 'Unknown Project',
       tags: doc.tags || [],
       uploadedBy: doc.uploadedBy || 'Admin User',
       uploadedAt: new Date(doc.uploadedAt).toISOString().split('T')[0],
       url: doc.s3Url
-    }));
+    };
+    });
 
     res.json(transformedDocuments);
   } catch (error) {

@@ -9,7 +9,6 @@ import {
   Eye, 
   Download, 
   Trash2, 
-  Tag, 
   Calendar,
   User,
   Building2,
@@ -26,6 +25,7 @@ import { companiesApi, documentsApi } from '@/lib/api';
 const AdminDocuments = () => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState('');
+  const [viewingCompanyId, setViewingCompanyId] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -82,7 +82,7 @@ const AdminDocuments = () => {
     loadData();
   }, [toast]);
 
-  const documentTags = ['Legal', 'Financial', 'Planning', 'Technical', 'Marketing', 'HR'];
+  const documentTags = ['ROC', 'financial', 'tax', 'GST', 'banking', 'director', 'HR', 'audit'];
 
   const getFileIcon = (type: string) => {
     switch (type) {
@@ -326,8 +326,8 @@ const AdminDocuments = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Documents Management</h1>
-              <p className="text-gray-600 text-lg font-medium">Company presentation documents only — projects and units manage their own docs separately</p>
+              <h1 className="text-4xl font-bold text-black mb-2 font-serif tracking-wide">Company KYC</h1>
+              <p className="text-gray-600 text-lg font-medium">KYC documents organized by company and category</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -336,130 +336,230 @@ const AdminDocuments = () => {
               className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 hover:shadow-lg transition-all duration-200 flex items-center space-x-2"
             >
               <Plus className="w-5 h-5" />
-              <span>Upload Document</span>
+              <span>Upload KYC Document</span>
             </motion.button>
           </div>
         </motion.div>
 
-        {/* Documents Grid */}
+        {/* Companies + Documents by Tag */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 gap-6"
+          className="flex gap-8"
         >
-          {documentsLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
-              <span className="ml-3 text-gray-600">Loading documents...</span>
-            </div>
-          ) : documents.length === 0 ? (
-            <div className="text-center py-12">
-              <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-600 mb-2">No documents found</h3>
-              <p className="text-gray-500">Upload your first document to get started.</p>
-            </div>
-          ) : (
-            documents.map((document, index) => (
-            <motion.div
-              key={document._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-            >
-              <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
+          {/* Companies List */}
+          <div className="w-72 flex-shrink-0">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Companies</h3>
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {companies.map((company) => {
+                  const companyDocCount = documents.filter(
+                    (d) => d.companyId === company._id || d.company === company.name
+                  ).length;
+                  const isSelected = viewingCompanyId === company._id;
+                  return (
+                    <button
+                      key={company._id}
+                      onClick={() => setViewingCompanyId(isSelected ? null : company._id)}
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center justify-between ${
+                        isSelected
+                          ? 'bg-black text-white font-medium'
+                          : 'bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className="truncate">{company.name}</span>
+                      <Badge
+                        variant={isSelected ? 'secondary' : 'outline'}
+                        className={`flex-shrink-0 ml-2 ${
+                          isSelected ? 'bg-white/20 text-white' : 'text-gray-600'
+                        }`}
+                      >
+                        {companyDocCount}
+                      </Badge>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Documents by Tag (when company selected) */}
+          <div className="flex-1 min-w-0">
+            {!viewingCompanyId ? (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <Building2 className="w-16 h-16 text-gray-300 mb-4" />
+                <h3 className="text-lg font-medium text-gray-500 mb-2">Select a company</h3>
+                <p className="text-gray-400 text-sm">Click a company to view its KYC documents grouped by category</p>
+              </div>
+            ) : documentsLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                <span className="ml-3 text-gray-600">Loading documents...</span>
+              </div>
+            ) : (() => {
+              const viewingCompany = companies.find((c) => c._id === viewingCompanyId);
+              const companyDocs = documents.filter(
+                (d) => d.companyId === viewingCompanyId || d.company === viewingCompany?.name
+              );
+              if (companyDocs.length === 0) {
+                return (
+                  <div className="text-center py-24">
+                    <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-600 mb-2">No documents yet</h3>
+                    <p className="text-gray-500 mb-4">Upload KYC documents for {viewingCompany?.name}</p>
+                    <Button onClick={() => setIsUploadModalOpen(true)} className="bg-black text-white hover:bg-gray-800">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Upload Document
+                    </Button>
+                  </div>
+                );
+              }
+              return (
+                <div className="space-y-8">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      {getFileIcon(document.type)}
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <h3 className="text-lg font-semibold text-black">{document.name}</h3>
-                          {documentAvailability[document._id] === false && (
-                            <Badge 
-                              variant="outline" 
-                              className="text-xs border-red-500/30 text-red-500 bg-red-50"
-                            >
-                              File Missing
-                            </Badge>
-                          )}
-                          {documentAvailability[document._id] === true && (
-                            <Badge 
-                              variant="outline" 
-                              className="text-xs border-green-500/30 text-green-500 bg-green-50"
-                            >
-                              Available
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
-                          <span>{document.size}</span>
-                          <span>•</span>
-                          <span>{document.company}</span>
-                        </div>
-                        <div className="flex items-center space-x-2 mt-2">
-                          {(document.tags || []).map((tag, tagIndex) => (
-                            <Badge 
-                              key={tagIndex}
-                              variant="outline" 
-                              className="text-xs border-gray-300 text-gray-700"
-                            >
-                              {tag}
-                            </Badge>
+                    <h2 className="text-xl font-bold text-black">{viewingCompany?.name}</h2>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setViewingCompanyId(null)}
+                      className="text-gray-600"
+                    >
+                      ← Back to companies
+                    </Button>
+                  </div>
+                  {documentTags.map((tag) => {
+                    const docsForTag = companyDocs.filter((d) =>
+                      (d.tags || []).some((t: string) => t.toLowerCase() === tag.toLowerCase())
+                    );
+                    if (docsForTag.length === 0) return null;
+                    return (
+                      <div key={tag}>
+                        <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{tag}</h4>
+                        <div className="space-y-3">
+                          {docsForTag.map((document) => (
+                            <Card key={document._id} className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
+                              <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-4">
+                                    {getFileIcon(document.type)}
+                                    <div>
+                                      <div className="flex items-center space-x-2">
+                                        <h3 className="font-semibold text-black">{document.name}</h3>
+                                        {documentAvailability[document._id] === false && (
+                                          <Badge variant="outline" className="text-xs border-red-500/30 text-red-500 bg-red-50">
+                                            File Missing
+                                          </Badge>
+                                        )}
+                                        {documentAvailability[document._id] === true && (
+                                          <Badge variant="outline" className="text-xs border-green-500/30 text-green-500 bg-green-50">
+                                            Available
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                                        <span>{document.size}</span>
+                                        <span>•</span>
+                                        <span>{document.uploadedAt}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handlePreview(document)}
+                                      disabled={documentAvailability[document._id] === false}
+                                      className="border-gray-300"
+                                      title="View"
+                                    >
+                                      <Eye className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleDownload(document)}
+                                      disabled={documentAvailability[document._id] === false}
+                                      className="border-gray-300"
+                                      title="Download"
+                                    >
+                                      <Download className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleDelete(document._id, document.name)}
+                                      className="border-red-500/30 text-red-500 hover:bg-red-50"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
                           ))}
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePreview(document)}
-                        disabled={documentAvailability[document._id] === false}
-                        className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        title={documentAvailability[document._id] === false ? "File not available" : "View document"}
-                      >
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownload(document)}
-                        disabled={documentAvailability[document._id] === false}
-                        className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        title={documentAvailability[document._id] === false ? "File not available" : "Download document"}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(document._id, document.name)}
-                        className="border-red-500/30 text-red-500 hover:bg-red-500/10"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex items-center space-x-4 text-xs text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <User className="w-3 h-3" />
-                        <span>Uploaded by {document.uploadedBy}</span>
+                    );
+                  })}
+                  {/* Documents with no matching tag */}
+                  {(() => {
+                    const untaggedDocs = companyDocs.filter(
+                      (d) =>
+                        !documentTags.some((tag) =>
+                          (d.tags || []).some((t: string) => t.toLowerCase() === tag.toLowerCase())
+                        )
+                    );
+                    if (untaggedDocs.length === 0) return null;
+                    return (
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Other</h4>
+                        <div className="space-y-3">
+                          {untaggedDocs.map((document) => (
+                            <Card key={document._id} className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
+                              <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-4">
+                                    {getFileIcon(document.type)}
+                                    <div>
+                                      <div className="flex items-center space-x-2">
+                                        <h3 className="font-semibold text-black">{document.name}</h3>
+                                        {documentAvailability[document._id] === false && (
+                                          <Badge variant="outline" className="text-xs border-red-500/30 text-red-500 bg-red-50">
+                                            File Missing
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      <div className="text-sm text-gray-500 mt-1">{document.size} • {document.uploadedAt}</div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <Button variant="outline" size="sm" onClick={() => handlePreview(document)} disabled={documentAvailability[document._id] === false}>
+                                      <Eye className="w-4 h-4" />
+                                    </Button>
+                                    <Button variant="outline" size="sm" onClick={() => handleDownload(document)} disabled={documentAvailability[document._id] === false}>
+                                      <Download className="w-4 h-4" />
+                                    </Button>
+                                    <Button variant="outline" size="sm" onClick={() => handleDelete(document._id, document.name)} className="border-red-500/30 text-red-500">
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{document.uploadedAt}</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-            ))
-          )}
+                    );
+                  })()}
+                </div>
+              );
+            })()}
+          </div>
         </motion.div>
 
         {/* Upload Modal */}
@@ -479,7 +579,7 @@ const AdminDocuments = () => {
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-black">Upload Documents</h2>
+                  <h2 className="text-2xl font-bold text-black">Upload KYC Document</h2>
                   <button
                     onClick={() => setIsUploadModalOpen(false)}
                     className="text-gray-500 hover:text-black transition-colors"
