@@ -348,84 +348,89 @@ const AdminDocuments = () => {
           </div>
         </motion.div>
 
-        {/* Main Content */}
+        {/* Companies Grid */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex gap-8"
+          className="space-y-8"
         >
-          {/* Companies Sidebar */}
-          <div className="w-80 flex-shrink-0">
-            <Card className="border-0 shadow-xl shadow-slate-200/50 bg-white/80 backdrop-blur-sm overflow-hidden">
-              <CardHeader className="pb-3 pt-6 px-6 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
-                <CardTitle className="text-sm font-semibold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-slate-400" />
-                  Companies
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                {loading ? (
-                  <div className="flex items-center justify-center py-16">
-                    <div className="w-8 h-8 border-2 border-slate-200 border-t-[#0B1F3A] rounded-full animate-spin"></div>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-slate-100 max-h-[calc(100vh-280px)] overflow-y-auto">
-                    {companies.map((company, i) => {
-                      const companyDocCount = documents.filter(
-                        (d) => d.companyId === company._id || d.company === company.name
-                      ).length;
-                      const isSelected = viewingCompanyId === company._id;
-                      return (
-                        <motion.button
-                          key={company._id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.03 }}
-                          onClick={() => setViewingCompanyId(isSelected ? null : company._id)}
-                          className={`w-full text-left px-5 py-4 transition-all duration-200 flex items-center justify-between gap-3 group ${
-                            isSelected
-                              ? 'bg-gradient-to-r from-[#0B1F3A] to-[#1e3a5f] text-white'
-                              : 'hover:bg-slate-50/80'
-                          }`}
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="w-10 h-10 border-2 border-slate-200 border-t-[#0B1F3A] rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {companies.map((company, index) => {
+                const companyDocCount = documents.filter(
+                  (d) => d.companyId === company._id || d.company === company.name
+                ).length;
+                const isSelected = viewingCompanyId === company._id;
+                return (
+                  <motion.div
+                    key={company._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                  >
+                    <Card
+                      onClick={() => setViewingCompanyId(isSelected ? null : company._id)}
+                      className={`cursor-pointer hover:shadow-lg transition-all duration-300 group overflow-hidden ${
+                        isSelected ? 'ring-2 ring-[#0B1F3A] shadow-lg' : ''
+                      }`}
+                    >
+                      <div className="relative">
+                        <img
+                          src={company.heroImage || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800'}
+                          alt={company.name}
+                          className="w-full h-40 object-cover"
+                        />
+                        <div className="absolute top-3 right-3">
+                          <Badge className="bg-white/95 text-slate-700 text-xs font-medium">
+                            {companyDocCount} docs
+                          </Badge>
+                        </div>
+                      </div>
+                      <CardContent className="p-5">
+                        <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#0B1F3A] transition-colors line-clamp-2">
+                          {company.name}
+                        </h3>
+                        <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                          {company.overview}
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-[#0B1F3A]/30 text-[#0B1F3A] hover:bg-[#0B1F3A] hover:text-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setViewingCompanyId(isSelected ? null : company._id);
+                          }}
                         >
-                          <span className={`truncate font-medium ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-slate-900'}`}>
-                            {company.name}
-                          </span>
-                          <span className={`flex-shrink-0 min-w-[28px] h-7 px-2 rounded-lg flex items-center justify-center text-xs font-semibold ${
-                            isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
-                          }`}>
-                            {companyDocCount}
-                          </span>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                          {isSelected ? 'Viewing documents' : 'View KYC Documents'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
 
-          {/* Documents Panel */}
-          <div className="flex-1 min-w-0">
-            {!viewingCompanyId ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col items-center justify-center py-32 text-center"
-              >
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-6 shadow-inner">
-                  <Building2 className="w-12 h-12 text-slate-400" />
+          {/* Documents Panel (when company selected) */}
+          {viewingCompanyId && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="pt-6 border-t border-slate-200"
+            >
+              {documentsLoading ? (
+                <div className="flex items-center justify-center py-24">
+                  <div className="w-10 h-10 border-2 border-slate-200 border-t-[#0B1F3A] rounded-full animate-spin"></div>
+                  <span className="ml-4 text-slate-600 font-medium">Loading documents...</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-700 mb-2">Select a company</h3>
-                <p className="text-slate-500 max-w-sm">Click a company from the list to view its KYC documents, organized by category for easy access.</p>
-              </motion.div>
-            ) : documentsLoading ? (
-              <div className="flex items-center justify-center py-24">
-                <div className="w-10 h-10 border-2 border-slate-200 border-t-[#0B1F3A] rounded-full animate-spin"></div>
-                <span className="ml-4 text-slate-600 font-medium">Loading documents...</span>
-              </div>
-            ) : (() => {
+              ) : (() => {
               const viewingCompany = companies.find((c) => c._id === viewingCompanyId);
               const companyDocs = documents.filter(
                 (d) => d.companyId === viewingCompanyId || d.company === viewingCompany?.name
@@ -607,7 +612,8 @@ const AdminDocuments = () => {
                 </motion.div>
               );
             })()}
-          </div>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Upload Modal */}
