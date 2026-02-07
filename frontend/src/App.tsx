@@ -18,6 +18,7 @@ import AdminCompanyProjects from '@/pages/admin/AdminCompanyProjects';
 import AdminProjects from '@/pages/admin/AdminProjects';
 import AdminProjectDetail from '@/pages/admin/AdminProjectDetail';
 import AdminDocuments from '@/pages/admin/AdminDocuments';
+import AdminAnalytics from '@/pages/admin/AdminAnalytics';
 import AdminLayout from '@/components/layout/AdminLayout';
 
 // Layout components
@@ -62,6 +63,7 @@ function App() {
                     <Route path="projects" element={<AdminProjects />} />
                     <Route path="projects/:id" element={<AdminProjectDetail />} />
                     <Route path="documents" element={<AdminDocuments />} />
+                    <Route path="analytics" element={<AdminAnalytics />} />
                   </Route>
             </Routes>
             <Toaster />

@@ -23,17 +23,17 @@ const AdminCompanies = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [companiesData, projectsData] = await Promise.all([
+      const [companiesData, unitsData] = await Promise.all([
         companiesApi.getAll(),
-        projectsApi.getAll()
+        projectsApi.getAllUnits()
       ]);
       setCompanies(companiesData);
-      setProjects(projectsData);
+      setProjects(unitsData);
     } catch (error) {
       console.error('Error loading data:', error);
       toast({
         title: "Error",
-        description: "Failed to load companies and projects data.",
+        description: "Failed to load companies and units data.",
         variant: "destructive",
       });
     } finally {
@@ -41,11 +41,14 @@ const AdminCompanies = () => {
     }
   };
 
-  const getProjectsForCompany = (companyId: string) => {
-    return projects.filter(project => project.companyId === companyId);
+  const getUnitsForCompany = (companyId: string) => {
+    return projects.filter(unit => {
+      const id = typeof unit.companyId === 'object' ? unit.companyId?._id : unit.companyId;
+      return id === companyId || id?.toString() === companyId?.toString();
+    });
   };
 
-  const handleViewProjects = (company: any) => {
+  const handleViewUnits = (company: any) => {
     navigate(`/admin/companies/${company.slug}/projects`);
   };
 
@@ -88,7 +91,7 @@ const AdminCompanies = () => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {companies.map((company, index) => {
-              const companyProjects = getProjectsForCompany(company._id);
+              const companyUnits = getUnitsForCompany(company._id);
               return (
             <motion.div
               key={company.id}
@@ -133,13 +136,13 @@ const AdminCompanies = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
                       <Building2 className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">{companyProjects.length} projects</span>
+                      <span className="text-sm text-gray-600">{companyUnits.length} units</span>
                     </div>
                   </div>
                   
                   <div className="flex items-center space-x-2">
                     <Button
-                      onClick={() => handleViewProjects(company)}
+                      onClick={() => handleViewUnits(company)}
                       variant="outline"
                       size="sm"
                       className="flex-1 border-red-200 text-red-600 hover:bg-red-50"

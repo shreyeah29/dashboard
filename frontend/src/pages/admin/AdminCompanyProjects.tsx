@@ -52,9 +52,9 @@ const AdminCompanyProjects = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [companiesData, projectsData] = await Promise.all([
+      const [companiesData, unitsData] = await Promise.all([
         companiesApi.getAll(),
-        projectsApi.getAll()
+        slug ? projectsApi.getByCompanySlug(slug) : []
       ]);
       
       // Find the company by slug
@@ -70,15 +70,13 @@ const AdminCompanyProjects = () => {
       }
       
       setCompany(foundCompany);
-      
-      // Filter projects for this company
-      const companyProjects = projectsData.filter(project => project.companyId === foundCompany._id);
-      setProjects(companyProjects);
+      // unitsData is already filtered by backend (type: 'unit' only)
+      setProjects(unitsData);
     } catch (error) {
       console.error('Error loading data:', error);
       toast({
         title: "Error",
-        description: "Failed to load company and projects data.",
+        description: "Failed to load company and units data.",
         variant: "destructive",
       });
     } finally {
@@ -104,7 +102,8 @@ const AdminCompanyProjects = () => {
       
       const projectData = {
         ...formData,
-        companyId: company._id
+        companyId: company._id,
+        type: 'unit'
       };
       
       console.log('Creating project with data:', projectData);
@@ -115,8 +114,8 @@ const AdminCompanyProjects = () => {
       await loadData();
       
       toast({
-        title: "Project Created",
-        description: `Project "${formData.name}" has been created successfully.`,
+        title: "Unit Created",
+        description: `Unit "${formData.name}" has been created successfully.`,
       });
       
       // Reset form and close modal
@@ -132,7 +131,7 @@ const AdminCompanyProjects = () => {
       console.error('Error creating project:', error);
       toast({
         title: "Creation Failed",
-        description: "There was an error creating the project. Please try again.",
+        description: "There was an error creating the unit. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -223,9 +222,9 @@ const AdminCompanyProjects = () => {
               </Button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  {company.name} - Projects
+                  {company.name}
                 </h1>
-                <p className="text-gray-600">Manage projects for {company.name}</p>
+                <p className="text-gray-600">Manage units for {company.name}</p>
               </div>
             </div>
             <motion.button
@@ -235,12 +234,12 @@ const AdminCompanyProjects = () => {
               className="bg-edicius-gold text-edicius-navy px-6 py-3 rounded-lg font-semibold hover:bg-edicius-gold/90 transition-colors flex items-center space-x-2"
             >
               <Plus className="w-5 h-5" />
-              <span>Add Project</span>
+              <span>Add Unit</span>
             </motion.button>
           </div>
         </motion.div>
 
-        {/* Projects Grid */}
+        {/* Units Grid */}
         {projects.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
@@ -249,14 +248,14 @@ const AdminCompanyProjects = () => {
             className="text-center py-12"
           >
             <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Projects Yet</h3>
-            <p className="text-gray-600 mb-6">Get started by creating your first project for {company.name}</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Units Yet</h3>
+            <p className="text-gray-600 mb-6">Get started by creating your first unit for {company.name}</p>
             <Button
               onClick={() => setIsCreateModalOpen(true)}
               className="bg-edicius-gold text-edicius-navy hover:bg-edicius-gold/90"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create First Project
+              Create First Unit
             </Button>
           </motion.div>
         ) : (
@@ -313,7 +312,7 @@ const AdminCompanyProjects = () => {
                       </div>
                     </div>
 
-                    {/* Project Stats */}
+                    {/* Unit Stats */}
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center space-x-2">
                         <Users className="w-4 h-4 text-gray-400" />
@@ -365,7 +364,7 @@ const AdminCompanyProjects = () => {
           </motion.div>
         )}
 
-        {/* Create Project Modal */}
+        {/* Create Unit Modal */}
         {isCreateModalOpen && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -385,22 +384,22 @@ const AdminCompanyProjects = () => {
               className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-gray-200"
             >
               <div className="p-6 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900">Create New Project</h2>
-                <p className="text-gray-600 mt-1">Add a new project to {company.name}</p>
+                <h2 className="text-2xl font-bold text-gray-900">Create New Unit</h2>
+                <p className="text-gray-600 mt-1">Add a new unit to {company.name}</p>
               </div>
               
               <div className="p-6 space-y-6">
-                {/* Project Name */}
+                {/* Unit Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Project Name *
+                    Unit Name *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-gray-900 focus:outline-none focus:border-edicius-gold"
-                    placeholder="Enter project name"
+                    placeholder="Enter unit name"
                   />
                 </div>
 
@@ -414,7 +413,7 @@ const AdminCompanyProjects = () => {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={4}
                     className="w-full px-3 py-2 bg-white/10 border border-edicius-gold/20 rounded-lg text-gray-900 focus:outline-none focus:border-edicius-gold"
-                    placeholder="Enter project description"
+                    placeholder="Enter unit description"
                   />
                 </div>
 
@@ -480,7 +479,7 @@ const AdminCompanyProjects = () => {
                       <span>Creating...</span>
                     </div>
                   ) : (
-                    'Create Project'
+                    'Create Unit'
                   )}
                 </Button>
               </div>

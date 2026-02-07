@@ -284,10 +284,14 @@ app.get('/api/v1/documents', async (req, res) => {
 
 // Real delete endpoint is handled by the project-specific delete endpoint below
 
-// Projects endpoints
+// Projects endpoints - returns type: 'project' by default, or type: 'unit' when ?type=unit
 app.get('/api/v1/projects', async (req, res) => {
   try {
-    const projects = await Project.find()
+    const { type } = req.query;
+    const filter = type === 'unit'
+      ? { type: 'unit' }
+      : { $or: [{ type: 'project' }, { type: { $exists: false } }] };
+    const projects = await Project.find(filter)
       .populate('companyId', 'name slug')
       .populate('documents')
       .sort({ createdAt: -1 });
@@ -311,7 +315,7 @@ app.get('/api/v1/projects', async (req, res) => {
 
 app.post('/api/v1/projects', async (req, res) => {
   try {
-    const { name, companyId, description, startDate, endDate, priority } = req.body;
+    const { name, companyId, description, startDate, endDate, priority, type } = req.body;
     
     console.log('Project creation request body:', req.body);
     console.log('CompanyId received:', companyId, 'Type:', typeof companyId);
@@ -328,7 +332,7 @@ app.post('/api/v1/projects', async (req, res) => {
       return res.status(404).json({ error: 'Company not found' });
     }
     
-    // Create new project
+    // Create new project/unit (type: 'unit' from company page, 'project' from Projects page)
     const newProject = new Project({
       name,
       companyId,
@@ -336,6 +340,7 @@ app.post('/api/v1/projects', async (req, res) => {
       startDate: startDate ? new Date(startDate) : undefined,
       endDate: endDate ? new Date(endDate) : undefined,
       priority: priority || 'Medium',
+      type: type || 'project',
       status: 'Planning',
       progress: 0,
       teamSize: 0,
@@ -368,14 +373,14 @@ app.get('/api/v1/projects/companies/:slug/projects', async (req, res) => {
       return res.status(404).json({ error: 'Company not found' });
     }
     
-    // Find projects for this company
-    const projects = await Project.find({ companyId: company._id })
+    // Find units for this company (type: 'unit' only)
+    const projects = await Project.find({ companyId: company._id, type: 'unit' })
       .populate('documents')
       .sort({ createdAt: -1 });
     
     res.json(projects);
   } catch (error) {
-    console.error('Error fetching company projects:', error);
+    console.error('Error fetching company units:', error);
     res.status(500).json({ error: 'Failed to fetch company projects' });
   }
 });

@@ -137,7 +137,7 @@ const AdminProjects = () => {
     
     try {
       console.log('Creating project with data:', formData);
-      const newProject = await projectsApi.create(formData);
+      const newProject = await projectsApi.create({ ...formData, type: 'project' });
       console.log('Project created successfully:', newProject);
       
       // Reload projects data

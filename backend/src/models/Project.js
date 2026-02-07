@@ -47,6 +47,11 @@ const projectSchema = new mongoose.Schema({
     enum: ['Low', 'Medium', 'High'],
     default: 'Medium'
   },
+  type: {
+    type: String,
+    enum: ['unit', 'project'],
+    default: 'project'
+  },
   documents: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Document'
