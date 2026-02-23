@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edicius Group - Organizational Chart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1600px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Top Level - EDICIUS GROUP - Metallic Silver Box */
+        .top-level {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 80px;
+        }
+
+        .edicius-box {
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 50%, #e5e7eb 100%);
+            border-radius: 12px;
+            padding: 32px 64px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .edicius-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+            border-radius: 12px 12px 0 0;
+            pointer-events: none;
+        }
+
+        .edicius-box h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1f2937;
+            letter-spacing: 1.5px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Directors Connection Lines - Red */
+        .directors-connector {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            height: 60px;
+        }
+
+        .directors-connector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 30px;
+            background: #ef4444;
+        }
+
+        .directors-connector::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 25%;
+            right: 25%;
+            width: 50%;
+            height: 2px;
+            background: #ef4444;
+        }
+
+        /* Directors Row */
+        .directors-row {
+            display: flex;
+            justify-content: center;
+            gap: 120px;
+            margin-bottom: 100px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .director-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .director-container::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            width: 2px;
+            height: 30px;
+            background: #ef4444;
+        }
+
+        .director-box {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 24px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .director-box .name {
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .director-box .role {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        /* Group Companies Section */
+        .group-companies {
+            margin-top: 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 26px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .section-title-line {
+            width: 200px;
+            height: 2px;
+            background: #ef4444;
+            margin: 12px auto 0;
+        }
+
+        /* Companies Connection Lines - White */
+        .companies-connector-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .companies-connector {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 30px;
+        }
+
+        .companies-connector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 30px;
+            background: white;
+        }
+
+        .companies-connector::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 12.5%;
+            right: 12.5%;
+            width: 75%;
+            height: 2px;
+            background: white;
+        }
+
+        /* Companies Grid */
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .company-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .company-container::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            width: 2px;
+            height: 30px;
+            background: white;
+        }
+
+        .company-box {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 28px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .company-box:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .company-box p {
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Second row connector */
+        .second-row-connector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .second-row-connector-line {
+            width: 75%;
+            max-width: 1200px;
+            height: 2px;
+            background: white;
+        }
+
+        @media (max-width: 1200px) {
+            .companies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .directors-row {
+                gap: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 40px 15px;
+            }
+
+            .edicius-box {
+                padding: 24px 40px;
+            }
+
+            .edicius-box h1 {
+                font-size: 24px;
+            }
+
+            .directors-row {
+                gap: 30px;
+            }
+
+            .director-box {
+                min-width: 220px;
+                padding: 20px 30px;
+            }
+
+            .companies-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .section-title h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top Level - EDICIUS GROUP -->
+        <div class="top-level">
+            <div class="edicius-box">
+                <h1>EDICIUS GROUP</h1>
+            </div>
+        </div>
+
+        <!-- Directors Connector Lines -->
+        <div class="directors-connector"></div>
+
+        <!-- Directors Row -->
+        <div class="directors-row">
+            <div class="director-container">
+                <div class="director-box">
+                    <p class="role">Director/Chairman</p>
+                    <p class="name">Victor Honey David</p>
+                </div>
+            </div>
+
+            <div class="director-container">
+                <div class="director-box">
+                    <p class="role">Director/Chairman</p>
+                    <p class="name">Paul Satyanadhan David</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Companies Section -->
+        <div class="group-companies">
+            <div class="section-title">
+                <h2>Group Companies (India)</h2>
+                <div class="section-title-line"></div>
+            </div>
+
+            <!-- Companies Connector Lines -->
+            <div class="companies-connector-wrapper">
+                <div class="companies-connector"></div>
+            </div>
+
+            <!-- First Row of Companies -->
+            <div class="companies-grid">
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Enterprises Private Limited</p>
+                    </div>
+                </div>
+
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Imports and Exports Private Limited</p>
+                    </div>
+                </div>
+
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Innovations and Consulting Private Limited</p>
+                    </div>
+                </div>
+
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Infrastructure and Developers Private Limited</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row Connector -->
+            <div class="second-row-connector">
+                <div class="second-row-connector-line"></div>
+            </div>
+
+            <!-- Second Row of Companies -->
+            <div class="companies-grid">
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Productions and Entertainment Private Limited</p>
+                    </div>
+                </div>
+
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Consumer Products Private Limited</p>
+                    </div>
+                </div>
+
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Hotels and Hospitality Private Limited</p>
+                    </div>
+                </div>
+
+                <div class="company-container">
+                    <div class="company-box">
+                        <p>Edicius Mining and Minerals Private Limited</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -10,6 +10,7 @@ const Header = () => {
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Business', href: '/companies' },
+    { name: 'One Edicius UK', href: '/one-edicius-uk' },
     { name: 'Contact', href: '/contact' },
   ];
 
