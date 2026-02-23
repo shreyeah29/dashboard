@@ -26,9 +26,6 @@ const OneEdiciusUK = () => {
               <span className="text-xs uppercase tracking-[0.25em] text-gray-300">
                 One Edicius UK
               </span>
-              <span className="ml-3 rounded-full bg-edicius-red/15 px-3 py-0.5 text-[11px] font-semibold text-edicius-red">
-                Coming soon
-              </span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
@@ -72,10 +69,6 @@ const OneEdiciusUK = () => {
                       <MapPin className="w-4 h-4 text-edicius-red" />
                       London, United Kingdom
                     </p>
-                  </div>
-                  <div className="hidden sm:flex items-center gap-2 text-xs text-gray-300 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
-                    <Clock className="w-3.5 h-3.5 text-edicius-red" />
-                    <span>Phase I – In planning</span>
                   </div>
                 </div>
               </div>
