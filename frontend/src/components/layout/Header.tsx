@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, Menu, X } from 'lucide-react';
+import { Building2, Menu, X, HeartHandshake } from 'lucide-react';
 import { useState } from 'react';
 import HiddenAdminTrigger from '@/components/admin/HiddenAdminTrigger';
 
@@ -30,26 +30,37 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-white hover:text-edicius-red transition-colors duration-200 font-medium"
-              >
-                {item.name}
-              </Link>
-            ))}
-            </nav>
+            <div className="flex items-center gap-4">
+              <nav className="hidden md:flex space-x-8">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-white hover:text-edicius-red transition-colors duration-200 font-medium"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </nav>
 
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white hover:text-edicius-red transition-colors duration-200"
+              {/* Edicius Foundation icon (desktop) */}
+              <Link
+                to="/foundation"
+                className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/20 hover:bg-pink-500/20 hover:border-pink-300 transition-colors"
+                title="Edicius Foundation"
               >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+                <HeartHandshake className="w-4 h-4 text-pink-300" />
+              </Link>
+
+              {/* Mobile menu button */}
+              <div className="md:hidden">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="text-white hover:text-edicius-red transition-colors duration-200"
+                >
+                  {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -73,6 +84,14 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
+              <Link
+                to="/foundation"
+                className="flex items-center gap-2 text-white hover:text-edicius-red transition-colors duration-200 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <HeartHandshake className="w-4 h-4" />
+                <span>Edicius Foundation</span>
+              </Link>
             </div>
             </motion.div>
           )}

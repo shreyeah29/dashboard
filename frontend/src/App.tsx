@@ -10,6 +10,7 @@ import CompanyPage from '@/pages/CompanyPage';
 import ProjectPage from '@/pages/ProjectPage';
 import Contact from '@/pages/Contact';
 import OneEdiciusUK from '@/pages/OneEdiciusUK';
+import EdiciusFoundation from '@/pages/EdiciusFoundation';
 
 // Admin pages
 import AdminLogin from '@/pages/admin/AdminLogin';
@@ -49,6 +50,7 @@ function App() {
                 <Route path="project/:slug" element={<ProjectPage />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="one-edicius-uk" element={<OneEdiciusUK />} />
+                <Route path="foundation" element={<EdiciusFoundation />} />
               </Route>
 
               {/* Admin Routes */}
