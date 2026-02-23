@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, Menu, X, HeartHandshake } from 'lucide-react';
+import { Building2, Menu, X, HeartHandshake, Globe2 } from 'lucide-react';
 import { useState } from 'react';
 import HiddenAdminTrigger from '@/components/admin/HiddenAdminTrigger';
 
@@ -10,7 +10,6 @@ const Header = () => {
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Business', href: '/companies' },
-    { name: 'One Edicius UK', href: '/one-edicius-uk' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -42,6 +41,15 @@ const Header = () => {
                   </Link>
                 ))}
               </nav>
+
+              {/* One Edicius UK icon (desktop) */}
+              <Link
+                to="/one-edicius-uk"
+                className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/20 hover:bg-sky-500/20 hover:border-sky-300 transition-colors"
+                title="One Edicius UK"
+              >
+                <Globe2 className="w-4 h-4 text-sky-300" />
+              </Link>
 
               {/* Edicius Foundation icon (desktop) */}
               <Link
@@ -84,6 +92,14 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
+              <Link
+                to="/one-edicius-uk"
+                className="flex items-center gap-2 text-white hover:text-edicius-red transition-colors duration-200 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Globe2 className="w-4 h-4" />
+                <span>One Edicius UK</span>
+              </Link>
               <Link
                 to="/foundation"
                 className="flex items-center gap-2 text-white hover:text-edicius-red transition-colors duration-200 font-medium"
