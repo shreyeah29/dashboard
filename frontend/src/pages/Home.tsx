@@ -67,9 +67,9 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black via-gray-800 to-black text-white overflow-hidden min-h-screen flex items-center">
+      <section className="relative bg-gradient-to-br from-black via-gray-800 to-black text-white overflow-hidden min-h-screen flex items-start sm:items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-edicius-red/10 rounded-full blur-3xl animate-pulse"></div>
@@ -102,7 +102,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8"
+              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8"
             >
               <span className="block bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
                 Consulting Minds
@@ -120,7 +120,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed"
+              className="text-base sm:text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed"
             >
               Edicius Group blends expert consulting with a wide spectrum of industries — 
               from consumer products to infrastructure — driving innovation, efficiency, 
@@ -135,15 +135,15 @@ const Home = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
             >
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-edicius-red mb-2">8+</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-edicius-red mb-2">8+</div>
                 <div className="text-gray-300 font-semibold">Companies</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-edicius-red mb-2">4</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-edicius-red mb-2">4</div>
                 <div className="text-gray-300 font-semibold">Years of R&D</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-edicius-red mb-2">100%</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-edicius-red mb-2">100%</div>
                 <div className="text-gray-300 font-semibold">Growth</div>
               </div>
             </motion.div>
