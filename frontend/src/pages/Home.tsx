@@ -74,10 +74,10 @@ const Home = () => {
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-edicius-red/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-edicius-red/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-edicius-red/3 rounded-full blur-3xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] sm:w-[800px] sm:h-[800px] bg-edicius-red/3 rounded-full blur-3xl animate-pulse delay-500"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="text-center">
             {/* Logo Animation */}
             <motion.div
@@ -87,10 +87,20 @@ const Home = () => {
               className="mb-12"
             >
               <div className="flex items-center justify-center mb-8">
+                {/* Use smaller Logo on mobile to prevent cropping/overlap */}
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
+                  className="sm:hidden"
+                >
+                  <Logo width={420} height={170} />
+                </motion.div>
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="hidden sm:block"
                 >
                   <Logo width={600} height={240} />
                 </motion.div>
@@ -102,7 +112,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8"
+              className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8"
             >
               <span className="block bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
                 Consulting Minds
