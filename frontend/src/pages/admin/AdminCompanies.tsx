@@ -7,6 +7,7 @@ import { Building2, Plus, Edit, Trash2, Eye, MoreHorizontal, ArrowRight } from '
 import { useNavigate } from 'react-router-dom';
 import { companiesApi, projectsApi } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
+import { sortCompaniesByRevenueDisplayOrder } from '@/lib/revenueCompanyOrder';
 
 const AdminCompanies = () => {
   const [companies, setCompanies] = useState<any[]>([]);
@@ -27,7 +28,7 @@ const AdminCompanies = () => {
         companiesApi.getAll(),
         projectsApi.getAllUnits()
       ]);
-      setCompanies(companiesData);
+      setCompanies(sortCompaniesByRevenueDisplayOrder(companiesData));
       setProjects(unitsData);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -94,7 +95,7 @@ const AdminCompanies = () => {
               const companyUnits = getUnitsForCompany(company._id);
               return (
             <motion.div
-              key={company.id}
+              key={company._id || company.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
