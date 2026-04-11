@@ -13,7 +13,8 @@ import {
   Bell,
   Bot,
   Search,
-  Users
+  Users,
+  Landmark
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useAuth } from '@/hooks/useAuth';
@@ -63,6 +64,7 @@ const AdminLayout = () => {
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Companies', href: '/admin/companies', icon: Building2 },
     { name: 'Projects', href: '/admin/projects', icon: FileText },
+    { name: 'Revenue', href: '/admin/revenue', icon: Landmark },
     { name: 'Team members', href: '/admin/team-members', icon: Users },
     { name: 'Documents', href: '/admin/documents', icon: FileText },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
