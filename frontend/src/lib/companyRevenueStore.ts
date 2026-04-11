@@ -86,3 +86,8 @@ export function deleteCompanyYearRevenue(slug: string, key: string): void {
   else all[slug] = rows;
   writeAll(all);
 }
+
+/** Clears all per-company yearly revenue saved in this browser. */
+export function clearAllCompanyRevenueLocal(): void {
+  localStorage.removeItem(STORAGE_KEY);
+}

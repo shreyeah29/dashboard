@@ -7,7 +7,7 @@ import { countTeamMembers } from '@/lib/teamMembersStore';
 
 const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [teamCount, setTeamCount] = useState(10);
+  const [teamCount, setTeamCount] = useState(0);
 
   const stats = [
     { title: 'Companies', value: '9', icon: Building2, color: 'text-black', bgColor: 'bg-gray-100', href: null as string | null },

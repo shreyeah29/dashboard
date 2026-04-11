@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Pencil, Plus, Users, Globe2, X } from 'lucide-react';
+import { MapPin, Pencil, Plus, Trash2, Users, Globe2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import {
   addTeamMember,
+  deleteTeamMember,
   loadTeamMembers,
   placesWithCounts,
   type TeamMember,
@@ -148,7 +149,7 @@ const AdminTeamMembers = () => {
           <div>
             <h1 className="text-3xl font-bold text-black font-serif tracking-wide">Team members</h1>
             <p className="text-gray-600 mt-1 font-medium">
-              Filter by region or office, then add or edit people and designations.
+              Add people, then filter by region or office. Edit or remove rows from the directory below.
             </p>
           </div>
           <Button onClick={openAdd} className="bg-black text-white hover:bg-gray-800 shrink-0">
@@ -246,7 +247,7 @@ const AdminTeamMembers = () => {
               Team locations
             </CardTitle>
             <p className="text-sm text-gray-600 font-medium">
-              Click a location to list everyone based there. Names and IDs can be edited in the table below.
+              Click a location to filter the table. Use Edit or Delete on each row to maintain the directory.
             </p>
           </CardHeader>
           <CardContent>
@@ -293,7 +294,7 @@ const AdminTeamMembers = () => {
                     <th className="px-4 py-3 font-semibold">Designation</th>
                     <th className="px-4 py-3 font-semibold">Region</th>
                     <th className="px-4 py-3 font-semibold">Place</th>
-                    <th className="px-4 py-3 font-semibold w-24">Actions</th>
+                    <th className="px-4 py-3 font-semibold w-36">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -305,17 +306,37 @@ const AdminTeamMembers = () => {
                       <td className="px-4 py-3 text-gray-700">{m.region}</td>
                       <td className="px-4 py-3 text-gray-700">{m.place}</td>
                       <td className="px-4 py-3">
-                        <Button variant="outline" size="sm" onClick={() => openEdit(m)} className="h-8">
-                          <Pencil className="w-3.5 h-3.5 mr-1" />
-                          Edit
-                        </Button>
+                        <div className="flex flex-wrap gap-1">
+                          <Button variant="outline" size="sm" onClick={() => openEdit(m)} className="h-8">
+                            <Pencil className="w-3.5 h-3.5 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 text-red-600 border-red-200 hover:bg-red-50"
+                            onClick={() => {
+                              if (!window.confirm(`Remove ${m.name} (${m.employeeId}) from the directory?`)) return;
+                              deleteTeamMember(m.key);
+                              refresh();
+                              toast({ title: 'Removed', description: `${m.name} was deleted.` });
+                            }}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               {filtered.length === 0 && (
-                <p className="p-8 text-center text-gray-500">No team members match the current filters.</p>
+                <p className="p-8 text-center text-gray-500">
+                  {members.length === 0
+                    ? 'No team members yet. Use Add team member above to add someone.'
+                    : 'No team members match the current filters.'}
+                </p>
               )}
             </div>
           </CardContent>

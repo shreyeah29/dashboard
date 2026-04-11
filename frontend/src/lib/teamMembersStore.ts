@@ -12,19 +12,6 @@ export type TeamMember = {
 
 const STORAGE_KEY = 'edicius_admin_team_members_v1';
 
-const defaultMembers: TeamMember[] = [
-  { key: 'seed-emea-1', employeeId: 'ED-1001', name: 'Alice Morgan', designation: 'Group Director', region: 'EMEA', place: 'London HQ' },
-  { key: 'seed-emea-2', employeeId: 'ED-1002', name: 'Raj Patel', designation: 'Senior Engineer', region: 'EMEA', place: 'London HQ' },
-  { key: 'seed-emea-3', employeeId: 'ED-1003', name: 'Sofia Rossi', designation: 'Operations Lead', region: 'EMEA', place: 'Milan Office' },
-  { key: 'seed-emea-4', employeeId: 'ED-1004', name: 'Marcus Webb', designation: 'Finance Manager', region: 'EMEA', place: 'London HQ' },
-  { key: 'seed-am-1', employeeId: 'ED-2001', name: 'Jordan Lee', designation: 'Product Manager', region: 'Americas', place: 'New York Hub' },
-  { key: 'seed-am-2', employeeId: 'ED-2002', name: 'Elena Vasquez', designation: 'Design Lead', region: 'Americas', place: 'New York Hub' },
-  { key: 'seed-am-3', employeeId: 'ED-2003', name: 'Chris Okonkwo', designation: 'DevOps Engineer', region: 'Americas', place: 'Austin Tech Center' },
-  { key: 'seed-apac-1', employeeId: 'ED-3001', name: 'Mei Chen', designation: 'Regional Head', region: 'APAC', place: 'Singapore HQ' },
-  { key: 'seed-apac-2', employeeId: 'ED-3002', name: 'Arjun Nair', designation: 'Consultant', region: 'APAC', place: 'Singapore HQ' },
-  { key: 'seed-apac-3', employeeId: 'ED-3003', name: 'Yuki Tanaka', designation: 'Analyst', region: 'APAC', place: 'Tokyo Office' },
-];
-
 function parseEmployeeNumber(id: string): number {
   const m = /^ED-(\d+)$/i.exec(id.trim());
   return m ? parseInt(m[1], 10) : 0;
@@ -38,22 +25,15 @@ function nextEmployeeId(members: TeamMember[]): string {
 export function loadTeamMembers(): TeamMember[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      saveTeamMembers(defaultMembers);
-      return [...defaultMembers];
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as TeamMember[];
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      saveTeamMembers(defaultMembers);
-      return [...defaultMembers];
-    }
+    if (!Array.isArray(parsed) || parsed.length === 0) return [];
     return parsed.map((m) => ({
       ...m,
       key: m.key || `legacy-${m.employeeId}-${Math.random().toString(36).slice(2, 9)}`,
     }));
   } catch {
-    saveTeamMembers(defaultMembers);
-    return [...defaultMembers];
+    return [];
   }
 }
 
@@ -105,6 +85,11 @@ export function updateTeamMember(key: string, updates: Partial<Omit<TeamMember, 
   saveTeamMembers(members);
 }
 
+export function deleteTeamMember(key: string): void {
+  const members = loadTeamMembers().filter((m) => m.key !== key);
+  saveTeamMembers(members);
+}
+
 export function uniqueRegions(members: TeamMember[]): string[] {
   return [...new Set(members.map((m) => m.region))].sort();
 }
@@ -118,4 +103,9 @@ export function placesWithCounts(members: TeamMember[]): { place: string; region
     else map.set(k, { place: m.place, region: m.region, count: 1 });
   }
   return [...map.values()].sort((a, b) => a.place.localeCompare(b.place));
+}
+
+/** Removes saved team directory data from this browser (directory is empty until you add again). */
+export function clearTeamMembersLocalData(): void {
+  localStorage.removeItem(STORAGE_KEY);
 }

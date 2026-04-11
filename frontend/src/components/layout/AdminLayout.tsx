@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -19,6 +19,7 @@ import {
 import Logo from '@/components/Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { getSessionTimeoutMs, loadAdminPreferences } from '@/lib/adminPreferences';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,13 +27,23 @@ const AdminLayout = () => {
   const [showAiPanel, setShowAiPanel] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const { toast } = useToast();
 
-  // Auto logout after 1 hour of inactivity
+  const [prefsRev, setPrefsRev] = useState(0);
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    
+    const onPrefs = () => setPrefsRev((n) => n + 1);
+    window.addEventListener('edicius-admin-prefs', onPrefs);
+    return () => window.removeEventListener('edicius-admin-prefs', onPrefs);
+  }, []);
+
+  const sessionTimeoutMs = useMemo(() => getSessionTimeoutMs(), [prefsRev]);
+  const prefs = useMemo(() => loadAdminPreferences(), [prefsRev]);
+
+  // Auto logout after configured inactivity (Settings)
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
     const resetTimeout = () => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
@@ -42,11 +53,11 @@ const AdminLayout = () => {
           description: "You have been logged out due to inactivity.",
           variant: "destructive",
         });
-      }, 60 * 60 * 1000); // 1 hour
+      }, sessionTimeoutMs);
     };
 
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, resetTimeout, true);
     });
 
@@ -54,11 +65,11 @@ const AdminLayout = () => {
 
     return () => {
       clearTimeout(timeout);
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, resetTimeout, true);
       });
     };
-  }, [logout, toast]);
+  }, [logout, toast, sessionTimeoutMs]);
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -211,16 +222,20 @@ const AdminLayout = () => {
           </button>
           
           <div className="flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-black transition-colors relative">
+            <button type="button" className="text-gray-600 hover:text-black transition-colors relative">
               <Bell className="w-6 h-6" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+              {prefs.showBellIndicator && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" aria-hidden />
+              )}
             </button>
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
                 <User className="w-4 h-4 text-gray-600" />
               </div>
               <div className="hidden md:block">
-                <p className="text-sm font-semibold text-black tracking-wide">{user?.email || 'Admin User'}</p>
+                <p className="text-sm font-semibold text-black tracking-wide">
+                  {prefs.displayName?.trim() || 'Admin User'}
+                </p>
                 <p className="text-xs text-gray-500 font-medium">Administrator</p>
               </div>
             </div>
