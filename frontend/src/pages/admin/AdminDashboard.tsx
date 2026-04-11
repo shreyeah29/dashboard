@@ -21,6 +21,12 @@ const AdminDashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const sync = () => setTeamCount(countTeamMembers());
+    window.addEventListener('edicius-team-members-changed', sync);
+    return () => window.removeEventListener('edicius-team-members-changed', sync);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">

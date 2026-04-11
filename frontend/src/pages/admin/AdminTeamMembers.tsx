@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Pencil, Plus, Trash2, Users, Globe2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,7 @@ import {
   deleteTeamMember,
   loadTeamMembers,
   placesWithCounts,
+  TEAM_MEMBERS_STORAGE_KEY,
   type TeamMember,
   uniqueRegions,
   updateTeamMember,
@@ -44,6 +45,22 @@ const AdminTeamMembers = () => {
   const refresh = useCallback(() => {
     setMembers(loadTeamMembers());
   }, []);
+
+  // Stay in sync if another tab edits localStorage, or after returning to this tab
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === TEAM_MEMBERS_STORAGE_KEY || e.key === null) refresh();
+    };
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    window.addEventListener('storage', onStorage);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [refresh]);
 
   const regions = useMemo(() => uniqueRegions(members), [members]);
   const placeSummaries = useMemo(() => placesWithCounts(members), [members]);
@@ -110,6 +127,9 @@ const AdminTeamMembers = () => {
         toast({ title: 'Added', description: `${form.name} was added to the directory.` });
       }
       refresh();
+      // Clear filters so the new or updated row is never hidden behind region/place filters
+      setRegionFilter(null);
+      setPlaceFilter(null);
       setDialogOpen(false);
     } catch {
       toast({
@@ -150,6 +170,11 @@ const AdminTeamMembers = () => {
             <h1 className="text-3xl font-bold text-black font-serif tracking-wide">Team members</h1>
             <p className="text-gray-600 mt-1 font-medium">
               Add people, then filter by region or office. Edit or remove rows from the directory below.
+            </p>
+            <p className="text-xs text-gray-500 mt-2 max-w-xl">
+              Data is saved in this browser only. If you add someone and do not see them, choose{' '}
+              <span className="font-medium text-gray-700">Clear filters</span> — active filters can hide rows.
+              Hard-refresh the page (Ctrl+Shift+R / Cmd+Shift+R) if an old version of the app is cached.
             </p>
           </div>
           <Button onClick={openAdd} className="bg-black text-white hover:bg-gray-800 shrink-0">
@@ -319,6 +344,8 @@ const AdminTeamMembers = () => {
                               if (!window.confirm(`Remove ${m.name} (${m.employeeId}) from the directory?`)) return;
                               deleteTeamMember(m.key);
                               refresh();
+                              setRegionFilter(null);
+                              setPlaceFilter(null);
                               toast({ title: 'Removed', description: `${m.name} was deleted.` });
                             }}
                           >

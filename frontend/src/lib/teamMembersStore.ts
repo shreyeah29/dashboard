@@ -10,7 +10,9 @@ export type TeamMember = {
   place: string;
 };
 
-const STORAGE_KEY = 'edicius_admin_team_members_v1';
+/** Exported so the Team members page can listen for cross-tab updates. */
+export const TEAM_MEMBERS_STORAGE_KEY = 'edicius_admin_team_members_v1';
+const STORAGE_KEY = TEAM_MEMBERS_STORAGE_KEY;
 
 function parseEmployeeNumber(id: string): number {
   const m = /^ED-(\d+)$/i.exec(id.trim());
@@ -37,8 +39,13 @@ export function loadTeamMembers(): TeamMember[] {
   }
 }
 
+function notifyTeamMembersChanged(): void {
+  window.dispatchEvent(new CustomEvent('edicius-team-members-changed'));
+}
+
 export function saveTeamMembers(members: TeamMember[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
+  notifyTeamMembersChanged();
 }
 
 export function countTeamMembers(): number {
@@ -108,4 +115,5 @@ export function placesWithCounts(members: TeamMember[]): { place: string; region
 /** Removes saved team directory data from this browser (directory is empty until you add again). */
 export function clearTeamMembersLocalData(): void {
   localStorage.removeItem(STORAGE_KEY);
+  notifyTeamMembersChanged();
 }
