@@ -18,61 +18,12 @@ import {
   Upload,
   Clock,
   CheckCircle,
-  AlertCircle,
-  DollarSign
+  AlertCircle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { companiesApi, projectsApi, documentsApi } from '@/lib/api';
 import FileUploadModal from '@/components/admin/FileUploadModal';
 import { X } from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from 'recharts';
-
-// Generate company-specific mock analytics (consistent per company slug)
-const getCompanyAnalytics = (companySlug: string, units: any[]) => {
-  const hash = (s: string) => s.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0);
-  const seed = Math.abs(hash(companySlug || 'default'));
-  
-  const yearlyRevenueData = [
-    { year: '2020', revenue: 2.4 + (seed % 3) * 0.5, growth: 12 + (seed % 5) },
-    { year: '2021', revenue: 3.1 + (seed % 3) * 0.5, growth: 29 + (seed % 8) },
-    { year: '2022', revenue: 4.2 + (seed % 4) * 0.5, growth: 35 + (seed % 6) },
-    { year: '2023', revenue: 5.8 + (seed % 4) * 0.5, growth: 38 + (seed % 5) },
-    { year: '2024', revenue: 7.2 + (seed % 3) * 0.5, growth: 24 + (seed % 7) },
-    { year: '2025', revenue: 8.9 + (seed % 4) * 0.5, growth: 24 + (seed % 6) },
-  ];
-
-  const revenueBySourceData = [
-    { name: 'Walk-in', value: 28 + (seed % 5), color: '#C9A227' },
-    { name: 'Sales', value: 24 + (seed % 4), color: '#0B1F3A' },
-    { name: 'Marketing', value: 18 + (seed % 3), color: '#DC2626' },
-    { name: 'Calling', value: 14 + (seed % 3), color: '#16a34a' },
-    { name: 'Social Media', value: 10 + (seed % 2), color: '#60a5fa' },
-    { name: 'Referrals', value: 6 + (seed % 2), color: '#a78bfa' },
-  ].map(d => ({ ...d, value: Math.min(100, d.value) }));
-
-  const totalRevenue = yearlyRevenueData.reduce((acc, d) => acc + d.revenue, 0).toFixed(1);
-  const topChannel = revenueBySourceData[0];
-  const yoyGrowth = yearlyRevenueData[yearlyRevenueData.length - 1]?.growth ?? 24;
-
-  const revenueByUnit = units.map((u, i) => ({
-    name: u.name || `Unit ${i + 1}`,
-    revenue: parseFloat((1.5 + (hash(u.name || u._id) % 10) * 0.3 + i * 0.5).toFixed(2)),
-  }));
-
-  return { yearlyRevenueData, revenueBySourceData, totalRevenue, topChannel, yoyGrowth, revenueByUnit };
-};
 
 const AdminCompanyProjects = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -405,7 +356,7 @@ const AdminCompanyProjects = () => {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   {company.name}
                 </h1>
-                <p className="text-gray-600">Unit Database</p>
+                <p className="text-gray-600">Add and manage business units for this company.</p>
               </div>
             </div>
             <motion.button
@@ -420,137 +371,16 @@ const AdminCompanyProjects = () => {
           </div>
         </motion.div>
 
-        {/* Company Analytics Section */}
-        {(() => {
-          const analytics = getCompanyAnalytics(company.slug, projects);
-          const CustomTooltip = ({ active, payload, label }: any) => {
-            if (active && payload && payload.length) {
-              return (
-                <div className="bg-white px-4 py-3 rounded-lg shadow-xl border border-gray-200">
-                  <p className="font-semibold text-edicius-navy">{label}</p>
-                  <p className="text-edicius-gold font-medium">Revenue: ₹{payload[0].value} Cr</p>
-                  <p className="text-sm text-gray-600">Growth: {payload[0].payload.growth}%</p>
-                </div>
-              );
-            }
-            return null;
-          };
-          return (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-10"
-            >
-              <h2 className="text-2xl font-bold text-edicius-navy mb-6 font-serif tracking-wide">
-                {company.name} — Analytics
-              </h2>
-              <p className="text-gray-600 mb-6">Revenue insights and performance metrics for this company</p>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl font-bold text-edicius-navy flex items-center gap-2">
-                        <DollarSign className="w-6 h-6 text-edicius-gold" />
-                        Yearly Revenue Model
-                      </CardTitle>
-                      <span className="text-sm text-gray-500 font-medium">Annual Report</span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">Revenue in Crores (₹ Cr) — Fiscal year performance</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[320px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={analytics.yearlyRevenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-                          <XAxis dataKey="year" stroke="#6B7280" fontSize={12} tickLine={false} axisLine={{ stroke: '#E5E7EB' }} />
-                          <YAxis stroke="#6B7280" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Bar dataKey="revenue" fill="#C9A227" radius={[6, 6, 0, 0]} name="Revenue (Cr)" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-xl font-bold text-edicius-navy flex items-center gap-2">
-                      <TrendingUp className="w-6 h-6 text-edicius-gold" />
-                      Revenue by Source
-                    </CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">Distribution across channels (% of total revenue)</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[320px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie data={analytics.revenueBySourceData} cx="50%" cy="50%" innerRadius={75} outerRadius={115} paddingAngle={3} dataKey="value">
-                            {analytics.revenueBySourceData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip formatter={(v: number, n: string) => [`${v}%`, n]} contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E7EB', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
-                          <Legend layout="vertical" align="right" verticalAlign="middle" formatter={(v) => <span className="text-sm font-medium text-gray-700">{v}</span>} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {projects.length > 0 && (
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow mb-8">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-xl font-bold text-edicius-navy flex items-center gap-2">
-                      <DollarSign className="w-6 h-6 text-edicius-gold" />
-                      Revenue by Unit
-                    </CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">Revenue generated by each unit</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[280px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={analytics.revenueByUnit} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-                          <XAxis dataKey="name" stroke="#6B7280" fontSize={12} tickLine={false} axisLine={{ stroke: '#E5E7EB' }} interval={0} />
-                          <YAxis stroke="#6B7280" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
-                          <Tooltip formatter={(v: number) => [`₹${v} Cr`, 'Revenue']} contentStyle={{ backgroundColor: '#fff', border: '1px solid #E5E7EB', borderRadius: '8px' }} />
-                          <Bar dataKey="revenue" fill="#C9A227" radius={[6, 6, 0, 0]} name="Revenue (Cr)" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card className="bg-white border border-gray-200">
-                  <CardContent className="pt-6">
-                    <p className="text-sm font-medium text-gray-600">Total Revenue (2020-2025)</p>
-                    <p className="text-2xl font-bold text-edicius-navy mt-1">₹ {analytics.totalRevenue} Cr</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-white border border-gray-200">
-                  <CardContent className="pt-6">
-                    <p className="text-sm font-medium text-gray-600">Top Revenue Channel</p>
-                    <p className="text-2xl font-bold text-edicius-navy mt-1">{analytics.topChannel.name} ({analytics.topChannel.value}%)</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-white border border-gray-200">
-                  <CardContent className="pt-6">
-                    <p className="text-sm font-medium text-gray-600">YoY Growth (2025)</p>
-                    <p className="text-2xl font-bold text-green-600 mt-1">+{analytics.yoyGrowth}%</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-          );
-        })()}
-
-        {/* Units Section */}
-        <h2 className="text-xl font-bold text-edicius-navy mb-4">Unit Database</h2>
+        {/* Units Section — primary content (no placeholder revenue analytics) */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="mb-6"
+        >
+          <h2 className="text-2xl font-bold text-edicius-navy mb-1 font-serif tracking-wide">Unit Database</h2>
+          <p className="text-gray-600 text-sm">Units you add for this company appear below.</p>
+        </motion.div>
         {projects.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
