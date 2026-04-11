@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { MapPin, Pencil, Plus, Trash2, Users, Globe2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,16 +15,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import {
-  addTeamMember,
-  deleteTeamMember,
-  loadTeamMembers,
-  placesWithCounts,
-  TEAM_MEMBERS_STORAGE_KEY,
-  type TeamMember,
-  uniqueRegions,
-  updateTeamMember,
-} from '@/lib/teamMembersStore';
+import { teamMembersApi, type TeamMemberRecord } from '@/lib/api';
+import { notifyTeamMembersChanged } from '@/lib/teamMembersStore';
 
 const emptyForm = {
   employeeId: '',
@@ -33,36 +26,69 @@ const emptyForm = {
   place: '',
 };
 
+function regionsFromMembers(members: TeamMemberRecord[]): string[] {
+  return [...new Set(members.map((m) => m.region))].sort();
+}
+
+function placesWithCounts(members: TeamMemberRecord[]): { place: string; region: string; count: number }[] {
+  const map = new Map<string, { place: string; region: string; count: number }>();
+  for (const m of members) {
+    const k = `${m.region}::${m.place}`;
+    const prev = map.get(k);
+    if (prev) prev.count += 1;
+    else map.set(k, { place: m.place, region: m.region, count: 1 });
+  }
+  return [...map.values()].sort((a, b) => a.place.localeCompare(b.place));
+}
+
 const AdminTeamMembers = () => {
   const { toast } = useToast();
-  const [members, setMembers] = useState<TeamMember[]>(() => loadTeamMembers());
+  const [members, setMembers] = useState<TeamMemberRecord[]>([]);
+  const [loading, setLoading] = useState(true);
   const [regionFilter, setRegionFilter] = useState<string | null>(null);
   const [placeFilter, setPlaceFilter] = useState<{ region: string; place: string } | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<TeamMember | null>(null);
+  const [editing, setEditing] = useState<TeamMemberRecord | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
 
-  const refresh = useCallback(() => {
-    setMembers(loadTeamMembers());
-  }, []);
+  const refresh = useCallback(async () => {
+    try {
+      const data = await teamMembersApi.getAll();
+      setMembers(data);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        toast({
+          title: 'Not signed in',
+          description: 'Open admin login and try again.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Could not load directory',
+          description: 'Check your connection and try again.',
+          variant: 'destructive',
+        });
+      }
+      setMembers([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
 
-  // Stay in sync if another tab edits localStorage, or after returning to this tab
   useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === TEAM_MEMBERS_STORAGE_KEY || e.key === null) refresh();
-    };
+    refresh();
+  }, [refresh]);
+
+  useEffect(() => {
     const onVisible = () => {
       if (document.visibilityState === 'visible') refresh();
     };
-    window.addEventListener('storage', onStorage);
     document.addEventListener('visibilitychange', onVisible);
-    return () => {
-      window.removeEventListener('storage', onStorage);
-      document.removeEventListener('visibilitychange', onVisible);
-    };
+    return () => document.removeEventListener('visibilitychange', onVisible);
   }, [refresh]);
 
-  const regions = useMemo(() => uniqueRegions(members), [members]);
+  const regions = useMemo(() => regionsFromMembers(members), [members]);
   const placeSummaries = useMemo(() => placesWithCounts(members), [members]);
 
   const filtered = useMemo(() => {
@@ -83,7 +109,7 @@ const AdminTeamMembers = () => {
     setDialogOpen(true);
   };
 
-  const openEdit = (m: TeamMember) => {
+  const openEdit = (m: TeamMemberRecord) => {
     setEditing(m);
     setForm({
       employeeId: m.employeeId,
@@ -95,7 +121,7 @@ const AdminTeamMembers = () => {
     setDialogOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.designation.trim() || !form.region.trim() || !form.place.trim()) {
       toast({
@@ -106,9 +132,10 @@ const AdminTeamMembers = () => {
       return;
     }
 
+    setSaving(true);
     try {
       if (editing) {
-        updateTeamMember(editing.key, {
+        await teamMembersApi.update(editing._id, {
           employeeId: form.employeeId.trim() || editing.employeeId,
           name: form.name,
           designation: form.designation,
@@ -117,7 +144,7 @@ const AdminTeamMembers = () => {
         });
         toast({ title: 'Saved', description: `${form.name} was updated.` });
       } else {
-        addTeamMember({
+        await teamMembersApi.create({
           employeeId: form.employeeId.trim() || undefined,
           name: form.name,
           designation: form.designation,
@@ -126,17 +153,33 @@ const AdminTeamMembers = () => {
         });
         toast({ title: 'Added', description: `${form.name} was added to the directory.` });
       }
-      refresh();
-      // Clear filters so the new or updated row is never hidden behind region/place filters
+      await refresh();
+      notifyTeamMembersChanged();
       setRegionFilter(null);
       setPlaceFilter(null);
       setDialogOpen(false);
-    } catch {
-      toast({
-        title: 'Could not save',
-        description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      });
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          toast({ title: 'Session expired', description: 'Please sign in again.', variant: 'destructive' });
+        } else if (err.response?.status === 409) {
+          toast({
+            title: 'Duplicate employee ID',
+            description: (err.response?.data as { error?: string })?.error || 'That ID is already used.',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Could not save',
+            description: (err.response?.data as { error?: string })?.error || 'Try again.',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        toast({ title: 'Could not save', description: 'Something went wrong.', variant: 'destructive' });
+      }
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -157,6 +200,32 @@ const AdminTeamMembers = () => {
 
   const filterActive = regionFilter !== null || placeFilter !== null;
 
+  const handleDelete = async (m: TeamMemberRecord) => {
+    if (!window.confirm(`Remove ${m.name} (${m.employeeId}) from the directory?`)) return;
+    try {
+      await teamMembersApi.delete(m._id);
+      await refresh();
+      notifyTeamMembersChanged();
+      setRegionFilter(null);
+      setPlaceFilter(null);
+      toast({ title: 'Removed', description: `${m.name} was deleted.` });
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        toast({ title: 'Session expired', description: 'Please sign in again.', variant: 'destructive' });
+      } else {
+        toast({ title: 'Could not delete', description: 'Try again.', variant: 'destructive' });
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -171,10 +240,8 @@ const AdminTeamMembers = () => {
             <p className="text-gray-600 mt-1 font-medium">
               Add people, then filter by region or office. Edit or remove rows from the directory below.
             </p>
-            <p className="text-xs text-gray-500 mt-2 max-w-xl">
-              Data is saved in this browser only. If you add someone and do not see them, choose{' '}
-              <span className="font-medium text-gray-700">Clear filters</span> — active filters can hide rows.
-              Hard-refresh the page (Ctrl+Shift+R / Cmd+Shift+R) if an old version of the app is cached.
+            <p className="text-xs text-gray-500 mt-2">
+              Directory is saved on the server — everyone with admin access sees the same list.
             </p>
           </div>
           <Button onClick={openAdd} className="bg-black text-white hover:bg-gray-800 shrink-0">
@@ -278,8 +345,7 @@ const AdminTeamMembers = () => {
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {placeSummaries.map((row) => {
-                const active =
-                  placeFilter?.region === row.region && placeFilter?.place === row.place;
+                const active = placeFilter?.region === row.region && placeFilter?.place === row.place;
                 return (
                   <button
                     key={`${row.region}-${row.place}`}
@@ -324,7 +390,7 @@ const AdminTeamMembers = () => {
                 </thead>
                 <tbody>
                   {filtered.map((m) => (
-                    <tr key={m.key} className="border-b border-gray-100 hover:bg-gray-50/80">
+                    <tr key={m._id} className="border-b border-gray-100 hover:bg-gray-50/80">
                       <td className="px-4 py-3 font-mono text-gray-800">{m.employeeId}</td>
                       <td className="px-4 py-3 font-medium text-black">{m.name}</td>
                       <td className="px-4 py-3 text-gray-700">{m.designation}</td>
@@ -340,14 +406,7 @@ const AdminTeamMembers = () => {
                             variant="outline"
                             size="sm"
                             className="h-8 text-red-600 border-red-200 hover:bg-red-50"
-                            onClick={() => {
-                              if (!window.confirm(`Remove ${m.name} (${m.employeeId}) from the directory?`)) return;
-                              deleteTeamMember(m.key);
-                              refresh();
-                              setRegionFilter(null);
-                              setPlaceFilter(null);
-                              toast({ title: 'Removed', description: `${m.name} was deleted.` });
-                            }}
+                            onClick={() => handleDelete(m)}
                           >
                             <Trash2 className="w-3.5 h-3.5 mr-1" />
                             Delete
@@ -377,7 +436,7 @@ const AdminTeamMembers = () => {
               <DialogTitle>{editing ? 'Edit team member' : 'Add team member'}</DialogTitle>
               <DialogDescription>
                 {editing
-                  ? 'Update their designation, region, or office. Employee ID should stay unique.'
+                  ? 'Update their designation, region, or office. Employee ID must stay unique.'
                   : 'Leave employee ID blank to assign the next available ID automatically.'}
               </DialogDescription>
             </DialogHeader>
@@ -390,6 +449,7 @@ const AdminTeamMembers = () => {
                   onChange={(e) => setForm((f) => ({ ...f, employeeId: e.target.value }))}
                   placeholder={editing ? '' : 'Optional — auto-generated if empty'}
                   className="font-mono"
+                  disabled={saving}
                 />
               </div>
               <div className="grid gap-2">
@@ -400,6 +460,7 @@ const AdminTeamMembers = () => {
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   placeholder="Full name"
                   required
+                  disabled={saving}
                 />
               </div>
               <div className="grid gap-2">
@@ -410,6 +471,7 @@ const AdminTeamMembers = () => {
                   onChange={(e) => setForm((f) => ({ ...f, designation: e.target.value }))}
                   placeholder="Role or title"
                   required
+                  disabled={saving}
                 />
               </div>
               <div className="grid gap-2">
@@ -420,6 +482,7 @@ const AdminTeamMembers = () => {
                   onChange={(e) => setForm((f) => ({ ...f, region: e.target.value }))}
                   placeholder="e.g. EMEA, Americas"
                   required
+                  disabled={saving}
                 />
               </div>
               <div className="grid gap-2">
@@ -430,15 +493,16 @@ const AdminTeamMembers = () => {
                   onChange={(e) => setForm((f) => ({ ...f, place: e.target.value }))}
                   placeholder="e.g. London HQ"
                   required
+                  disabled={saving}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} disabled={saving}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-black text-white hover:bg-gray-800">
-                {editing ? 'Save changes' : 'Add member'}
+              <Button type="submit" className="bg-black text-white hover:bg-gray-800" disabled={saving}>
+                {saving ? 'Saving…' : editing ? 'Save changes' : 'Add member'}
               </Button>
             </DialogFooter>
           </form>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Building2, Users, FileText } from 'lucide-react';
-import { countTeamMembers } from '@/lib/teamMembersStore';
+import { teamMembersApi } from '@/lib/api';
 
 const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -16,15 +16,26 @@ const AdminDashboard = () => {
   ];
 
   useEffect(() => {
-    setTeamCount(countTeamMembers());
+    let cancelled = false;
+    const syncTeamCount = async () => {
+      try {
+        const list = await teamMembersApi.getAll();
+        if (!cancelled) setTeamCount(list.length);
+      } catch {
+        if (!cancelled) setTeamCount(0);
+      }
+    };
+    syncTeamCount();
     const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const sync = () => setTeamCount(countTeamMembers());
-    window.addEventListener('edicius-team-members-changed', sync);
-    return () => window.removeEventListener('edicius-team-members-changed', sync);
+    const onTeamChange = () => {
+      void syncTeamCount();
+    };
+    window.addEventListener('edicius-team-members-changed', onTeamChange);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      window.removeEventListener('edicius-team-members-changed', onTeamChange);
+    };
   }, []);
 
   if (isLoading) {

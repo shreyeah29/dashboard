@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Bell,
+  Building2,
   Clock,
   Database,
+  FileText,
+  Layers,
+  Landmark,
   LogOut,
+  RefreshCw,
   Server,
   Settings2,
   Shield,
   User,
+  Users,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,8 +30,8 @@ import {
   type AdminPreferences,
 } from '@/lib/adminPreferences';
 import { clearAllCompanyRevenueLocal } from '@/lib/companyRevenueStore';
-import { clearTeamMembersLocalData } from '@/lib/teamMembersStore';
-import { DASHBOARD_API_PUBLIC_BASE } from '@/lib/api';
+import { companiesApi, documentsApi, DASHBOARD_API_PUBLIC_BASE, projectsApi, teamMembersApi } from '@/lib/api';
+import { notifyTeamMembersChanged } from '@/lib/teamMembersStore';
 
 const SESSION_OPTIONS = [
   { value: 15, label: '15 minutes' },
@@ -35,6 +41,13 @@ const SESSION_OPTIONS = [
   { value: 240, label: '4 hours' },
 ] as const;
 
+type OverviewStats = {
+  companies: number | null;
+  units: number | null;
+  teamMembers: number | null;
+  documents: number | null;
+};
+
 const AdminSettings = () => {
   const { user, logout } = useAuth();
   const { toast } = useToast();
@@ -42,6 +55,53 @@ const AdminSettings = () => {
   const [prefs, setPrefs] = useState<AdminPreferences>(() => loadAdminPreferences());
   const [displayNameDraft, setDisplayNameDraft] = useState('');
   const [sessionDraft, setSessionDraft] = useState(60);
+  const [overview, setOverview] = useState<OverviewStats>({
+    companies: null,
+    units: null,
+    teamMembers: null,
+    documents: null,
+  });
+  const [overviewLoading, setOverviewLoading] = useState(true);
+
+  const loadOverview = useCallback(async () => {
+    setOverviewLoading(true);
+    const next: OverviewStats = {
+      companies: null,
+      units: null,
+      teamMembers: null,
+      documents: null,
+    };
+    try {
+      const companies = await companiesApi.getAll();
+      next.companies = companies.length;
+    } catch {
+      next.companies = null;
+    }
+    try {
+      const units = await projectsApi.getAllUnits();
+      next.units = units.length;
+    } catch {
+      next.units = null;
+    }
+    try {
+      const docs = await documentsApi.getAll();
+      next.documents = docs.length;
+    } catch {
+      next.documents = null;
+    }
+    try {
+      const team = await teamMembersApi.getAll();
+      next.teamMembers = team.length;
+    } catch {
+      next.teamMembers = null;
+    }
+    setOverview(next);
+    setOverviewLoading(false);
+  }, []);
+
+  useEffect(() => {
+    loadOverview();
+  }, [loadOverview]);
 
   useEffect(() => {
     const p = loadAdminPreferences();
@@ -91,10 +151,21 @@ const AdminSettings = () => {
     }
   };
 
-  const handleClearTeam = () => {
-    if (!window.confirm('Remove all team member directory data from this browser? The list will be empty until you add people again.')) return;
-    clearTeamMembersLocalData();
-    toast({ title: 'Cleared', description: 'Team member local data was removed.' });
+  const handleClearTeam = async () => {
+    if (
+      !window.confirm(
+        'Remove every team member from the shared directory? This affects all admins and cannot be undone except by re-adding people.'
+      )
+    )
+      return;
+    try {
+      await teamMembersApi.deleteAll();
+      notifyTeamMembersChanged();
+      await loadOverview();
+      toast({ title: 'Cleared', description: 'Team directory was emptied on the server.' });
+    } catch {
+      toast({ title: 'Could not clear', description: 'Sign in as admin and try again.', variant: 'destructive' });
+    }
   };
 
   const handleClearRevenue = () => {
@@ -126,13 +197,75 @@ const AdminSettings = () => {
             <div>
               <h1 className="text-3xl font-bold text-black font-serif tracking-wide">Settings</h1>
               <p className="text-gray-600 mt-1 font-medium">
-                Workspace preferences, session behaviour, and local data for this browser.
+                Live counts from the API, your display preferences (this browser), and data tools for admins.
               </p>
             </div>
           </div>
         </motion.div>
 
         <div className="space-y-6">
+          <Card className="border border-gray-200 shadow-sm bg-white">
+            <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-4">
+              <div>
+                <CardTitle className="text-lg">Workspace overview</CardTitle>
+                <CardDescription>Current totals from the dashboard API (refreshes when you clear data).</CardDescription>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => void loadOverview()}
+                disabled={overviewLoading}
+                className="shrink-0"
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${overviewLoading ? 'animate-spin' : ''}`} />
+                Refresh stats
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {overviewLoading ? (
+                <p className="text-sm text-gray-500">Loading statistics…</p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { label: 'Companies', value: overview.companies, icon: Building2, href: '/admin/companies' },
+                    { label: 'Units', value: overview.units, icon: Layers, href: '/admin/companies' },
+                    { label: 'Team', value: overview.teamMembers, icon: Users, href: '/admin/team-members' },
+                    { label: 'Documents', value: overview.documents, icon: FileText, href: '/admin/documents' },
+                  ].map((row) => (
+                    <Link
+                      key={row.label}
+                      to={row.href}
+                      className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 hover:border-gray-400 hover:bg-white transition-colors"
+                    >
+                      <div className="flex items-center gap-2 text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">
+                        <row.icon className="w-3.5 h-3.5" />
+                        {row.label}
+                      </div>
+                      <p className="text-2xl font-bold text-black tabular-nums">
+                        {row.value === null ? '—' : row.value}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              )}
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button asChild variant="secondary" size="sm">
+                  <Link to="/admin/revenue">
+                    <Landmark className="w-4 h-4 mr-1" />
+                    Revenue
+                  </Link>
+                </Button>
+                <Button asChild variant="secondary" size="sm">
+                  <Link to="/admin/team-members">Team members</Link>
+                </Button>
+                <Button asChild variant="secondary" size="sm">
+                  <Link to="/admin/documents">Documents</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card className="border border-gray-200 shadow-sm bg-white">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
@@ -154,9 +287,26 @@ const AdminSettings = () => {
                   maxLength={80}
                 />
               </div>
-              <div className="rounded-lg border border-gray-100 bg-gray-50/80 px-4 py-3 text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Admin ID: </span>
-                {user?.id || '—'}
+              <div className="rounded-lg border border-gray-100 bg-gray-50/80 px-4 py-3 text-sm text-gray-600 space-y-1">
+                <p>
+                  <span className="font-medium text-gray-800">Admin ID: </span>
+                  {user?.id || '—'}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-800">Role: </span>
+                  Administrator
+                </p>
+                <p className="text-xs text-gray-500 pt-1 border-t border-gray-200 mt-2">
+                  Saved display name:{' '}
+                  <span className="font-medium text-gray-700">
+                    {prefs.displayName?.trim() || 'Default (Admin User)'}
+                  </span>
+                  {' · '}
+                  Auto-logout after{' '}
+                  <span className="font-medium text-gray-700">{prefs.sessionTimeoutMinutes} min</span> idle
+                  {' · '}
+                  Bell dot: {prefs.showBellIndicator ? 'on' : 'off'}
+                </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-2 border-t border-gray-100">
                 <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -218,11 +368,11 @@ const AdminSettings = () => {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2 text-gray-900">
                 <Database className="w-5 h-5" />
-                Browser-only data
+                Data management
               </CardTitle>
               <CardDescription>
-                Team members and revenue figures you entered are stored in this browser until you clear them or
-                use a different device.
+                Team members are stored on the server (shared by all admins). Clearing the directory removes
+                everyone for every device. Revenue amounts below are stored only in this browser.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -264,9 +414,15 @@ const AdminSettings = () => {
               <CardTitle className="text-lg">About</CardTitle>
               <CardDescription>Edicius admin portal (frontend)</CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-gray-600 space-y-1">
-              <p>Version 1.0.0</p>
-              <p>Use the sidebar to manage companies, units, documents, revenue, and team data.</p>
+            <CardContent className="text-sm text-gray-600 space-y-2">
+              <p>
+                <span className="font-medium text-gray-800">Portal:</span> Edicius Group admin (frontend v1.0.0)
+              </p>
+              <p className="text-xs leading-relaxed">
+                Companies and units are stored in MongoDB. Team members are stored in MongoDB after the latest
+                deploy. Revenue and some display options stay in this browser only unless you add more server
+                features later.
+              </p>
             </CardContent>
           </Card>
 

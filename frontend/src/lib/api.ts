@@ -187,4 +187,55 @@ export const analyticsApi = {
   }
 };
 
+function adminAuthHeader(): Record<string, string> {
+  const token = localStorage.getItem('adminToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export type TeamMemberRecord = {
+  _id: string;
+  employeeId: string;
+  name: string;
+  designation: string;
+  region: string;
+  place: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+/** Shared directory — all admins see the same list (MongoDB on the API). */
+export const teamMembersApi = {
+  getAll: async (): Promise<TeamMemberRecord[]> => {
+    const response = await api.get<TeamMemberRecord[]>('/team-members', { headers: adminAuthHeader() });
+    return response.data;
+  },
+
+  create: async (body: {
+    employeeId?: string;
+    name: string;
+    designation: string;
+    region: string;
+    place: string;
+  }): Promise<TeamMemberRecord> => {
+    const response = await api.post<TeamMemberRecord>('/team-members', body, { headers: adminAuthHeader() });
+    return response.data;
+  },
+
+  update: async (
+    id: string,
+    body: Partial<Pick<TeamMemberRecord, 'employeeId' | 'name' | 'designation' | 'region' | 'place'>>
+  ): Promise<TeamMemberRecord> => {
+    const response = await api.patch<TeamMemberRecord>(`/team-members/${id}`, body, { headers: adminAuthHeader() });
+    return response.data;
+  },
+
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/team-members/${id}`, { headers: adminAuthHeader() });
+  },
+
+  deleteAll: async (): Promise<void> => {
+    await api.delete('/team-members/all', { headers: adminAuthHeader() });
+  },
+};
+
 export default api;

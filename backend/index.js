@@ -10,6 +10,27 @@ const { upload, getFileType, generateFileUrl, deleteLocalFile } = require('./src
 const Project = require('./src/models/Project');
 const Document = require('./src/models/Document');
 const Company = require('./src/models/Company');
+const TeamMember = require('./src/models/TeamMember');
+
+function requireAdminSession(req, res, next) {
+  const cookieToken = req.cookies.adminToken;
+  const headerToken = req.headers.authorization?.replace('Bearer ', '');
+  const token = cookieToken || headerToken;
+  if (token && token.startsWith('admin-session-')) {
+    return next();
+  }
+  return res.status(401).json({ message: 'Unauthorized' });
+}
+
+async function nextTeamEmployeeId() {
+  const all = await TeamMember.find().select('employeeId').lean();
+  let max = 1000;
+  for (const m of all) {
+    const match = /^ED-(\d+)$/i.exec((m.employeeId || '').trim());
+    if (match) max = Math.max(max, parseInt(match[1], 10));
+  }
+  return `ED-${max + 1}`;
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -242,6 +263,103 @@ app.get('/api/v1/auth/admin/verify', (req, res) => {
 app.post('/api/v1/auth/admin/logout', (req, res) => {
   res.clearCookie('adminToken');
   res.json({ success: true, message: 'Logged out successfully' });
+});
+
+// Team members (MongoDB — visible to all admins on every device)
+app.get('/api/v1/team-members', requireAdminSession, async (req, res) => {
+  try {
+    await ensureConnection();
+    const list = await TeamMember.find().sort({ region: 1, place: 1, name: 1 }).lean();
+    res.json(list);
+  } catch (error) {
+    console.error('Error fetching team members:', error);
+    res.status(500).json({ error: 'Failed to fetch team members' });
+  }
+});
+
+app.post('/api/v1/team-members', requireAdminSession, async (req, res) => {
+  try {
+    await ensureConnection();
+    const { employeeId, name, designation, region, place } = req.body;
+    if (!name || !designation || !region || !place) {
+      return res.status(400).json({ error: 'name, designation, region, and place are required' });
+    }
+    let eid = employeeId && String(employeeId).trim();
+    if (eid) {
+      const taken = await TeamMember.findOne({ employeeId: eid });
+      if (taken) {
+        return res.status(409).json({ error: 'Employee ID already exists' });
+      }
+    } else {
+      eid = await nextTeamEmployeeId();
+    }
+    const doc = new TeamMember({
+      employeeId: eid,
+      name: String(name).trim(),
+      designation: String(designation).trim(),
+      region: String(region).trim(),
+      place: String(place).trim(),
+    });
+    await doc.save();
+    res.status(201).json(doc);
+  } catch (error) {
+    console.error('Error creating team member:', error);
+    if (error.code === 11000) {
+      return res.status(409).json({ error: 'Employee ID already exists' });
+    }
+    res.status(500).json({ error: 'Failed to create team member' });
+  }
+});
+
+app.patch('/api/v1/team-members/:id', requireAdminSession, async (req, res) => {
+  try {
+    await ensureConnection();
+    const { id } = req.params;
+    const { employeeId, name, designation, region, place } = req.body;
+    const update = {};
+    if (employeeId !== undefined) update.employeeId = String(employeeId).trim();
+    if (name !== undefined) update.name = String(name).trim();
+    if (designation !== undefined) update.designation = String(designation).trim();
+    if (region !== undefined) update.region = String(region).trim();
+    if (place !== undefined) update.place = String(place).trim();
+    const doc = await TeamMember.findByIdAndUpdate(id, update, { new: true, runValidators: true });
+    if (!doc) {
+      return res.status(404).json({ error: 'Team member not found' });
+    }
+    res.json(doc);
+  } catch (error) {
+    console.error('Error updating team member:', error);
+    if (error.code === 11000) {
+      return res.status(409).json({ error: 'Employee ID already exists' });
+    }
+    res.status(500).json({ error: 'Failed to update team member' });
+  }
+});
+
+app.delete('/api/v1/team-members/all', requireAdminSession, async (req, res) => {
+  try {
+    await ensureConnection();
+    await TeamMember.deleteMany({});
+    res.json({ success: true, deleted: true });
+  } catch (error) {
+    console.error('Error clearing team members:', error);
+    res.status(500).json({ error: 'Failed to clear team members' });
+  }
+});
+
+app.delete('/api/v1/team-members/:id', requireAdminSession, async (req, res) => {
+  try {
+    await ensureConnection();
+    const { id } = req.params;
+    const doc = await TeamMember.findByIdAndDelete(id);
+    if (!doc) {
+      return res.status(404).json({ error: 'Team member not found' });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting team member:', error);
+    res.status(500).json({ error: 'Failed to delete team member' });
+  }
 });
 
 // Documents endpoints - returns only company-level documents (not project/unit docs)
