@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Building2, Users, FileText } from 'lucide-react';
+import { countTeamMembers } from '@/lib/teamMembersStore';
 
 const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [teamCount, setTeamCount] = useState(10);
 
-  // Mock data for demonstration
   const stats = [
-    { title: 'Companies', value: '9', icon: Building2, color: 'text-black', bgColor: 'bg-gray-100' },
-    { title: 'Active Projects', value: '4', icon: FileText, color: 'text-black', bgColor: 'bg-gray-100' },
-    { title: 'Team Members', value: '10', icon: Users, color: 'text-black', bgColor: 'bg-gray-100' },
+    { title: 'Companies', value: '9', icon: Building2, color: 'text-black', bgColor: 'bg-gray-100', href: null as string | null },
+    { title: 'Active Projects', value: '4', icon: FileText, color: 'text-black', bgColor: 'bg-gray-100', href: null as string | null },
+    { title: 'Team Members', value: String(teamCount), icon: Users, color: 'text-black', bgColor: 'bg-gray-100', href: '/admin/team-members' as string | null },
   ];
 
   useEffect(() => {
-    // Simulate loading
+    setTeamCount(countTeamMembers());
     const timer = setTimeout(() => setIsLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
@@ -58,19 +60,38 @@ const AdminDashboard = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
             >
-              <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 hover:shadow-gray-200">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                      <p className="text-2xl font-bold text-black">{stat.value}</p>
+              {stat.href ? (
+                <Link to={stat.href} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black rounded-xl">
+                  <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 hover:shadow-gray-200 cursor-pointer h-full">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                          <p className="text-2xl font-bold text-black">{stat.value}</p>
+                          <p className="text-xs text-gray-500 mt-1 font-medium">Click to manage by region</p>
+                        </div>
+                        <div className={`p-3 rounded-full ${stat.bgColor} border border-gray-200`}>
+                          <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ) : (
+                <Card className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 hover:shadow-gray-200">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                        <p className="text-2xl font-bold text-black">{stat.value}</p>
+                      </div>
+                      <div className={`p-3 rounded-full ${stat.bgColor} border border-gray-200`}>
+                        <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                      </div>
                     </div>
-                    <div className={`p-3 rounded-full ${stat.bgColor} border border-gray-200`}>
-                      <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
             </motion.div>
           ))}
         </motion.div>
