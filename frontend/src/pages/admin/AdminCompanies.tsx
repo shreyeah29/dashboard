@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Building2, Plus, Edit, Trash2, Eye, MoreHorizontal, ArrowRight } from 'lucide-react';
+import { Building2, Plus, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { companiesApi, projectsApi } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
@@ -141,31 +141,15 @@ const AdminCompanies = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      onClick={() => handleViewUnits(company)}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
-                    >
-                      <ArrowRight className="w-4 h-4 mr-2" />
-                      Profile
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-red-200 text-red-600 hover:bg-red-50"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-red-200 text-red-600 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  <Button
+                    onClick={() => handleViewUnits(company)}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-red-200 text-red-600 hover:bg-red-50"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Profile
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
